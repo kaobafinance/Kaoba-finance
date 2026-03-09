@@ -49,56 +49,6 @@ deuda -= anticipada;
 deuda -= capitalPago;
 totalInteres += interesPago;
 
-tabla += `<tr>
-<td>${i}</td>
-<td>${cuotaF.toFixed(2)}</td>
-<td>${interesPago.toFixed(2)}</td>
-<td>${capitalPago.toFixed(2)}</td>
-<td>${deuda.toFixed(2)}</td>
-</tr>`;
-
-capitalData.push(capitalPago);
-interesData.push(interesPago);
-}
-
-document.querySelector("#tabla tbody").innerHTML = tabla;
-let totalPagado = cuotaF * meses;
-
-// Mostrar resultados
-document.getElementById("resultado").innerHTML =
-`<b>Porcentaje de financiación:</b> ${porcentajeFinanciacion.toFixed(2)} %<br>
-<b>Ratio de endeudamiento:</b> ${ratioEndeudamiento.toFixed(2)} %<br>
-<b>Tipo Fijo:</b> ${cuotaF.toFixed(2)} €/mes, total: ${totalPagado.toFixed(2)} €<br>
-<b>Tipo Variable:</b> ${cuotaV.toFixed(2)} €/mes<br>
-<b>Intereses:</b> ${totalInteres.toFixed(2)} €<br>
-<b>Gastos de compra:</b> ${gastosTotales.toFixed(2)} €<br>
-<b>Precio total con gastos:</b> ${(precio+gastosTotales).toFixed(2)} €`;
-
-// Gráfico
-new Chart(document.getElementById("grafico"),{
-type:"pie",
-data:{
-labels:["Capital","Intereses","Gastos compra"],
-datasets:[{data:[monto,totalInteres,gastosTotales],backgroundColor:["#0077ff","#00cc66","#ff9933"]}]
-},
-options:{responsive:true}
-});
-}
-
-// Función para mostrar/ocultar la tabla de amortización
-function toggleAmortizacion() {
-const tabla = document.getElementById("tabla");
-if(tabla.style.display === "none"){
-tabla.style.display = "table"; // Mostrar
-} else {
-tabla.style.display = "none"; // Ocultar
-}
-}
-
-Jesus Parra <jesusdavid.parraromero@gmail.com>
-0:06 (hace 2 minutos)
-para mí
-
 let filaClase = (i % 2 === 0) ? 'class="even"' : 'class="odd"';
 tabla += `<tr ${filaClase} data-mes="${i}">
 <td>${i}</td>
