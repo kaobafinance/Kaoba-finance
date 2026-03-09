@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Calculadora Hipoteca PRO</title>
-
-<!-- CSS va primero -->
 <link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -49,13 +48,16 @@
 <label>Amortización anticipada (€)</label>
 <input type="number" id="anticipada" placeholder="0">
 
+<label>Ingresos anuales (€)</label>
+<input type="number" id="ingresos" placeholder="30000">
+
 <button onclick="calcular()">Calcular</button>
+<button id="btnAmortizacion" onclick="toggleAmortizacion()">Ver/Ocultar cuadro de amortización</button>
 
 <div class="result" id="resultado"></div>
-
 <canvas id="grafico"></canvas>
 
-<table id="tabla">
+<table id="tabla" style="display:none;">
 <thead>
 <tr><th>Mes</th><th>Cuota</th><th>Interés</th><th>Capital</th><th>Deuda restante</th></tr>
 </thead>
@@ -63,7 +65,6 @@
 </table>
 </div>
 
-<!-- JS al final del body -->
 <script src="script.js"></script>
 </body>
 </html>
