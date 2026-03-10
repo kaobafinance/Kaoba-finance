@@ -243,7 +243,6 @@ let saldoData=[];
 let totalIntereses=0;
 
 let tbody=document.querySelector("#tabla tbody").innerHTML=filas.join("")
-tbody.innerHTML="";
 
 for(let i=1;i<=n;i++){
 
