@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>Simulador Hipotecario</title>
 <link rel="stylesheet" href="style.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -35,6 +34,18 @@
     <input id="años" type="number" value="30">
   </div>
 
+  <div>
+    <label>Comunidad autónoma</label>
+    <select id="comunidad">
+      <option value="0.10">Andalucía (10%)</option>
+      <option value="0.06">Madrid (6%)</option>
+      <option value="0.10">Cataluña (10%)</option>
+      <option value="0.08">Valencia (8%)</option>
+      <option value="0.08">Galicia (8%)</option>
+      <option value="0.08">Castilla y León (8%)</option>
+    </select>
+  </div>
+
 </div>
 
 <div class="cards">
@@ -63,24 +74,22 @@
   <p><strong>Porcentaje financiado (LTV):</strong> <span id="ltv"></span></p>
 </div>
 
-<canvas id="grafico1" height="250"></canvas>
-
 <button onclick="toggleTabla()">Ver tabla de amortización</button>
 
 <div id="tablaContainer">
-  <h2>Tabla de amortización</h2>
-  <table id="tabla">
-    <thead>
-      <tr>
-        <th>Mes</th>
-        <th>Cuota</th>
-        <th>Interés</th>
-        <th>Capital</th>
-        <th>Restante</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+<h2>Tabla de amortización</h2>
+<table id="tabla">
+<thead>
+<tr>
+<th>Mes</th>
+<th>Cuota</th>
+<th>Interés</th>
+<th>Capital</th>
+<th>Restante</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
 </div>
 
 <script src="script.js"></script>
