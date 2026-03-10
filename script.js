@@ -1,3 +1,5 @@
+let chart1
+let chart2
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -114,12 +116,12 @@ display:none;
 
 <div>
 <label>Precio vivienda (€)</label>
-<input id="precio" type="number" value="250000">
+<input id="precio" type="number" value="€">
 </div>
 
 <div>
 <label>Ahorros disponibles (€)</label>
-<input id="entrada" type="number" value="50000">
+<input id="entrada" type="number" value="€">
 </div>
 
 <div>
