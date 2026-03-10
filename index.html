@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Simulador Hipotecario PRO</title>
+<title>Simulador Hipotecario</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -40,13 +40,6 @@ padding:10px;
 font-size:16px;
 }
 
-.result{
-margin-top:20px;
-padding:15px;
-background:#f1f3f5;
-border-radius:8px;
-}
-
 .cards{
 display:grid;
 grid-template-columns:repeat(4,1fr);
@@ -59,6 +52,29 @@ background:#f8f9fa;
 padding:15px;
 border-radius:8px;
 text-align:center;
+}
+
+.extra{
+margin-top:20px;
+background:#f1f3f5;
+padding:15px;
+border-radius:8px;
+}
+
+button{
+margin-top:20px;
+padding:12px;
+width:100%;
+background:#2c7be5;
+color:white;
+border:none;
+border-radius:6px;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#1a68d1;
 }
 
 canvas{
@@ -81,6 +97,10 @@ th{
 background:#f1f1f1;
 }
 
+#tablaContainer{
+display:none;
+}
+
 </style>
 </head>
 
@@ -98,7 +118,7 @@ background:#f1f1f1;
 </div>
 
 <div>
-<label>Entrada (€)</label>
+<label>Ahorros disponibles (€)</label>
 <input id="entrada" type="number" value="50000">
 </div>
 
@@ -117,7 +137,7 @@ background:#f1f1f1;
 <div class="cards">
 
 <div class="card">
-<p>Hipoteca</p>
+<p>Hipoteca necesaria</p>
 <h3 id="capital"></h3>
 </div>
 
@@ -138,10 +158,21 @@ background:#f1f1f1;
 
 </div>
 
-<p><strong>Porcentaje financiado:</strong> <span id="ltv"></span></p>
+<div class="extra">
+
+<p><strong>Gastos estimados compra:</strong> <span id="gastos"></span></p>
+<p><strong>Entrada usada para gastos:</strong> <span id="entradaGastos"></span></p>
+<p><strong>Entrada usada para vivienda:</strong> <span id="entradaCasa"></span></p>
+
+<p><strong>Porcentaje financiado (LTV):</strong> <span id="ltv"></span></p>
+
+</div>
 
 <canvas id="grafico1"></canvas>
-<canvas id="grafico2"></canvas>
+
+<button onclick="toggleTabla()">Ver tabla de amortización</button>
+
+<div id="tablaContainer">
 
 <h2>Tabla de amortización</h2>
 
@@ -163,26 +194,40 @@ background:#f1f1f1;
 
 </div>
 
+</div>
+
 <script>
 
 const inputs=document.querySelectorAll("input");
 inputs.forEach(i=>i.addEventListener("input",calcular));
 
 let chart1;
-let chart2;
 
 function formatMoney(n){
 return new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(n);
 }
 
+function toggleTabla(){
+
+const tabla=document.getElementById("tablaContainer");
+
+tabla.style.display = tabla.style.display==="none" ? "block" : "none";
+
+}
+
 function calcular(){
 
 let precio=parseFloat(precioInput.value);
-let entrada=parseFloat(entradaInput.value);
+let ahorro=parseFloat(entradaInput.value);
 let interes=parseFloat(interesInput.value)/100/12;
 let años=parseFloat(añosInput.value);
 
-let capital=precio-entrada;
+let gastos=precio*0.10;
+
+let entradaGastos=Math.min(ahorro,gastos);
+let entradaCasa=Math.max(0,ahorro-gastos);
+
+let capital=precio-entradaCasa;
 
 let n=años*12;
 
@@ -237,6 +282,10 @@ let ltv=(capital/precio)*100;
 
 document.getElementById("ltv").innerText=ltv.toFixed(1)+"%";
 
+document.getElementById("gastos").innerText=formatMoney(gastos);
+document.getElementById("entradaGastos").innerText=formatMoney(entradaGastos);
+document.getElementById("entradaCasa").innerText=formatMoney(entradaCasa);
+
 if(chart1) chart1.destroy();
 
 chart1=new Chart(document.getElementById("grafico1"),{
@@ -246,18 +295,6 @@ labels:meses,
 datasets:[{
 label:"Capital pendiente",
 data:saldoData
-}]
-}
-});
-
-if(chart2) chart2.destroy();
-
-chart2=new Chart(document.getElementById("grafico2"),{
-type:"doughnut",
-data:{
-labels:["Capital","Intereses"],
-datasets:[{
-data:[capital,totalIntereses]
 }]
 }
 });
