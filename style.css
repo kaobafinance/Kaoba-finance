@@ -37,12 +37,15 @@ input, select {
   box-sizing: border-box;
 }
 
+input::placeholder {
+  color: #999;
+}
+
 label {
   font-size: 14px;
   color: #555;
 }
 
-/* Botón principal */
 button {
   width: 100%;
   padding: 14px;
@@ -61,7 +64,6 @@ button:hover {
   background: #005ccc;
 }
 
-/* Tarjetas resumen */
 .cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -89,16 +91,6 @@ button:hover {
   color: #111;
 }
 
-/* Resumen extra */
-.extra {
-  margin-top: 20px;
-  padding: 15px;
-  background: #f2f4f7;
-  border-radius: 8px;
-  font-size: 15px;
-}
-
-/* Tabla de amortización */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -125,6 +117,13 @@ tr:nth-child(even) {
   margin-top: 20px;
 }
 
+/* Campos de titular 2 y deuda 2 ocultos por defecto */
+#edadTitular2,
+#deudaTitular2,
+#comunidadContainer {
+  display: none;
+}
+
 /* Mensaje de plazo máximo por edad */
 #plazoEdadMax {
   font-size: 13px;
@@ -132,13 +131,8 @@ tr:nth-child(even) {
   margin-top: 5px;
 }
 
-/* Edad y deuda del segundo titular */
-#edadTitular2, #deudaTitular2 {
-  display: none;
-}
-
 /* Responsive */
-@media (max-width: 700px) {
+@media (max-width:700px) {
   .grid {
     grid-template-columns: 1fr;
   }
