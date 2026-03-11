@@ -1,83 +1,127 @@
-const inputs = document.querySelectorAll("input");
-const comunidadInput = document.getElementById("comunidad");
-
-inputs.forEach(i => i.addEventListener("input", () => debounce(calcular, 300)()));
-comunidadInput.addEventListener("change", calcular);
-
-const precioInput = document.getElementById("precio");
-const entradaInput = document.getElementById("entrada");
-const interesInput = document.getElementById("interes");
-const añosInput = document.getElementById("años");
-
-let timer;
-
-function debounce(func, wait) {
-  return function() {
-    clearTimeout(timer);
-    timer = setTimeout(() => func.apply(this, arguments), wait);
-  };
+body{
+font-family:Arial, sans-serif;
+background:#f4f6f9;
+padding:20px;
+margin:0;
 }
 
-function formatMoney(n) {
-  return new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(n);
+.container{
+max-width:900px;
+margin:auto;
+background:white;
+padding:30px;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
 }
 
-function toggleTabla() {
-  const tabla = document.getElementById("tablaContainer");
-  tabla.style.display = tabla.style.display === "none" ? "block" : "none";
+h1{
+text-align:center;
+margin-bottom:30px;
+color:#222;
 }
 
-function calcular() {
-  let precio = parseFloat(precioInput.value) || 0;
-  let ahorro = parseFloat(entradaInput.value) || 0;
-  let interes = (parseFloat(interesInput.value)/100/12) || 0;
-  let años = parseFloat(añosInput.value) || 0;
-
-  let itp = parseFloat(comunidadInput.value) || 0.08;
-  let gastos = 2500 + precio * itp; // Escrituras + ITP
-  let entradaGastos = Math.min(ahorro, gastos);
-  let entradaCasa = Math.max(0, ahorro - entradaGastos);
-
-  let capital = precio - entradaCasa;
-  let n = años * 12;
-  let cuota = n > 0 ? capital*(interes*Math.pow(1+interes,n))/(Math.pow(1+interes,n)-1) : 0;
-  let saldo = capital;
-
-  let tbody = document.querySelector("#tabla tbody");
-  tbody.innerHTML = "";
-
-  let totalIntereses = 0;
-
-  for(let i=1; i<=n; i++){
-    let interesMes = saldo*interes;
-    let capitalMes = cuota - interesMes;
-    saldo -= capitalMes;
-    totalIntereses += interesMes;
-
-    let row = `
-      <tr>
-        <td>${i}</td>
-        <td>${formatMoney(cuota)}</td>
-        <td>${formatMoney(interesMes)}</td>
-        <td>${formatMoney(capitalMes)}</td>
-        <td>${formatMoney(Math.max(saldo,0))}</td>
-      </tr>
-    `;
-    tbody.innerHTML += row;
-  }
-
-  document.getElementById("capital").innerText = formatMoney(capital);
-  document.getElementById("cuota").innerText = formatMoney(cuota);
-  document.getElementById("intereses").innerText = formatMoney(totalIntereses);
-
-  // Salario recomendado: que no supere 35% de cuota
-  let sueldo = cuota / 0.35;
-  document.getElementById("sueldo").innerText = formatMoney(sueldo);
-
-  document.getElementById("ltv").innerText = precio>0 ? ((capital/precio)*100).toFixed(1) + "%" : "0%";
-  document.getElementById("gastos").innerText = formatMoney(gastos);
-  document.getElementById("entradaGastos").innerText = formatMoney(entradaGastos);
-  document.getElementById("entradaCasa").innerText = formatMoney(entradaCasa);
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+margin-bottom:20px;
 }
 
-calcular();
+input, select{
+width:100%;
+padding:10px;
+margin-top:5px;
+border:1px solid #ccc;
+border-radius:6px;
+font-size:16px;
+box-sizing:border-box;
+}
+
+label{
+font-size:14px;
+color:#555;
+}
+
+button{
+width:100%;
+padding:14px;
+margin-top:15px;
+background:#0077ff;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-size:16px;
+font-weight:bold;
+transition:0.2s;
+}
+
+button:hover{
+background:#005ccc;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:15px;
+margin-top:25px;
+}
+
+.card{
+background:#f8f9fb;
+padding:15px;
+border-radius:10px;
+text-align:center;
+border:1px solid #eee;
+}
+
+.card p{
+margin:0;
+font-size:14px;
+color:#666;
+}
+
+.card h3{
+margin-top:6px;
+font-size:18px;
+color:#111;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+font-size:14px;
+}
+
+th{
+background:#f1f3f6;
+padding:8px;
+}
+
+td{
+border-bottom:1px solid #eee;
+padding:6px;
+}
+
+tr:nth-child(even){
+background:#fafafa;
+}
+
+#tablaContainer{
+display:none;
+margin-top:20px;
+}
+
+/* Responsive */
+@media (max-width:700px){
+.grid{
+grid-template-columns:1fr;
+}
+.cards{
+grid-template-columns:1fr 1fr;
+}
+.container{
+padding:20px;
+}
+}
