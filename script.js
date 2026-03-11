@@ -1,4 +1,4 @@
-// Inputs principales
+// Referencias a elementos
 const precioInput = document.getElementById("precio");
 const entradaInput = document.getElementById("entrada");
 const tipoViviendaInput = document.getElementById("tipoVivienda");
@@ -12,7 +12,6 @@ const salarioInput = document.getElementById("salario");
 const comunidadInput = document.getElementById("comunidad");
 const interesInput = document.getElementById("interes");
 
-// Outputs
 const capitalOut = document.getElementById("capital");
 const cuotaOut = document.getElementById("cuota");
 const interesesOut = document.getElementById("intereses");
@@ -20,124 +19,129 @@ const entradaTotalOut = document.getElementById("entradaTotal");
 const sueldoOut = document.getElementById("sueldo");
 const ltiOut = document.getElementById("lti");
 const compatibleOut = document.getElementById("compatible");
-const plazoEdadMaxOut = document.getElementById("plazoEdadMax");
+const resumenOut = document.getElementById("resumen");
+const plazoEdadMax = document.getElementById("plazoEdadMax");
 
-// Mostrar/ocultar segundo titular y deuda
 const edadTitular2Div = document.getElementById("edadTitular2");
 const deudaTitular2Div = document.getElementById("deudaTitular2");
-
-// Tabla
 const tablaContainer = document.getElementById("tablaContainer");
 const tbody = document.querySelector("#tabla tbody");
 
-// Formateo de dinero
+// Función para formatear dinero
 function formatMoney(n){
   return new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(n);
 }
 
-// Evento para mostrar/ocultar segundo titular
+// Mostrar/ocultar segundo titular y comunidad según elecciones
 titularesInput.addEventListener("change", ()=>{
-  if(titularesInput.value === "2"){
-    edadTitular2Div.style.display = "block";
-    deudaTitular2Div.style.display = "block";
-  } else {
-    edadTitular2Div.style.display = "none";
-    deudaTitular2Div.style.display = "none";
-  }
+  edadTitular2Div.style.display = titularesInput.value === "2" ? "block" : "none";
+  deudaTitular2Div.style.display = titularesInput.value === "2" ? "block" : "none";
   calcular();
 });
 
-// Evento para mostrar/ocultar comunidad según tipo de vivienda
 tipoViviendaInput.addEventListener("change", ()=>{
   if(tipoViviendaInput.value === "obraNueva"){
-    comunidadInput.parentElement.style.display = "none";
+    comunidadInput.parentElement.style.display = "none"; // Ocultar comunidad
   } else {
     comunidadInput.parentElement.style.display = "block";
   }
   calcular();
 });
 
-// Debounce para inputs
-const inputs = [precioInput, entradaInput, tipoViviendaInput, titularesInput, edad1Input, edad2Input, deuda1Input, deuda2Input, añosInput, salarioInput, comunidadInput, interesInput];
-inputs.forEach(i => i.addEventListener("input", ()=> setTimeout(calcular, 100)));
-
-// Calcular máximo plazo según edad
-function maxPlazoPorEdad() {
+// Ajuste de plazo máximo según edad (hasta 75 años)
+function ajustarPlazoMax(){
   let edades = [parseInt(edad1Input.value) || 18];
-  if(titularesInput.value === "2") edades.push(parseInt(edad2Input.value) || 18);
-  const mayor = Math.max(...edades);
-  const maxAños = Math.min(30, 75 - mayor); // nunca más de 30 años
-  plazoEdadMaxOut.innerText = `Plazo máximo según edad: ${maxAños} años`;
-  
-  if(parseInt(añosInput.value) > maxAños) añosInput.value = maxAños;
-  return maxAños;
+  if(titularesInput.value === "2"){
+    edades.push(parseInt(edad2Input.value) || 18);
+  }
+  let mayorEdad = Math.max(...edades);
+  let maxPlazo = Math.max(0, 75 - mayorEdad);
+  plazoEdadMax.innerText = `Plazo máximo según edad: ${maxPlazo} años`;
+  if(parseInt(añosInput.value) > maxPlazo){
+    añosInput.value = maxPlazo;
+  }
+  return maxPlazo;
 }
 
 // Función principal de cálculo
 function calcular(){
-  const precio = parseFloat(precioInput.value) || 0;
-  const ahorro = parseFloat(entradaInput.value) || 0;
-  const interes = (parseFloat(interesInput.value)/100)/12 || 0;
-  const años = parseFloat(añosInput.value) || 0;
-  const salario = parseFloat(salarioInput.value) || 0;
-  const comunidad = parseFloat(comunidadInput.value) || 0;
+  ajustarPlazoMax();
+
+  let precio = parseFloat(precioInput.value)||0;
+  let ahorro = parseFloat(entradaInput.value)||0;
+  let tipoVivienda = tipoViviendaInput.value;
+  let comunidad = parseFloat(comunidadInput.value)||0;
+  let nAnios = parseInt(añosInput.value)||0;
+  let interes = parseFloat(interesInput.value)/100/12||0;
+  let salario = parseFloat(salarioInput.value)||0;
 
   // Gastos según tipo de vivienda
-  let gastos = tipoViviendaInput.value === "obraNueva" ? precio*0.10 + 2500 : precio*comunidad + 2500;
+  let impuesto = tipoVivienda === "obraNueva" ? precio*0.10 : precio*comunidad; // IVA 10% o ITP
+  let gastos = impuesto + 2500; // 2500€ por escrituras
   let entradaCasa = Math.max(0, ahorro - gastos);
   let capital = precio - entradaCasa;
-  let n = años * 12;
+  let n = nAnios*12;
+  let cuota = capital*(interes*Math.pow(1+interes,n))/(Math.pow(1+interes,n)-1);
+  let totalIntereses = cuota*n - capital;
 
-  // Cuota mensual
-  const cuota = capital*(interes*Math.pow(1+interes,n))/(Math.pow(1+interes,n)-1);
-  const totalIntereses = cuota*n - capital;
+  // Deudas
+  let deuda1 = parseFloat(deuda1Input.value)||0;
+  let deuda2 = titularesInput.value==="2"? (parseFloat(deuda2Input.value)||0) : 0;
+  let deudaTotal = deuda1 + deuda2;
 
-  // Salidas
+  // LTI considerando deudas
+  let ltiVal = (cuota + deudaTotal)*12 / salario;
+  let comp = "";
+  if(ltiVal <= 0.35) comp = "Compatible";
+  else if(ltiVal <= 0.40) comp = "Aceptable";
+  else comp = "No viable";
+
+  // Salario mínimo recomendado (que soporte la cuota + deudas con LTI ≤ 35%)
+  let salarioRecomendado = ((cuota + deudaTotal)*12) / 0.35;
+
+  // Mostrar resultados
   capitalOut.innerText = formatMoney(capital);
   cuotaOut.innerText = formatMoney(cuota);
   interesesOut.innerText = formatMoney(totalIntereses);
   entradaTotalOut.innerText = formatMoney(entradaCasa + gastos);
-
-  // Máximo plazo según edad
-  maxPlazoPorEdad();
-
-  // Total de deudas mensuales
-  let deudaTotal = parseFloat(deuda1Input.value) || 0;
-  if(titularesInput.value === "2") deudaTotal += parseFloat(deuda2Input.value) || 0;
-
-  // LTI considerando deudas
-  const ltiVal = ((cuota*12) + (deudaTotal*12)) / salario;
+  sueldoOut.innerText = formatMoney(salarioRecomendado);
   ltiOut.innerText = (ltiVal*100).toFixed(1) + "%";
-  compatibleOut.innerText = ltiVal <= 0.35 ? "Compatible" : ltiVal <= 0.40 ? "Aceptable" : "No viable";
+  ltiOut.style.color = ltiVal<=0.35? "green": ltiVal<=0.40? "orange":"red";
+  compatibleOut.innerText = comp;
+  compatibleOut.style.color = ltiVal<=0.35? "green":ltiVal<=0.40? "orange":"red";
 
-  // Salario mínimo recomendado
-  sueldoOut.innerText = formatMoney(((cuota*12) + (deudaTotal*12))/0.35);
+  // Resumen de precio máximo según salario disponible
+  let maxCapital = (salario*0.35/12 - deudaTotal) * n;
+  let maxPrecio = maxCapital + entradaCasa;
+  resumenOut.innerText = `Con tu salario neto anual de ${formatMoney(salario)}, podrías permitirte una vivienda de hasta ${formatMoney(maxPrecio)} con LTI ≤35%`;
 }
 
-// Tabla de amortización
-document.getElementById("verTabla").addEventListener("click", ()=>{
-  tablaContainer.style.display = tablaContainer.style.display==="none"?"block":"none";
+// Generar tabla de amortización
+function toggleTabla(){
+  tablaContainer.style.display = tablaContainer.style.display==="none" ? "block" : "none";
   if(tablaContainer.style.display==="block") generarTabla();
-});
+}
 
 function generarTabla(){
   tbody.innerHTML = "";
-  const precio = parseFloat(precioInput.value) || 0;
-  const ahorro = parseFloat(entradaInput.value) || 0;
-  const interes = (parseFloat(interesInput.value)/100)/12 || 0;
-  const años = parseFloat(añosInput.value) || 0;
-  const comunidad = parseFloat(comunidadInput.value) || 0;
+  let precio = parseFloat(precioInput.value)||0;
+  let ahorro = parseFloat(entradaInput.value)||0;
+  let tipoVivienda = tipoViviendaInput.value;
+  let comunidad = parseFloat(comunidadInput.value)||0;
+  let nAnios = parseInt(añosInput.value)||0;
+  let interes = parseFloat(interesInput.value)/100/12||0;
 
-  let gastos = tipoViviendaInput.value === "obraNueva" ? precio*0.10 + 2500 : precio*comunidad + 2500;
+  let impuesto = tipoVivienda === "obraNueva" ? precio*0.10 : precio*comunidad; 
+  let gastos = impuesto + 2500;
   let entradaCasa = Math.max(0, ahorro - gastos);
   let capital = precio - entradaCasa;
-  let n = años*12;
+  let n = nAnios*12;
   let cuota = capital*(interes*Math.pow(1+interes,n))/(Math.pow(1+interes,n)-1);
   let saldo = capital;
 
   for(let i=1;i<=n;i++){
-    const interesMes = saldo*interes;
-    const capitalMes = cuota - interesMes;
+    let interesMes = saldo*interes;
+    let capitalMes = cuota - interesMes;
     saldo -= capitalMes;
     tbody.innerHTML += `<tr>
       <td>${i}</td>
@@ -148,6 +152,12 @@ function generarTabla(){
     </tr>`;
   }
 }
+
+// Listeners
+[precioInput, entradaInput, tipoViviendaInput, titularesInput, edad1Input, edad2Input, deuda1Input, deuda2Input, añosInput, salarioInput, comunidadInput, interesInput].forEach(el=>{
+  el.addEventListener("input", calcular);
+});
+document.getElementById("verTabla").addEventListener("click", toggleTabla);
 
 // Inicial
 calcular();
