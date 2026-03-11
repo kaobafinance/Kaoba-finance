@@ -1,127 +1,94 @@
-body{
-font-family:Arial, sans-serif;
-background:#f4f6f9;
-padding:20px;
-margin:0;
+const precioInput=document.getElementById("precio");
+const entradaInput=document.getElementById("entrada");
+const interesInput=document.getElementById("interes");
+const añosInput=document.getElementById("años");
+const comunidadInput=document.getElementById("comunidad");
+const salarioInput=document.getElementById("salario");
+
+const capitalOut=document.getElementById("capital");
+const cuotaOut=document.getElementById("cuota");
+const interesesOut=document.getElementById("intereses");
+const entradaTotalOut=document.getElementById("entradaTotal");
+const sueldoOut=document.getElementById("sueldo");
+const ltiOut=document.getElementById("lti");
+const tablaContainer=document.getElementById("tablaContainer");
+const tbody=document.querySelector("#tabla tbody");
+
+const inputs=document.querySelectorAll("input, select");
+inputs.forEach(i=>i.addEventListener("input",calcular));
+
+function formatMoney(n){
+return new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(n);
 }
 
-.container{
-max-width:900px;
-margin:auto;
-background:white;
-padding:30px;
-border-radius:12px;
-box-shadow:0 10px 25px rgba(0,0,0,0.08);
+function toggleTabla(){
+tablaContainer.style.display = tablaContainer.style.display==="none" ? "block" : "none";
+if(tablaContainer.style.display==="block") generarTabla();
 }
 
-h1{
-text-align:center;
-margin-bottom:30px;
-color:#222;
+function calcular(){
+let precio=parseFloat(precioInput.value)||0;
+let ahorro=parseFloat(entradaInput.value)||0;
+let interes=parseFloat(interesInput.value)/100/12||0;
+let años=parseFloat(añosInput.value)||0;
+let comunidad=parseFloat(comunidadInput.value)||0;
+let salario=parseFloat(salarioInput.value)||0;
+
+// Gastos + ITP
+let gastos=precio*comunidad;
+let entradaTotal=Math.min(ahorro, gastos) + (ahorro - Math.min(ahorro,gastos));
+let capital=precio - (ahorro - Math.min(ahorro,gastos));
+
+let n=años*12;
+let cuota=capital*(interes*Math.pow(1+interes,n))/(Math.pow(1+interes,n)-1);
+let totalIntereses=cuota*n - capital;
+
+capitalOut.innerText=formatMoney(capital);
+cuotaOut.innerText=formatMoney(cuota);
+interesesOut.innerText=formatMoney(totalIntereses);
+entradaTotalOut.innerText=formatMoney(entradaTotal);
+
+// Sueldo recomendado y LTI
+let sueldo=cuota/0.35*12;
+sueldoOut.innerText=formatMoney(sueldo);
+
+let lti=cuota*12/salario;
+ltiOut.innerText=(lti*100).toFixed(1)+'%';
+if(lti>0.4) ltiOut.style.color="red";
+else if(lti>0.35) ltiOut.style.color="orange";
+else ltiOut.style.color="green";
 }
 
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:20px;
-margin-bottom:20px;
+function generarTabla(){
+tbody.innerHTML="";
+let precio=parseFloat(precioInput.value)||0;
+let ahorro=parseFloat(entradaInput.value)||0;
+let interes=parseFloat(interesInput.value)/100/12||0;
+let años=parseFloat(añosInput.value)||0;
+let comunidad=parseFloat(comunidadInput.value)||0;
+
+let gastos=precio*comunidad;
+let capital=precio - (ahorro - Math.min(ahorro,gastos));
+
+let n=años*12;
+let cuota=capital*(interes*Math.pow(1+interes,n))/(Math.pow(1+interes,n)-1);
+let saldo=capital;
+
+for(let i=1;i<=n;i++){
+let interesMes=saldo*interes;
+let capitalMes=cuota-interesMes;
+saldo-=capitalMes;
+
+let row=`<tr>
+<td>${i}</td>
+<td>${formatMoney(cuota)}</td>
+<td>${formatMoney(interesMes)}</td>
+<td>${formatMoney(capitalMes)}</td>
+<td>${formatMoney(Math.max(saldo,0))}</td>
+</tr>`;
+tbody.innerHTML+=row;
+}
 }
 
-input, select{
-width:100%;
-padding:10px;
-margin-top:5px;
-border:1px solid #ccc;
-border-radius:6px;
-font-size:16px;
-box-sizing:border-box;
-}
-
-label{
-font-size:14px;
-color:#555;
-}
-
-button{
-width:100%;
-padding:14px;
-margin-top:15px;
-background:#0077ff;
-color:white;
-border:none;
-border-radius:8px;
-cursor:pointer;
-font-size:16px;
-font-weight:bold;
-transition:0.2s;
-}
-
-button:hover{
-background:#005ccc;
-}
-
-.cards{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:15px;
-margin-top:25px;
-}
-
-.card{
-background:#f8f9fb;
-padding:15px;
-border-radius:10px;
-text-align:center;
-border:1px solid #eee;
-}
-
-.card p{
-margin:0;
-font-size:14px;
-color:#666;
-}
-
-.card h3{
-margin-top:6px;
-font-size:18px;
-color:#111;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:20px;
-font-size:14px;
-}
-
-th{
-background:#f1f3f6;
-padding:8px;
-}
-
-td{
-border-bottom:1px solid #eee;
-padding:6px;
-}
-
-tr:nth-child(even){
-background:#fafafa;
-}
-
-#tablaContainer{
-display:none;
-margin-top:20px;
-}
-
-/* Responsive */
-@media (max-width:700px){
-.grid{
-grid-template-columns:1fr;
-}
-.cards{
-grid-template-columns:1fr 1fr;
-}
-.container{
-padding:20px;
-}
-}
+// Calcular inicialmente
+calcular();
