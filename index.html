@@ -3,126 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Simula tu Hipoteca</title>
-<style>
-body{
-  font-family:Arial, sans-serif;
-  background:#f4f6f9;
-  padding:20px;
-  margin:0;
-}
-.container{
-  max-width:900px;
-  margin:auto;
-  background:white;
-  padding:30px;
-  border-radius:12px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.08);
-}
-h1{
-  text-align:center;
-  margin-bottom:15px;
-  color:#222;
-}
-.resumen{
-  background:#eef6ff;
-  padding:12px 15px;
-  border-radius:8px;
-  margin-bottom:20px;
-  font-size:16px;
-  text-align:center;
-}
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:20px;
-  margin-bottom:20px;
-}
-input, select{
-  width:100%;
-  padding:10px;
-  margin-top:5px;
-  border:1px solid #ccc;
-  border-radius:6px;
-  font-size:16px;
-  box-sizing:border-box;
-}
-label{
-  font-size:14px;
-  color:#555;
-}
-button{
-  width:100%;
-  padding:14px;
-  margin-top:15px;
-  background:#0077ff;
-  color:white;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  font-size:16px;
-  font-weight:bold;
-  transition:0.2s;
-}
-button:hover{
-  background:#005ccc;
-}
-.cards{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:15px;
-  margin-top:25px;
-}
-.card{
-  background:#f8f9fb;
-  padding:15px;
-  border-radius:10px;
-  text-align:center;
-  border:1px solid #eee;
-}
-.card p{
-  margin:0;
-  font-size:14px;
-  color:#666;
-}
-.card h3{
-  margin-top:6px;
-  font-size:20px;
-  color:#111;
-}
-.extra{
-  margin-top:20px;
-  padding:15px;
-  background:#f2f4f7;
-  border-radius:8px;
-  font-size:15px;
-}
-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:25px;
-  font-size:14px;
-}
-th{
-  background:#f1f3f6;
-  padding:8px;
-}
-td{
-  border-bottom:1px solid #eee;
-  padding:6px;
-}
-tr:nth-child(even){
-  background:#fafafa;
-}
-#tablaContainer{
-  display:none;
-  margin-top:20px;
-}
-@media (max-width:700px){
-  .grid{grid-template-columns:1fr;}
-  .cards{grid-template-columns:1fr 1fr;}
-  .container{padding:20px;}
-}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -147,7 +28,7 @@ tr:nth-child(even){
   <div>
     <label>Plazo (años)</label>
     <input id="años" type="number" value="30">
-    <p id="plazoEdadMax" style="font-size:13px;color:#555;margin-top:5px;"></p>
+    <p id="plazoEdadMax"></p>
   </div>
   <div>
     <label>Comunidad Autónoma (ITP)</label>
@@ -165,7 +46,7 @@ tr:nth-child(even){
     <input id="salario" type="number" value="0">
   </div>
 
-  <!-- NUEVOS CAMPOS PARA TITULARES Y EDADES -->
+  <!-- Nuevos campos de titulares y edades -->
   <div>
     <label>Número de titulares</label>
     <select id="titulares">
@@ -177,7 +58,7 @@ tr:nth-child(even){
     <label>Edad titular 1</label>
     <input id="edad1" type="number" min="18" max="75">
   </div>
-  <div id="edadTitular2" style="display:none;">
+  <div id="edadTitular2">
     <label>Edad titular 2</label>
     <input id="edad2" type="number" min="18" max="75">
   </div>
@@ -209,131 +90,6 @@ tr:nth-child(even){
   </table>
 </div>
 
-</div>
-
-<script>
-// Debounce para que no se recalculen valores demasiado rápido
-function debounce(func, wait) {
-  let timeout;
-  return function() {
-    clearTimeout(timeout);
-    timeout = setTimeout(func, wait);
-  }
-}
-
-const precioInput = document.getElementById("precio");
-const entradaInput = document.getElementById("entrada");
-const interesInput = document.getElementById("interes");
-const añosInput = document.getElementById("años");
-const comunidadInput = document.getElementById("comunidad");
-const salarioInput = document.getElementById("salario");
-
-const inputs = [precioInput, entradaInput, interesInput, añosInput, comunidadInput, salarioInput];
-inputs.forEach(input => input.addEventListener("input", debounce(calcular, 300)));
-
-document.getElementById("verTabla").addEventListener("click", toggleTabla);
-
-let amortizacionGenerada = false;
-
-function formatMoney(n){
-  return new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(n);
-}
-
-function calcular(){
-  let precio = parseFloat(precioInput.value) || 0;
-  let ahorro = parseFloat(entradaInput.value) || 0;
-  let interes = parseFloat(interesInput.value)/100/12 || 0;
-  let años = parseFloat(añosInput.value) || 0;
-  let comunidad = parseFloat(comunidadInput.value) || 0;
-  let salario = parseFloat(salarioInput.value) || 0;
-
-  let gastos = precio * comunidad + 2500; // ITP + escrituras
-  let entradaCasa = Math.max(0, ahorro - gastos);
-  let capital = precio - entradaCasa;
-  let n = años*12;
-  let cuota = capital*(interes*Math.pow(1+interes,n))/(Math.pow(1+interes,n)-1);
-  let totalIntereses = cuota*n - capital;
-
-  // Mostrar en tarjetas
-  document.getElementById("capital").innerText = formatMoney(capital);
-  document.getElementById("cuota").innerText = formatMoney(cuota);
-  document.getElementById("intereses").innerText = formatMoney(totalIntereses);
-  document.getElementById("sueldo").innerText = formatMoney(cuota/0.35);
-  document.getElementById("ltv").innerText = (capital/precio*100).toFixed(1) + "%";
-
-  document.getElementById("entradaTotal").innerText = formatMoney(entradaCasa + gastos);
-
-  // LTI y compatibilidad
-  let ltiVal = cuota*12 / salario;
-  let ltiSpan = document.getElementById("lti");
-  ltiSpan.innerText = (ltiVal*100).toFixed(1)+"%";
-  if(ltiVal <= 0.35) ltiSpan.style.color = "green";
-  else if(ltiVal <= 0.40) ltiSpan.style.color = "orange";
-  else ltiSpan.style.color = "red";
-
-  let compSpan = document.getElementById("compatible");
-  if(ltiVal <= 0.35){
-    compSpan.innerText = "Compatible";
-    compSpan.style.color = "green";
-  } else if(ltiVal <= 0.40){
-    compSpan.innerText = "Aceptable";
-    compSpan.style.color = "orange";
-  } else {
-    compSpan.innerText = "No viable";
-    compSpan.style.color = "red";
-  }
-
-  // Resumen rápido con máximo precio posible según salario
-  let maxCapital = salario*0.35/12 * n; 
-  let maxPrecio = maxCapital + entradaCasa;
-  document.getElementById("resumen").innerText = `Con tu salario neto anual de ${formatMoney(salario)}, podrías permitirte una vivienda de hasta ${formatMoney(maxPrecio)} con LTI ≤35%`;
-
-  amortizacionGenerada = false;
-}
-
-function toggleTabla(){
-  const tabla = document.getElementById("tablaContainer");
-  tabla.style.display = tabla.style.display==="none" ? "block" : "none";
-  if(tabla.style.display==="block") generarTabla();
-}
-
-function generarTabla(){
-  if(amortizacionGenerada) return;
-  let tbody = document.querySelector("#tabla tbody");
-  tbody.innerHTML = "";
-
-  let precio = parseFloat(precioInput.value) || 0;
-  let ahorro = parseFloat(entradaInput.value) || 0;
-  let interes = parseFloat(interesInput.value)/100/12 || 0;
-  let años = parseFloat(añosInput.value) || 0;
-  let comunidad = parseFloat(comunidadInput.value) || 0;
-
-  let gastos = precio * comunidad + 2500;
-  let entradaCasa = Math.max(0, ahorro - gastos);
-  let capital = precio - entradaCasa;
-  let n = años*12;
-  let cuota = capital*(interes*Math.pow(1+interes,n))/(Math.pow(1+interes,n)-1);
-  let saldo = capital;
-
-  for(let i=1;i<=n;i++){
-    let interesMes = saldo*interes;
-    let capitalMes = cuota - interesMes;
-    saldo -= capitalMes;
-    tbody.innerHTML += `
-      <tr>
-        <td>${i}</td>
-        <td>${formatMoney(cuota)}</td>
-        <td>${formatMoney(interesMes)}</td>
-        <td>${formatMoney(capitalMes)}</td>
-        <td>${formatMoney(Math.max(saldo,0))}</td>
-      </tr>`;
-  }
-  amortizacionGenerada = true;
-}
-
-// Inicial
-calcular();
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
