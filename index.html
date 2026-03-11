@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Simulador Hipotecario</title>
+<title>Simulador Hipotecario Rápido</title>
 
 <style>
 body{
@@ -13,24 +13,24 @@ body{
 }
 
 .container{
-  max-width:900px;
+  max-width:600px;
   margin:auto;
   background:white;
-  padding:30px;
+  padding:25px;
   border-radius:12px;
   box-shadow:0 10px 25px rgba(0,0,0,0.08);
 }
 
 h1{
   text-align:center;
-  margin-bottom:30px;
+  margin-bottom:25px;
   color:#222;
 }
 
 .grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:20px;
+  gap:15px;
   margin-bottom:20px;
 }
 
@@ -69,9 +69,9 @@ button:hover{
 
 .cards{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
+  grid-template-columns:1fr 1fr;
   gap:15px;
-  margin-top:25px;
+  margin-top:20px;
 }
 
 .card{
@@ -94,18 +94,20 @@ button:hover{
   color:#111;
 }
 
-.extra{
+#ltiMessage{
+  margin-top:15px;
+  font-weight:bold;
+  color:#c00;
+}
+
+#tablaContainer{
+  display:none;
   margin-top:20px;
-  padding:15px;
-  background:#f2f4f7;
-  border-radius:8px;
-  font-size:15px;
 }
 
 table{
   width:100%;
   border-collapse:collapse;
-  margin-top:25px;
   font-size:14px;
 }
 
@@ -123,21 +125,12 @@ tr:nth-child(even){
   background:#fafafa;
 }
 
-#tablaContainer{
-  display:none;
-  margin-top:20px;
-}
-
-/* RESPONSIVE */
-@media (max-width:700px){
+@media (max-width:500px){
   .grid{
     grid-template-columns:1fr;
   }
   .cards{
     grid-template-columns:1fr 1fr;
-  }
-  .container{
-    padding:20px;
   }
 }
 </style>
@@ -145,31 +138,25 @@ tr:nth-child(even){
 <body>
 
 <div class="container">
-
-<h1>Simulador Hipotecario</h1>
+<h1>Simulador Hipotecario Rápido</h1>
 
 <div class="grid">
-
   <div>
     <label>Precio vivienda (€)</label>
-    <input id="precio" type="number" value="€">
+    <input id="precio" type="number" value="0">
   </div>
-
   <div>
     <label>Ahorros disponibles (€)</label>
-    <input id="entrada" type="number" value="€">
+    <input id="entrada" type="number" value="0">
   </div>
-
   <div>
     <label>Interés anual (%)</label>
     <input id="interes" type="number" step="0.1" value="2.5">
   </div>
-
   <div>
     <label>Plazo (años)</label>
     <input id="años" type="number" value="30">
   </div>
-
   <div>
     <label>Comunidad Autónoma</label>
     <select id="comunidad">
@@ -181,37 +168,34 @@ tr:nth-child(even){
       <option value="0.08">Castilla y León (8%)</option>
     </select>
   </div>
-
+  <div>
+    <label>Salario neto anual (€)</label>
+    <input id="salario" type="number" value="0">
+  </div>
 </div>
 
 <div class="cards">
   <div class="card">
     <p>Hipoteca necesaria</p>
-    <h3 id="capital"></h3>
+    <h3 id="capital">€0</h3>
   </div>
-
   <div class="card">
     <p>Cuota mensual</p>
-    <h3 id="cuota"></h3>
+    <h3 id="cuota">€0</h3>
   </div>
-
-  <div class="card">
-    <p>Total intereses</p>
-    <h3 id="intereses"></h3>
-  </div>
-
   <div class="card">
     <p>Sueldo recomendado</p>
-    <h3 id="sueldo"></h3>
+    <h3 id="sueldo">€0</h3>
+  </div>
+  <div class="card">
+    <p>Entrada usada</p>
+    <h3 id="entradaUsada">€0</h3>
   </div>
 </div>
 
-<div class="extra">
-  <p><strong>Entrada usada (incluye gastos e impuestos):</strong> <span id="entradaUsada"></span></p>
-  <p><strong>Porcentaje financiado (LTV):</strong> <span id="ltv"></span></p>
-</div>
+<div id="ltiMessage"></div>
 
-<button onclick="toggleTabla()">Ver tabla de amortización</button>
+<button onclick="generarTabla()">Ver tabla de amortización</button>
 
 <div id="tablaContainer">
   <h2>Tabla de amortización</h2>
@@ -230,83 +214,93 @@ tr:nth-child(even){
 </div>
 
 <script>
-const inputs = document.querySelectorAll("input");
-const comunidadInput = document.getElementById("comunidad");
 const precioInput = document.getElementById("precio");
 const entradaInput = document.getElementById("entrada");
 const interesInput = document.getElementById("interes");
 const añosInput = document.getElementById("años");
+const comunidadInput = document.getElementById("comunidad");
+const salarioInput = document.getElementById("salario");
 
-let timer;
-inputs.forEach(i => i.addEventListener("input", () => debounce(calcular, 300)()));
-comunidadInput.addEventListener("change", calcular);
+const capitalEl = document.getElementById("capital");
+const cuotaEl = document.getElementById("cuota");
+const sueldoEl = document.getElementById("sueldo");
+const entradaUsadaEl = document.getElementById("entradaUsada");
+const ltiMessageEl = document.getElementById("ltiMessage");
 
-function debounce(func, wait) {
-  return function() {
-    clearTimeout(timer);
-    timer = setTimeout(() => func.apply(this, arguments), wait);
-  };
-}
-
-function formatMoney(n) {
+function formatMoney(n){
   return new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(n);
 }
 
-function toggleTabla() {
-  const tabla = document.getElementById("tablaContainer");
-  tabla.style.display = tabla.style.display === "none" ? "block" : "none";
-}
-
-function calcular() {
+function calcular(){
   let precio = parseFloat(precioInput.value) || 0;
   let ahorro = parseFloat(entradaInput.value) || 0;
   let interes = (parseFloat(interesInput.value)/100/12) || 0;
   let años = parseFloat(añosInput.value) || 0;
   let itp = parseFloat(comunidadInput.value) || 0.08;
+  let salario = parseFloat(salarioInput.value) || 0;
 
-  let gastos = 2500 + precio * itp; // Escrituras + ITP
-  let entradaUsada = Math.min(ahorro, gastos + precio); // Total usado
-
-  let entradaCasa = Math.max(0, ahorro - gastos); 
+  let gastos = 2500 + precio*itp;
+  let entradaUsada = Math.min(ahorro, gastos + precio);
+  let entradaCasa = Math.max(0, ahorro - gastos);
   let capital = precio - entradaCasa;
-  let n = años * 12;
-  let cuota = n > 0 ? capital*(interes*Math.pow(1+interes,n))/(Math.pow(1+interes,n)-1) : 0;
-  let saldo = capital;
+  let n = años*12;
+  let cuota = n>0 ? capital*(interes*Math.pow(1+interes,n))/(Math.pow(1+interes,n)-1) : 0;
 
+  capitalEl.innerText = formatMoney(capital);
+  cuotaEl.innerText = formatMoney(cuota);
+  sueldoEl.innerText = formatMoney(cuota/0.35);
+  entradaUsadaEl.innerText = formatMoney(entradaUsada);
+
+  if(salario>0){
+    let maxCuota = salario*0.35/12;
+    if(cuota > maxCuota){
+      let maxCompra = precio*(maxCuota/cuota);
+      ltiMessageEl.innerText = `La cuota supera el 35% de tu salario. Podrías permitirte hasta ${formatMoney(maxCompra)}.`;
+    }else{
+      ltiMessageEl.innerText = "La cuota es compatible con tu salario.";
+    }
+  }else{
+    ltiMessageEl.innerText = "";
+  }
+}
+
+// Recalcular al escribir (sin tabla)
+[precioInput, entradaInput, interesInput, añosInput, comunidadInput, salarioInput].forEach(el=>{
+  el.addEventListener("input", calcular);
+});
+
+calcular();
+
+// Tabla solo al pedirla
+function generarTabla(){
   let tbody = document.querySelector("#tabla tbody");
   tbody.innerHTML = "";
-  let totalIntereses = 0;
+  let precio = parseFloat(precioInput.value) || 0;
+  let ahorro = parseFloat(entradaInput.value) || 0;
+  let interes = (parseFloat(interesInput.value)/100/12) || 0;
+  let años = parseFloat(añosInput.value) || 0;
+  let gastos = 2500 + precio*parseFloat(comunidadInput.value || 0.08);
+  let entradaCasa = Math.max(0, ahorro - gastos);
+  let capital = precio - entradaCasa;
+  let n = años*12;
+  let cuota = n>0 ? capital*(interes*Math.pow(1+interes,n))/(Math.pow(1+interes,n)-1) : 0;
+  let saldo = capital;
 
-  for(let i=1; i<=n; i++){
+  for(let i=1;i<=n;i++){
     let interesMes = saldo*interes;
     let capitalMes = cuota - interesMes;
     saldo -= capitalMes;
-    totalIntereses += interesMes;
-
-    let row = `
-      <tr>
-        <td>${i}</td>
-        <td>${formatMoney(cuota)}</td>
-        <td>${formatMoney(interesMes)}</td>
-        <td>${formatMoney(capitalMes)}</td>
-        <td>${formatMoney(Math.max(saldo,0))}</td>
-      </tr>
-    `;
+    let row = `<tr>
+      <td>${i}</td>
+      <td>${formatMoney(cuota)}</td>
+      <td>${formatMoney(interesMes)}</td>
+      <td>${formatMoney(capitalMes)}</td>
+      <td>${formatMoney(Math.max(saldo,0))}</td>
+    </tr>`;
     tbody.innerHTML += row;
   }
-
-  document.getElementById("capital").innerText = formatMoney(capital);
-  document.getElementById("cuota").innerText = formatMoney(cuota);
-  document.getElementById("intereses").innerText = formatMoney(totalIntereses);
-
-  let sueldo = cuota / 0.35;
-  document.getElementById("sueldo").innerText = formatMoney(sueldo);
-
-  document.getElementById("ltv").innerText = precio>0 ? ((capital/precio)*100).toFixed(1) + "%" : "0%";
-  document.getElementById("entradaUsada").innerText = formatMoney(entradaUsada);
+  document.getElementById("tablaContainer").style.display="block";
 }
-
-calcular();
 </script>
 
 </body>
