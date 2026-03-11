@@ -170,7 +170,7 @@ tr:nth-child(even){
   <p><strong>Compatible con salario:</strong> <span id="compatible"></span></p>
 </div>
 
-<button onclick="toggleTabla()">Ver tabla de amortización</button>
+<button id="verTabla">Ver tabla de amortización</button>
 
 <div id="tablaContainer">
   <h2>Tabla de amortización</h2>
@@ -185,7 +185,7 @@ tr:nth-child(even){
 </div>
 
 <script>
-// Debounce function
+// Debounce para que sea más rápido al escribir
 function debounce(func, wait) {
   let timeout;
   return function() {
@@ -209,9 +209,14 @@ function formatMoney(n){
 }
 
 function toggleTabla(){
-  const tabla=document.getElementById("tablaContainer");
+  const tabla = document.getElementById("tablaContainer");
   tabla.style.display = tabla.style.display==="none" ? "block" : "none";
+  if(tabla.style.display==="block") generarTabla(); // solo genera la tabla al abrir
 }
+
+document.getElementById("verTabla").addEventListener("click", toggleTabla);
+
+let amortizacionGenerada = false;
 
 function calcular(){
   let precio = parseFloat(precioInput.value) || 0;
@@ -226,33 +231,15 @@ function calcular(){
   let capital = precio - entradaCasa;
   let n = años*12;
   let cuota = capital*(interes*Math.pow(1+interes,n))/(Math.pow(1+interes,n)-1);
-  let saldo = capital;
 
-  let totalIntereses = 0;
-  let tbody = document.querySelector("#tabla tbody");
-  tbody.innerHTML = "";
-
-  for(let i=1;i<=n;i++){
-    let interesMes = saldo*interes;
-    let capitalMes = cuota - interesMes;
-    saldo -= capitalMes;
-    totalIntereses += interesMes;
-    tbody.innerHTML += `
-      <tr>
-        <td>${i}</td>
-        <td>${formatMoney(cuota)}</td>
-        <td>${formatMoney(interesMes)}</td>
-        <td>${formatMoney(capitalMes)}</td>
-        <td>${formatMoney(Math.max(saldo,0))}</td>
-      </tr>`;
-  }
+  let totalIntereses = cuota*n - capital;
 
   document.getElementById("capital").innerText = formatMoney(capital);
   document.getElementById("cuota").innerText = formatMoney(cuota);
   document.getElementById("intereses").innerText = formatMoney(totalIntereses);
   document.getElementById("sueldo").innerText = formatMoney(cuota/0.35);
 
-  document.getElementById("entradaTotal").innerText = formatMoney(gastos + entradaCasa);
+  document.getElementById("entradaTotal").innerText = formatMoney(entradaCasa + gastos);
 
   // LTI y compatibilidad
   let ltiVal = cuota*12 / salario;
@@ -273,6 +260,43 @@ function calcular(){
     compSpan.innerText = "No viable";
     compSpan.style.color = "red";
   }
+
+  amortizacionGenerada = false; // fuerza a regenerar si se abre tabla
+}
+
+function generarTabla(){
+  if(amortizacionGenerada) return;
+  let tbody = document.querySelector("#tabla tbody");
+  tbody.innerHTML = "";
+
+  let precio = parseFloat(precioInput.value) || 0;
+  let ahorro = parseFloat(entradaInput.value) || 0;
+  let interes = parseFloat(interesInput.value)/100/12 || 0;
+  let años = parseFloat(añosInput.value) || 0;
+  let comunidad = parseFloat(comunidadInput.value) || 0;
+
+  let gastos = precio * comunidad + 2500;
+  let entradaCasa = Math.max(0, ahorro - gastos);
+  let capital = precio - entradaCasa;
+  let n = años*12;
+  let cuota = capital*(interes*Math.pow(1+interes,n))/(Math.pow(1+interes,n)-1);
+  let saldo = capital;
+
+  for(let i=1;i<=n;i++){
+    let interesMes = saldo*interes;
+    let capitalMes = cuota - interesMes;
+    saldo -= capitalMes;
+    tbody.innerHTML += `
+      <tr>
+        <td>${i}</td>
+        <td>${formatMoney(cuota)}</td>
+        <td>${formatMoney(interesMes)}</td>
+        <td>${formatMoney(capitalMes)}</td>
+        <td>${formatMoney(Math.max(saldo,0))}</td>
+      </tr>`;
+  }
+
+  amortizacionGenerada = true;
 }
 
 // Inicial
