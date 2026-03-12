@@ -37,15 +37,8 @@ input, select{
   box-sizing:border-box;
 }
 
-input::placeholder {
-  color:#aaa;
-  font-style:italic;
-}
-
-label{
-  font-size:14px;
-  color:#555;
-}
+input::placeholder { color:#aaa; font-style:italic;}
+label{ font-size:14px;color:#555;}
 
 button{
   width:100%;
@@ -60,10 +53,7 @@ button{
   font-weight:bold;
   transition:0.2s;
 }
-
-button:hover{
-  background:#005ccc;
-}
+button:hover{ background:#005ccc;}
 
 .cards{
   display:grid;
@@ -80,17 +70,8 @@ button:hover{
   border:1px solid #eee;
 }
 
-.card p{
-  margin:0;
-  font-size:14px;
-  color:#666;
-}
-
-.card h3{
-  margin-top:6px;
-  font-size:18px;
-  color:#111;
-}
+.card p{ margin:0; font-size:14px; color:#666;}
+.card h3{ margin-top:6px; font-size:18px; color:#111;}
 
 table{
   width:100%;
@@ -98,53 +79,5 @@ table{
   margin-top:20px;
   font-size:14px;
 }
-
-th{
-  background:#f1f3f6;
-  padding:8px;
-}
-
-td{
-  border-bottom:1px solid #eee;
-  padding:6px;
-}
-
-tr:nth-child(even){
-  background:#fafafa;
-}
-
-#tablaContainer{
-  display:none;
-  margin-top:20px;
-}
-
-/* Mensaje de plazo máximo por edad */
-#plazoEdadMax {
-  font-size: 13px;
-  color: #555;
-  margin-top: 5px;
-}
-
-/* Edad y deuda del segundo titular */
-#edadTitular2,
-#deudaTitular2 {
-  display: none;
-}
-
-/* Ocultar comunidad si es obra nueva */
-#comunidad {
-  display: block;
-}
-
-/* Responsive */
-@media (max-width:700px){
-  .grid{
-    grid-template-columns:1fr;
-  }
-  .cards{
-    grid-template-columns:1fr 1fr;
-  }
-  .container{
-    padding:20px;
-  }
-}
+th{ background:#f1f3f6; padding:8px;}
+td{ border-bottom:1px solid #eee; padding
