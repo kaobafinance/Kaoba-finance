@@ -89,7 +89,7 @@ tr:nth-child(even){background:#fafafa;}
 #tablaContainer,#perfilTablaContainer{display:none;margin-top:20px;}
 
 /* Responsive */
-@media(max-width:700px){
+@media (max-width:700px){
   .grid{grid-template-columns:1fr;}
   .cards{grid-template-columns:1fr 1fr;}
 }
