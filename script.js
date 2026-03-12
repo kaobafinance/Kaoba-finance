@@ -74,20 +74,12 @@ perfilTitulares.addEventListener("change", ()=>{
 
 // --- MOSTRAR/OCULTAR COMUNIDAD ---
 tipoVivienda.addEventListener("change", ()=>{
-  if(tipoVivienda.value==="obraNueva"){
-    comunidadSelect.parentElement.style.display="none";
-  }else{
-    comunidadSelect.parentElement.style.display="block";
-  }
+  comunidadSelect.parentElement.style.display = tipoVivienda.value==="obraNueva"?"none":"block";
   calcular();
 });
 
 perfilTipoVivienda.addEventListener("change", ()=>{
-  if(perfilTipoVivienda.value==="obraNueva"){
-    perfilComunidad.parentElement.style.display="none";
-  }else{
-    perfilComunidad.parentElement.style.display="block";
-  }
+  perfilComunidad.parentElement.style.display = perfilTipoVivienda.value==="obraNueva"?"none":"block";
   calcularPerfil();
 });
 
@@ -103,17 +95,17 @@ function calcular(){
   let entrada = parseFloat(entradaInput.value)||0;
   let años = parseFloat(añosInput.value)||0;
   let interes = parseFloat(interesInput.value)/100/12||0;
-  
+
   let impuestos = tipoVivienda.value==="obraNueva"?precio*0.10:precio*parseFloat(comunidadSelect.value);
   let gastos = impuestos+2500;
-  
+
   let ahorroAplicado = Math.min(entrada,gastos);
   let capital = precio - (entrada - ahorroAplicado);
-  
+
   let n = años*12;
   let cuota = capital*(interes*Math.pow(1+interes,n))/(Math.pow(1+interes,n)-1);
   let ltv = (capital/precio)*100;
-  
+
   capitalOut.innerText = formatMoney(capital);
   cuotaOut.innerText = formatMoney(cuota);
   ltvOut.innerText = ltv.toFixed(1)+"%";
@@ -136,11 +128,11 @@ function generarTabla(){
   let gastos = impuestos+2500;
   let ahorroAplicado = Math.min(entrada,gastos);
   let capital = precio - (entrada - ahorroAplicado);
-  
+
   let n = años*12;
   let cuota = capital*(interes*Math.pow(1+interes,n))/(Math.pow(1+interes,n)-1);
   let saldo = capital;
-  
+
   for(let i=1;i<=n;i++){
     let interesMes = saldo*interes;
     let capitalMes = cuota - interesMes;
@@ -157,7 +149,7 @@ function calcularPerfil(){
   let maxEdad = Math.max(edad1,edad2);
   let plazoMax = Math.min(30,75-maxEdad);
   perfilPlazo.value = plazoMax>0?plazoMax:0;
-  
+
   let ingresos = (parseFloat(perfilSalario1.value)||0) + (nTitulares===2?(parseFloat(perfilSalario2.value)||0):0) + (parseFloat(perfilOtroIngreso.value)||0);
   let pagas = parseInt(perfilPagas.value)||12;
   let ingresosAnuales = ingresos*pagas;
@@ -168,7 +160,7 @@ function calcularPerfil(){
   let n = plazoMax*12;
   let cuotaMax = ingresosAnuales*0.35/12 - deudas;
   let capitalPosible = cuotaMax*(Math.pow(1+tipoRef,n)-1)/(tipoRef*(Math.pow(1+tipoRef,n)));
-  
+
   // Si tiene vivienda
   let gastos=0;
   if(yaTieneVivienda.checked){
@@ -189,4 +181,29 @@ function calcularPerfil(){
   perfilCapitalOut.innerText = formatMoney(capitalPosible);
   perfilCuotaOut.innerText = formatMoney(cuota);
   perfilLTVOut.innerText = ltv>0?ltv.toFixed(1)+"%":"-";
-  perfilGastos
+  perfilGastosOut.innerText = formatMoney(gastos);
+
+  // LTI y compatibilidad
+  perfilLTIOut.innerText = (lti*100).toFixed(1) + "%";
+  if(lti <= 0.35){
+    perfilCompatibleOut.innerText = "Compatible";
+    perfilCompatibleOut.style.color = "green";
+  } else if(lti <= 0.40){
+    perfilCompatibleOut.innerText = "Aceptable";
+    perfilCompatibleOut.style.color = "orange";
+  } else {
+    perfilCompatibleOut.innerText = "No viable";
+    perfilCompatibleOut.style.color = "red";
+  }
+}
+
+// --- ESCUCHAR CAMBIOS PERFIL ---
+[
+  perfilTitulares, perfilEdad1, perfilEdad2, perfilSalario1, perfilSalario2,
+  perfilPagas, perfilAhorros, perfilDeuda, perfilOtroIngreso,
+  yaTieneVivienda, perfilPrecio, perfilTipoVivienda, perfilComunidad, perfilPlazo
+].forEach(el => el.addEventListener("input", calcularPerfil));
+
+// Inicializar
+calcular();
+calcularPerfil();
