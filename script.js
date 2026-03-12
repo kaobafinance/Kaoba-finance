@@ -8,7 +8,6 @@ btnCalculadora.addEventListener("click", ()=>{
   calculadoraDiv.style.display="block";
   perfilDiv.style.display="none";
 });
-
 btnPerfil.addEventListener("click", ()=>{
   calculadoraDiv.style.display="none";
   perfilDiv.style.display="block";
@@ -60,36 +59,12 @@ const perfilCompatibleOut = document.getElementById("perfilCompatible");
 // --- FORMATO MONEDA ---
 function formatMoney(n){return new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(n);}
 
-// --- MOSTRAR/OCULTAR SEGUNDO TITULAR ---
-perfilTitulares.addEventListener("change", ()=>{
-  if(perfilTitulares.value==="2"){
-    perfilEdad2Div.style.display="block";
-    perfilSalario2Div.style.display="block";
-  }else{
-    perfilEdad2Div.style.display="none";
-    perfilSalario2Div.style.display="none";
-  }
-  calcularPerfil();
-});
-
-// --- MOSTRAR/OCULTAR COMUNIDAD ---
+// --- CALCULADORA ---
 tipoVivienda.addEventListener("change", ()=>{
   comunidadSelect.parentElement.style.display = tipoVivienda.value==="obraNueva"?"none":"block";
   calcular();
 });
 
-perfilTipoVivienda.addEventListener("change", ()=>{
-  perfilComunidad.parentElement.style.display = perfilTipoVivienda.value==="obraNueva"?"none":"block";
-  calcularPerfil();
-});
-
-// --- MOSTRAR INFO VIVIENDA ---
-yaTieneVivienda.addEventListener("change", ()=>{
-  viviendaInfo.style.display = yaTieneVivienda.checked ? "block":"none";
-  calcularPerfil();
-});
-
-// --- FUNCIONES CALCULADORA ---
 function calcular(){
   let precio = parseFloat(precioInput.value)||0;
   let entrada = parseFloat(entradaInput.value)||0;
@@ -98,7 +73,6 @@ function calcular(){
 
   let impuestos = tipoVivienda.value==="obraNueva"?precio*0.10:precio*parseFloat(comunidadSelect.value);
   let gastos = impuestos+2500;
-
   let ahorroAplicado = Math.min(entrada,gastos);
   let capital = precio - (entrada - ahorroAplicado);
 
@@ -128,11 +102,9 @@ function generarTabla(){
   let gastos = impuestos+2500;
   let ahorroAplicado = Math.min(entrada,gastos);
   let capital = precio - (entrada - ahorroAplicado);
-
   let n = años*12;
   let cuota = capital*(interes*Math.pow(1+interes,n))/(Math.pow(1+interes,n)-1);
   let saldo = capital;
-
   for(let i=1;i<=n;i++){
     let interesMes = saldo*interes;
     let capitalMes = cuota - interesMes;
@@ -141,7 +113,28 @@ function generarTabla(){
   }
 }
 
-// --- FUNCIONES PERFIL ---
+// --- PERFIL ---
+perfilTitulares.addEventListener("change", ()=>{
+  if(perfilTitulares.value==="2"){
+    perfilEdad2Div.style.display="block";
+    perfilSalario2Div.style.display="block";
+  }else{
+    perfilEdad2Div.style.display="none";
+    perfilSalario2Div.style.display="none";
+  }
+  calcularPerfil();
+});
+
+perfilTipoVivienda.addEventListener("change", ()=>{
+  perfilComunidad.parentElement.style.display = perfilTipoVivienda.value==="obraNueva"?"none":"block";
+  calcularPerfil();
+});
+
+yaTieneVivienda.addEventListener("change", ()=>{
+  viviendaInfo.style.display = yaTieneVivienda.checked?"block":"none";
+  calcularPerfil();
+});
+
 function calcularPerfil(){
   let nTitulares = parseInt(perfilTitulares.value)||1;
   let edad1 = parseInt(perfilEdad1.value)||0;
@@ -155,13 +148,11 @@ function calcularPerfil(){
   let ingresosAnuales = ingresos*pagas;
   let deudas = parseFloat(perfilDeuda.value)||0;
 
-  // Tipo referencia 2,8%
   let tipoRef = 0.028/12;
   let n = plazoMax*12;
   let cuotaMax = ingresosAnuales*0.35/12 - deudas;
   let capitalPosible = cuotaMax*(Math.pow(1+tipoRef,n)-1)/(tipoRef*(Math.pow(1+tipoRef,n)));
 
-  // Si tiene vivienda
   let gastos=0;
   if(yaTieneVivienda.checked){
     let precio = parseFloat(perfilPrecio.value)||0;
@@ -171,20 +162,16 @@ function calcularPerfil(){
     capitalPosible = precio + gastos - ahorro;
   }
 
-  // Cuota real con capital
   let cuota = capitalPosible*(tipoRef*Math.pow(1+tipoRef,n))/(Math.pow(1+tipoRef,n)-1);
   let ltv = yaTieneVivienda.checked?(capitalPosible/parseFloat(perfilPrecio.value)*100):0;
-
-  // LTI
   let lti = (cuota + deudas)*12 / ingresosAnuales;
 
   perfilCapitalOut.innerText = formatMoney(capitalPosible);
   perfilCuotaOut.innerText = formatMoney(cuota);
   perfilLTVOut.innerText = ltv>0?ltv.toFixed(1)+"%":"-";
   perfilGastosOut.innerText = formatMoney(gastos);
-
-  // LTI y compatibilidad
   perfilLTIOut.innerText = (lti*100).toFixed(1) + "%";
+
   if(lti <= 0.35){
     perfilCompatibleOut.innerText = "Compatible";
     perfilCompatibleOut.style.color = "green";
@@ -197,12 +184,16 @@ function calcularPerfil(){
   }
 }
 
-// --- ESCUCHAR CAMBIOS PERFIL ---
+// --- ESCUCHAR CAMBIOS ---
 [
   perfilTitulares, perfilEdad1, perfilEdad2, perfilSalario1, perfilSalario2,
   perfilPagas, perfilAhorros, perfilDeuda, perfilOtroIngreso,
-  yaTieneVivienda, perfilPrecio, perfilTipoVivienda, perfilComunidad, perfilPlazo
-].forEach(el => el.addEventListener("input", calcularPerfil));
+  yaTieneVivienda, perfilPrecio, perfilTipoVivienda, perfilComunidad, perfilPlazo,
+  precioInput, entradaInput, tipoVivienda, añosInput, interesInput, comunidadSelect
+].forEach(el => el.addEventListener("input", ()=>{
+  calcular();
+  calcularPerfil();
+}));
 
 // Inicializar
 calcular();
