@@ -202,10 +202,14 @@ function calcularPerfil(){
 
 // --- EVENTOS AUTOMÁTICOS PERFIL ---
 [
-  perfilTitulares, perfilEdad1, perfilEdad2, perfilSalario1, perfilSalario2,
+  perfilEdad1, perfilEdad2, perfilSalario1, perfilSalario2,
   perfilPagas, perfilAhorros, perfilDeuda, perfilOtroIngreso,
-  yaTieneVivienda, perfilPrecio, perfilTipoVivienda, perfilComunidad, perfilPlazo
+  perfilPrecio, perfilPlazo
 ].forEach(el => el.addEventListener("input", calcularPerfil));
+
+[
+  perfilTitulares, perfilTipoVivienda, perfilComunidad
+].forEach(el => el.addEventListener("change", calcularPerfil));
 
 // --- INICIALIZAR ---
 calcular();
