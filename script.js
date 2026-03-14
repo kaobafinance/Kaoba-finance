@@ -182,7 +182,7 @@ function calcularPerfil(){
 
   let cuota = capitalPosible*(tipoRef*Math.pow(1+tipoRef,n))/(Math.pow(1+tipoRef,n)-1);
   let ltv = yaTieneVivienda.checked?(capitalPosible/parseFloat(perfilPrecio.value)*100):0;
-  let lti = (cuota + deudas)*12 / ingresosAnuales;
+let lti = ingresosAnuales > 0 ? (cuota + deudas)*12 / ingresosAnuales : 0;
 
   perfilCapitalOut.innerText = formatMoneyPerfil(capitalPosible);
   perfilCuotaOut.innerText = formatMoneyPerfil(cuota);
