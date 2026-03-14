@@ -104,10 +104,9 @@ function generarTabla(){
 const perfilTitulares = document.getElementById("perfilTitulares");
 const perfilEdad1 = document.getElementById("perfilEdad1");
 const perfilEdad2 = document.getElementById("perfilEdad2");
-const perfilEdad2Div = document.getElementById("perfilEdad2Div");
 const perfilSalario1 = document.getElementById("perfilSalario1");
 const perfilSalario2 = document.getElementById("perfilSalario2");
-const perfilSalario2Div = document.getElementById("perfilSalario2Div");
+const titular2Div = document.getElementById("titular2Div");
 const perfilPagas = document.getElementById("perfilPagas");
 const perfilAhorros = document.getElementById("perfilAhorros");
 const perfilDeuda = document.getElementById("perfilDeuda");
