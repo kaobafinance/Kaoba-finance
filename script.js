@@ -183,9 +183,17 @@ function calcularPerfil(){
 
   let cuota = capitalPosible*(tipoRef*Math.pow(1+tipoRef,n))/(Math.pow(1+tipoRef,n)-1);
   let ltv = yaTieneVivienda.checked?(capitalPosible/parseFloat(perfilPrecio.value)*100):0;
-if(perfilPrimeraSegunda.value === "segunda" && ltv > 70){
+if(perfilPrimeraSegunda.value === "segunda"){
   avisoSegunda.style.display = "block";
-}else{
+  avisoSegunda.innerHTML = `
+    <strong>¡Atención! Segunda residencia:</strong>
+    <ul>
+      <li>Entrada estimada: ${formatMoneyPerfil(entrada)}</li>
+      <li>Gastos aproximados: ${formatMoneyPerfil(gastos)}</li>
+      <li>Total ahorro necesario: ${formatMoneyPerfil(totalAporte)}</li>
+    </ul>
+  `;
+} else {
   avisoSegunda.style.display = "none";
 }
   let lti = ingresosAnuales > 0 ? (cuota + deudas)*12 / ingresosAnuales : 0;
