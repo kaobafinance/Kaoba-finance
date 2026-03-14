@@ -91,3 +91,20 @@ td{
 #tablaContainer{
   display:none;
 }
+.gridTitulares{
+
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:30px;
+margin-top:20px;
+
+}
+
+.titular{
+
+border:1px solid #e5e7eb;
+padding:20px;
+border-radius:10px;
+background:#f9fafb;
+
+}
