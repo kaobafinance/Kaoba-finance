@@ -172,30 +172,40 @@ function calcularPerfil(){
   let cuotaMax = ingresosAnuales*0.35/12 - deudas;
   let capitalPosible = cuotaMax*(Math.pow(1+tipoRef,n)-1)/(tipoRef*(Math.pow(1+tipoRef,n)));
 
-  let gastos=0;
+  // --- Cálculo de gastos y entrada ---
+  let precio = parseFloat(perfilPrecio.value)||0;
+  let impuestos = perfilTipoVivienda.value==="obraNueva"?precio*0.10:precio*parseFloat(perfilComunidad.value);
+  let gastos = impuestos + 2500;
+
+  // Entrada estimada: 20% del precio
+  let entrada = precio * 0.20;
+
+  // Total ahorro necesario
+  let totalAporte = entrada + gastos;
+
   if(yaTieneVivienda.checked){
-    let precio = parseFloat(perfilPrecio.value)||0;
-    let impuestos = perfilTipoVivienda.value==="obraNueva"?precio*0.10:precio*parseFloat(perfilComunidad.value);
-    gastos = impuestos+2500;
     let ahorro = parseFloat(perfilAhorros.value)||0;
     capitalPosible = precio + gastos - ahorro;
   }
 
   let cuota = capitalPosible*(tipoRef*Math.pow(1+tipoRef,n))/(Math.pow(1+tipoRef,n)-1);
-  let ltv = yaTieneVivienda.checked?(capitalPosible/parseFloat(perfilPrecio.value)*100):0;
-if(perfilPrimeraSegunda.value === "segunda"){
-  avisoSegunda.style.display = "block";
-  avisoSegunda.innerHTML = `
-    <strong>¡Atención! Segunda residencia:</strong>
-    <ul>
-      <li>Entrada estimada: ${formatMoneyPerfil(entrada)}</li>
-      <li>Gastos aproximados: ${formatMoneyPerfil(gastos)}</li>
-      <li>Total ahorro necesario: ${formatMoneyPerfil(totalAporte)}</li>
-    </ul>
-  `;
-} else {
-  avisoSegunda.style.display = "none";
-}
+  let ltv = yaTieneVivienda.checked?(capitalPosible/precio*100):0;
+
+  // --- ALERTA SEGUNDA RESIDENCIA ---
+  if(perfilPrimeraSegunda.value === "segunda"){
+    avisoSegunda.style.display = "block";
+    avisoSegunda.innerHTML = `
+      <strong>¡Atención! Segunda residencia:</strong>
+      <ul>
+        <li>Entrada estimada: ${formatMoneyPerfil(entrada)}</li>
+        <li>Gastos aproximados: ${formatMoneyPerfil(gastos)}</li>
+        <li>Total ahorro necesario: ${formatMoneyPerfil(totalAporte)}</li>
+      </ul>
+    `;
+  } else {
+    avisoSegunda.style.display = "none";
+  }
+
   let lti = ingresosAnuales > 0 ? (cuota + deudas)*12 / ingresosAnuales : 0;
 
   perfilCapitalOut.innerText = formatMoneyPerfil(capitalPosible);
@@ -215,7 +225,6 @@ if(perfilPrimeraSegunda.value === "segunda"){
     perfilCompatibleOut.style.color = "red";
   }
 }
-
 // --- EVENTOS AUTOMÁTICOS PERFIL ---
 [
   perfilEdad1, perfilEdad2, perfilSalario1, perfilSalario2,
