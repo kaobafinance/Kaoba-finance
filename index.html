@@ -8,16 +8,17 @@
 <body>
 
 <div class="container">
-
 <h1>Simula tu Hipoteca</h1>
 
+<!-- BOTONES -->
 <div class="selector">
   <button id="btnCalculadora">Calculadora de Hipoteca</button>
   <button id="btnPerfil">Analizar Perfil</button>
 </div>
 
+<!-- EURIBOR -->
 <p class="euriborInfo">
-Euríbor actual (referencia hipotecas): <span id="euriborValor">4.15</span>%
+Euríbor actual aproximado: <span id="euriborValor">4.15</span>%
 </p>
 
 <!-- CALCULADORA -->
@@ -25,45 +26,32 @@ Euríbor actual (referencia hipotecas): <span id="euriborValor">4.15</span>%
 
 <h2>Calculadora de Hipoteca</h2>
 
-<div class="grid calculadora-grid">
+<div class="grid" style="grid-template-columns:1fr; gap:15px;">
 
 <div>
 <label>Importe del préstamo (€)</label>
-<input id="prestamo" type="number" placeholder="Ej: 150000" value="">
+<input id="prestamo" type="number" placeholder="Ej: 200000" value="200000">
 </div>
 
 <div>
 <label>Tipo de interés anual (%)</label>
-<input id="interes" type="number" step="0.01" placeholder="Ej: 3" value="">
+<input id="interes" type="number" step="0.01" placeholder="Ej: 3" value="3">
 </div>
 
 <div>
 <label>Plazo (años)</label>
-<input id="anos" type="number" placeholder="Ej: 30" value="">
+<input id="anos" type="number" placeholder="Ej: 30" value="30">
 </div>
 
 </div>
 
 <div class="cards" id="resultados" style="display:none">
-
-<div class="card">
-<p>Cuota mensual</p>
-<h3 id="cuota"></h3>
+<div class="card"><p>Cuota mensual</p><h3 id="cuota"></h3></div>
+<div class="card"><p>Intereses totales</p><h3 id="interesesTotales"></h3></div>
+<div class="card"><p>Total pagado</p><h3 id="totalPagado"></h3></div>
 </div>
 
-<div class="card">
-<p>Intereses totales</p>
-<h3 id="interesesTotales"></h3>
-</div>
-
-<div class="card">
-<p>Total pagado</p>
-<h3 id="totalPagado"></h3>
-</div>
-
-</div>
-
-<button id="verTabla" style="display:none;">Ver tabla de amortización</button>
+<button id="verTabla" style="display:none">Ver tabla de amortización</button>
 
 <div id="tablaContainer" style="display:none">
 <h2>Tabla de amortización</h2>
@@ -89,7 +77,6 @@ Euríbor actual (referencia hipotecas): <span id="euriborValor">4.15</span>%
 <h2>Analizar Perfil Financiero</h2>
 
 <div class="grid">
-
 <div>
 <label>Número de titulares</label>
 <select id="perfilTitulares">
@@ -97,45 +84,45 @@ Euríbor actual (referencia hipotecas): <span id="euriborValor">4.15</span>%
 <option value="2">2 titulares</option>
 </select>
 </div>
-
 </div>
+
+<!-- GRID TITULARES -->
+<div class="grid" style="grid-template-columns:1fr 1fr; gap:20px">
 
 <!-- TITULAR 1 -->
-<div class="titular-div">
+<div class="titular-div" id="titular1Div">
 <h3>Titular 1</h3>
-<div>
 <label>Edad</label>
-<input id="perfilEdad1" type="number" placeholder="Ej: 35" value="">
-</div>
-<div>
+<input id="perfilEdad1" type="number" placeholder="Ej: 35">
 <label>Ingreso mensual (€)</label>
-<input id="perfilSalario1" type="number" placeholder="Ej: 2500" value="">
-</div>
-<div>
+<input id="perfilSalario1" type="number" placeholder="Ej: 2500">
 <label>Número de pagas</label>
 <input id="perfilPagas" type="number" value="12">
-</div>
-<div>
 <label>Deuda mensual (€)</label>
-<input id="perfilDeuda" type="number" placeholder="Ej: 350" value="">
-</div>
-<div>
+<input id="perfilDeuda1" type="number" placeholder="Ej: 350">
 <label>Otro ingreso mensual (€)</label>
-<input id="perfilOtroIngreso" type="number" placeholder="Opcional" value="">
-</div>
+<input id="perfilOtroIngreso1" type="number" placeholder="Opcional">
+<label>Ahorro disponible (€)</label>
+<input id="perfilAhorros1" type="number" placeholder="Ej: 50000">
 </div>
 
-<!-- TITULAR 2 -->
+<!-- TITULAR 2 OPCIONAL -->
 <div class="titular-div" id="titular2Div" style="display:none">
 <h3>Titular 2</h3>
-<div>
 <label>Edad</label>
-<input id="perfilEdad2" type="number" placeholder="Ej: 33" value="">
-</div>
-<div>
+<input id="perfilEdad2" type="number" placeholder="Ej: 33">
 <label>Ingreso mensual (€)</label>
-<input id="perfilSalario2" type="number" placeholder="Ej: 2000" value="">
+<input id="perfilSalario2" type="number" placeholder="Ej: 2000">
+<label>Número de pagas</label>
+<input id="perfilPagas2" type="number" value="12">
+<label>Deuda mensual (€)</label>
+<input id="perfilDeuda2" type="number" placeholder="Ej: 150">
+<label>Otro ingreso mensual (€)</label>
+<input id="perfilOtroIngreso2" type="number" placeholder="Opcional">
+<label>Ahorro disponible (€)</label>
+<input id="perfilAhorros2" type="number" placeholder="Ej: 20000">
 </div>
+
 </div>
 
 <!-- DATOS VIVIENDA -->
@@ -145,23 +132,14 @@ Euríbor actual (referencia hipotecas): <span id="euriborValor">4.15</span>%
 </div>
 
 <div id="viviendaInfo" style="display:none">
-<div>
 <label>Precio vivienda (€)</label>
-<input id="perfilPrecio" type="number" placeholder="Ej: 200000" value="">
-</div>
-<div>
-<label>Ahorro disponible (€)</label>
-<input id="perfilAhorros" type="number" placeholder="Ej: 50000" value="">
-</div>
-<div>
+<input id="perfilPrecio" type="number" placeholder="Ej: 200000">
 <label>Tipo de vivienda</label>
 <select id="perfilTipoVivienda">
 <option value="primera">Primera vivienda</option>
 <option value="segunda">Segunda residencia</option>
 <option value="local">Local comercial</option>
 </select>
-</div>
-<div>
 <label>Comunidad Autónoma</label>
 <select id="perfilComunidad">
 <option value="0.10">Andalucía (10%)</option>
@@ -172,12 +150,8 @@ Euríbor actual (referencia hipotecas): <span id="euriborValor">4.15</span>%
 <option value="0.08">Castilla y León (8%)</option>
 </select>
 </div>
-<div>
-<label>Plazo máximo (años)</label>
-<input id="perfilPlazo" type="number" value="30">
-</div>
-</div>
 
+<!-- RESULTADOS -->
 <div class="cards">
 <div class="card"><p>Importe de préstamo</p><h3 id="perfilCapital"></h3></div>
 <div class="card"><p>Cuota mensual</p><h3 id="perfilCuota"></h3></div>
