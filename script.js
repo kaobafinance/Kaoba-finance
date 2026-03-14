@@ -134,11 +134,9 @@ function formatMoneyPerfil(n){
 // --- PERFIL ---
 perfilTitulares.addEventListener("change", ()=>{
   if(perfilTitulares.value==="2"){
-    perfilEdad2Div.style.display="block";
-    perfilSalario2Div.style.display="block";
+    titular2Div.style.display="block";
   } else {
-    perfilEdad2Div.style.display="none";
-    perfilSalario2Div.style.display="none";
+    titular2Div.style.display="none";
   }
   calcularPerfil();
 });
