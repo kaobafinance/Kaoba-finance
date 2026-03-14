@@ -4,19 +4,18 @@ const btnPerfil = document.getElementById("btnPerfil");
 const calculadoraDiv = document.getElementById("calculadora");
 const perfilDiv = document.getElementById("perfil");
 
-btnCalculadora.addEventListener("click", () => {
+btnCalculadora.addEventListener("click", ()=>{
   calculadoraDiv.style.display="block";
   perfilDiv.style.display="none";
   calculadoraDiv.scrollIntoView({behavior:"smooth"});
 });
-
-btnPerfil.addEventListener("click", () => {
+btnPerfil.addEventListener("click", ()=>{
   calculadoraDiv.style.display="none";
   perfilDiv.style.display="block";
   perfilDiv.scrollIntoView({behavior:"smooth"});
 });
 
-// --- ELEMENTOS CALCULADORA ---
+// --- CALCULADORA ---
 const prestamoInput = document.getElementById("prestamo");
 const interesInput = document.getElementById("interes");
 const anosInput = document.getElementById("anos");
@@ -28,10 +27,8 @@ const verTablaBtn = document.getElementById("verTabla");
 const tablaContainer = document.getElementById("tablaContainer");
 const tbody = document.querySelector("#tabla tbody");
 
-// --- FORMATO MONEDA ---
 function formatMoney(n){return new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(n);}
 
-// --- CALCULO AUTOMÁTICO ---
 function calcular(){
   const capital = parseFloat(prestamoInput.value)||0;
   const interes = (parseFloat(interesInput.value)/100)/12||0;
@@ -49,9 +46,8 @@ function calcular(){
   tablaContainer.style.display="none";
 }
 
-// --- TABLA AMORTIZACIÓN ---
-verTablaBtn.addEventListener("click",()=>{
-  if(tablaContainer.style.display==="none"){generarTabla();tablaContainer.style.display="block"; verTablaBtn.innerText="Ocultar tabla de amortización";}
+verTablaBtn.addEventListener("click", ()=>{
+  if(tablaContainer.style.display==="none"){generarTabla(); tablaContainer.style.display="block"; verTablaBtn.innerText="Ocultar tabla de amortización";}
   else{tablaContainer.style.display="none"; verTablaBtn.innerText="Ver tabla de amortización";}
 });
 
@@ -76,8 +72,6 @@ function generarTabla(){
     </tr>`;
   }
 }
-
-// --- EVENTOS AUTOMÁTICOS CALCULADORA ---
 [prestamoInput,interesInput,anosInput].forEach(el=>el.addEventListener("input",calcular));
 
 // --- PERFIL ---
@@ -105,10 +99,8 @@ const perfilGastosOut = document.getElementById("perfilGastos");
 const perfilLTIOut = document.getElementById("perfilLTI");
 const perfilCompatibleOut = document.getElementById("perfilCompatible");
 
-// --- FORMATO MONEDA PERFIL ---
 function formatMoneyPerfil(n){return new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(n);}
 
-// --- PERFIL: MOSTRAR TITULAR 2 ---
 perfilTitulares.addEventListener("change",()=>{
   if(perfilTitulares.value==="2"){titular2Div.style.display="block"; salario2Div.style.display="block";}
   else{titular2Div.style.display="none"; salario2Div.style.display="none";}
@@ -118,7 +110,6 @@ perfilTitulares.addEventListener("change",()=>{
 yaTieneVivienda.addEventListener("change",()=>{viviendaInfo.style.display=yaTieneVivienda.checked?"block":"none"; calcularPerfil();});
 perfilTipoVivienda.addEventListener("change",calcularPerfil);
 
-// --- CALCULO PERFIL ---
 function calcularPerfil(){
   let nTitulares = parseInt(perfilTitulares.value)||1;
   let edad1 = parseInt(perfilEdad1.value)||0;
@@ -137,7 +128,6 @@ function calcularPerfil(){
   let cuotaMax = ingresosAnuales*0.35/12 - deudas;
   let capitalPosible = cuotaMax*(Math.pow(1+tipoRef,n)-1)/(tipoRef*(Math.pow(1+tipoRef,n)));
 
-  // SI YA TIENE VIVIENDA
   let gastos=0;
   if(yaTieneVivienda.checked){
     let precio = parseFloat(perfilPrecio.value)||0;
@@ -163,15 +153,11 @@ function calcularPerfil(){
   else{perfilCompatibleOut.innerText="No viable"; perfilCompatibleOut.style.color="red";}
 }
 
-// --- EVENTOS AUTOMÁTICOS PERFIL ---
 [
 perfilTitulares, perfilEdad1, perfilEdad2, perfilSalario1, perfilSalario2,
 perfilPagas, perfilAhorros, perfilDeuda, perfilOtroIngreso,
 yaTieneVivienda, perfilPrecio, perfilTipoVivienda, perfilComunidad, perfilPlazo
 ].forEach(el=>el.addEventListener("input",calcularPerfil));
-
-// --- EURIBOR ---
-document.getElementById("euriborValor").innerText="4.15"; // valor de ejemplo, actualizar dinámico si se desea
 
 // --- INICIALIZAR ---
 calcular();
