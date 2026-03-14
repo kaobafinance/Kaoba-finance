@@ -7,7 +7,7 @@ body{
 }
 
 .container{
-  max-width: 600px;
+  max-width: 900px;
   margin: auto;
   background: #fff;
   padding: 30px;
@@ -116,18 +116,4 @@ input, select{
 .tabla-amortizacion th,
 .tabla-amortizacion td {
   padding: 10px 12px;
-}
-
-/* Resultados de la calculadora en vertical */
-#calculadora .cards {
-  display: flex;
-  flex-direction: column; /* apila verticalmente */
-  gap: 15px;              /* espacio entre tarjetas */
-  align-items: center;    /* centra horizontalmente */
-  margin-top: 25px;
-}
-
-#calculadora .card {
-  min-width: 200px;       /* ancho mínimo para cada tarjeta */
-  width: 80%;             /* ancho relativo al contenedor */
 }
