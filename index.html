@@ -1,96 +1,166 @@
-body{
-font-family:Arial, sans-serif;
-background:#f5f6fa;
-color:#1f2937;
-margin:0;
-padding:20px;
-}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Simula tu Hipoteca</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-.container{
-max-width:950px;
-margin:auto;
-background:#ffffff;
-padding:30px;
-border-radius:12px;
-border:1px solid #d1d5db;
-}
+<div class="container">
+  <h1>Simula tu Hipoteca</h1>
 
-h1,h2{
-color:#0d4f8b;
-}
+  <!-- BOTONES -->
+  <div class="selector">
+    <button id="btnCalculadora">Calculadora de Hipoteca</button>
+    <button id="btnPerfil">Analizar Perfil</button>
+  </div>
 
-.grid-column{
-display:flex;
-flex-direction:column;
-gap:15px;
-margin-bottom:20px;
-}
+  <p class="euriborInfo">
+    Euríbor actual aproximado: <span id="euriborValor">4.15</span>%
+  </p>
 
-label{
-font-size:14px;
-}
+  <!-- CALCULADORA -->
+  <div id="calculadora" class="seccion" style="display:none;">
+    <h2>Calculadora de Hipoteca</h2>
+    <div class="grid columna">
+      <div>
+        <label>Importe del préstamo (€)</label>
+        <input id="prestamo" type="number" placeholder="Ej: 200000" value="200000">
+      </div>
+      <div>
+        <label>Tipo de interés anual (%)</label>
+        <input id="interes" type="number" step="0.01" placeholder="Ej: 3" value="3">
+      </div>
+      <div>
+        <label>Plazo (años)</label>
+        <input id="anos" type="number" placeholder="Ej: 30" value="30">
+      </div>
+    </div>
 
-input,select{
-width:100%;
-padding:10px;
-border:1px solid #d1d5db;
-border-radius:6px;
-font-size:16px;
-}
+    <div class="cards" id="resultados" style="display:none;">
+      <div class="card">
+        <p>Cuota mensual</p>
+        <h3 id="cuota"></h3>
+      </div>
+      <div class="card">
+        <p>Intereses totales</p>
+        <h3 id="interesesTotales"></h3>
+      </div>
+      <div class="card">
+        <p>Total pagado</p>
+        <h3 id="totalPagado"></h3>
+      </div>
+    </div>
 
-button{
-width:100%;
-padding:14px;
-margin-top:15px;
-background:#0d4f8b;
-color:white;
-border:none;
-border-radius:8px;
-cursor:pointer;
-}
+    <button id="verTabla" style="display:none;">Ver tabla de amortización</button>
 
-.cards{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:15px;
-margin-top:25px;
-}
+    <div id="tablaContainer">
+      <h2>Tabla de amortización</h2>
+      <table id="tabla">
+        <thead>
+          <tr>
+            <th>Mes</th>
+            <th>Cuota</th>
+            <th>Interés</th>
+            <th>Capital</th>
+            <th>Restante</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
 
-.card{
-background:#f9fafb;
-padding:15px;
-border-radius:10px;
-text-align:center;
-border:1px solid #d1d5db;
-}
+  <!-- PERFIL FINANCIERO -->
+  <div id="perfil" class="seccion" style="display:none;">
+    <h2>Analizar Perfil Financiero</h2>
 
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:20px;
-font-size:14px;
-}
+    <div class="grid columna">
+      <div>
+        <label>Número de titulares</label>
+        <select id="perfilTitulares">
+          <option value="1">1 titular</option>
+          <option value="2">2 titulares</option>
+        </select>
+      </div>
+      <div>
+        <label>Edad titular 1</label>
+        <input id="perfilEdad1" type="number" placeholder="Ej: 35">
+      </div>
+      <div id="titular2Div" style="display:none;">
+        <label>Edad titular 2</label>
+        <input id="perfilEdad2" type="number" placeholder="Ej: 33">
+      </div>
+      <div>
+        <label>Ingreso mensual titular 1 (€)</label>
+        <input id="perfilSalario1" type="number" placeholder="Ej: 2500">
+      </div>
+      <div id="salario2Div" style="display:none;">
+        <label>Ingreso mensual titular 2 (€)</label>
+        <input id="perfilSalario2" type="number" placeholder="Ej: 2000">
+      </div>
+      <div>
+        <label>Número de pagas al año</label>
+        <input id="perfilPagas" type="number" placeholder="12" value="12">
+      </div>
+      <div>
+        <label>Ahorro disponible (€)</label>
+        <input id="perfilAhorros" type="number" placeholder="Ej: 50000">
+      </div>
+      <div>
+        <label>Deuda mensual (€)</label>
+        <input id="perfilDeuda" type="number" placeholder="Ej: 350">
+      </div>
+      <div>
+        <label>Otro ingreso mensual (€)</label>
+        <input id="perfilOtroIngreso" type="number" placeholder="Opcional">
+      </div>
+      <div>
+        <label>¿Ya tiene vivienda?</label>
+        <input type="checkbox" id="yaTieneVivienda">
+      </div>
+    </div>
 
-th{
-background:#f1f3f6;
-padding:8px;
-}
+    <div id="viviendaInfo" style="display:none;">
+      <div class="grid columna">
+        <div>
+          <label>Precio vivienda (€)</label>
+          <input id="perfilPrecio" type="number" placeholder="Ej: 200000">
+        </div>
+        <div>
+          <label>Tipo de vivienda</label>
+          <select id="perfilTipoVivienda">
+            <option value="primera">Primera vivienda</option>
+            <option value="segunda">Segunda residencia</option>
+            <option value="local">Local comercial</option>
+          </select>
+        </div>
+        <div>
+          <label>Comunidad Autónoma</label>
+          <select id="perfilComunidad">
+            <option value="0.10">Andalucía (10%)</option>
+            <option value="0.06">Madrid (6%)</option>
+            <option value="0.10">Cataluña (10%)</option>
+          </select>
+        </div>
+        <div>
+          <label>Plazo máximo (años)</label>
+          <input id="perfilPlazo" type="number" placeholder="Ej: 30">
+        </div>
+      </div>
+    </div>
 
-td{
-border-bottom:1px solid #e5e7eb;
-padding:6px;
-}
+    <div class="cards">
+      <div class="card"><p>Importe de préstamo</p><h3 id="perfilCapital"></h3></div>
+      <div class="card"><p>Cuota mensual</p><h3 id="perfilCuota"></h3></div>
+      <div class="card"><p>% Financiación (LTV)</p><h3 id="perfilLTV"></h3></div>
+      <div class="card"><p>Gastos</p><h3 id="perfilGastos"></h3></div>
+      <div class="card"><p>LTI</p><h3 id="perfilLTI"></h3></div>
+      <div class="card"><p>Compatibilidad</p><h3 id="perfilCompatible"></h3></div>
+    </div>
 
-#tablaContainer,#viviendaInfo{
-display:none;
-}
-
-.euriborInfo{
-margin-top:10px;
-color:#0d4f8b;
-font-weight:bold;
-}
-
+  </div>
 </div>
 
 <script src="script.js"></script>
