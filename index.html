@@ -192,5 +192,21 @@ Ver cuadro de amortización
 </div>
 
 <script src="script.js"></script>
+
+<script>
+const perfilTitulares = document.getElementById("perfilTitulares");
+const titular2Div = document.getElementById("titular2Div");
+
+perfilTitulares.onchange = () => {
+  if (perfilTitulares.value === "2") {
+    titular2Div.style.display = "flex"; 
+  } else {
+    titular2Div.style.display = "none"; 
+  }
+
+  calcularPerfil();
+};
+</script>
+  
 </body>
 </html>
