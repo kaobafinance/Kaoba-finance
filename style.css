@@ -82,3 +82,33 @@ input, select{
   border-radius: 10px;
   background:#f9fafb;
 }
+
+/* Tabla de amortización */
+.tabla-amortizacion {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.tabla-amortizacion th,
+.tabla-amortizacion td {
+  padding: 8px;
+  text-align: right;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tabla-amortizacion th {
+  background: #f1f3f6;
+  text-align: center;
+}
+
+.tabla-amortizacion tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+/* Responsive: permite scroll horizontal en móviles */
+#tablaContainer {
+  overflow-x: auto;
+  margin-top: 15px;
+}
