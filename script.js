@@ -152,7 +152,7 @@ yaTieneVivienda.addEventListener("change", ()=>{
   calcularPerfil();
 });
 
-ffunction calcularPerfil(){
+function calcularPerfil(){
   let nTitulares = parseInt(perfilTitulares.value)||1;
   let edad1 = parseInt(perfilEdad1.value)||0;
   let edad2 = nTitulares===2?parseInt(perfilEdad2.value)||0:0;
