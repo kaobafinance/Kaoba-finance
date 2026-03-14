@@ -173,20 +173,15 @@ function calcularPerfil(){
   let cuotaMax = ingresosAnuales*0.35/12 - deudas;
   let capitalPosible = cuotaMax*(Math.pow(1+tipoRef,n)-1)/(tipoRef*(Math.pow(1+tipoRef,n)));
 
-  // --- Cálculo de precio, impuestos y gastos ---
+  // Precio, impuestos y gastos
   let precio = parseFloat(perfilPrecio.value)||0;
   let impuestos = perfilTipoVivienda.value==="obraNueva"?precio*0.10:precio*parseFloat(perfilComunidad.value);
   let gastos = impuestos + 2500;
 
-  // --- Entrada editable ---
+  // Entrada editable
   let entradaManual = parseFloat(document.getElementById("perfilEntrada")?.value) || null;
-  let entrada;
-  if(entradaManual !== null && !isNaN(entradaManual)){
-    entrada = entradaManual; // usa el valor del input manual
-  } else {
-    // Por defecto: segunda 30%, primera 20%
-    entrada = perfilPrimeraSegunda.value === "segunda" ? precio*0.30 : precio*0.20;
-  }
+  let entrada = (entradaManual !== null && !isNaN(entradaManual)) ? entradaManual
+                : (perfilPrimeraSegunda.value === "segunda" ? precio*0.30 : precio*0.20);
 
   let ahorros = parseFloat(perfilAhorros.value)||0;
   let faltanteEntrada = Math.max(entrada - ahorros, 0);
@@ -198,30 +193,14 @@ function calcularPerfil(){
   }
 
   let cuota = capitalPosible*(tipoRef*Math.pow(1+tipoRef,n))/(Math.pow(1+tipoRef,n)-1);
-  let ltv = yaTieneVivienda.checked?(capitalPosible/precio*100):0;
+  let ltv = precio > 0 ? (capitalPosible / precio * 100) : 0;
 
-  // --- ALERTA SEGUNDA RESIDENCIA ---
-  if(perfilPrimeraSegunda.value === "segunda"){
+  // ALERTA SEGUNDA RESIDENCIA: solo si LTV > 70%
+  if(perfilPrimeraSegunda.value === "segunda" && ltv > 70){
     avisoSegunda.style.display = "block";
-
-    let colorAlerta;
-    if(faltanteEntrada <= 0){
-      colorAlerta = "#d4edda"; // verde
-    } else if(faltanteEntrada <= entrada * 0.5){
-      colorAlerta = "#fff3cd"; // naranja
-    } else {
-      colorAlerta = "#f8d7da"; // rojo
-    }
-
-    avisoSegunda.style.backgroundColor = colorAlerta;
-    avisoSegunda.style.padding = "12px";
-    avisoSegunda.style.borderRadius = "8px";
-    avisoSegunda.style.border = "1px solid #ccc";
-    avisoSegunda.style.marginTop = "10px";
-
     avisoSegunda.innerHTML = `
-      <strong>¡Atención! Segunda residencia:</strong>
-      <ul style="margin:5px 0 0 18px; padding:0;">
+      <strong>¡Atención! Segunda residencia con alta financiación:</strong>
+      <ul>
         <li>Entrada estimada: ${formatMoneyPerfil(entrada)}</li>
         <li>Gastos aproximados: ${formatMoneyPerfil(gastos)}</li>
         <li>Ahorros disponibles: ${formatMoneyPerfil(ahorros)}</li>
@@ -233,7 +212,7 @@ function calcularPerfil(){
     avisoSegunda.style.display = "none";
   }
 
-  // --- LTI y compatibilidad ---
+  // LTI y compatibilidad
   let lti = ingresosAnuales > 0 ? (cuota + deudas)*12 / ingresosAnuales : 0;
 
   perfilCapitalOut.innerText = formatMoneyPerfil(capitalPosible);
@@ -254,7 +233,7 @@ function calcularPerfil(){
   }
 }
 
-// --- Evento para entrada editable ---
+// Evento para actualizar alerta si se cambia la entrada manual
 document.getElementById("perfilEntrada")?.addEventListener("input", calcularPerfil);
 
 // --- EVENTOS AUTOMÁTICOS PERFIL ---
