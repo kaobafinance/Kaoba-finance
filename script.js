@@ -249,7 +249,7 @@ document.getElementById("perfilEntrada")?.addEventListener("input", calcularPerf
 [
   perfilEdad1, perfilEdad2, perfilSalario1, perfilSalario2,
   perfilPagas, perfilAhorros, perfilDeuda, perfilOtroIngreso,
-  perfilPrecio, perfilPlazo
+  perfilPrecio, 
 ].forEach(el => el.addEventListener("input", calcularPerfil));
 
 [
