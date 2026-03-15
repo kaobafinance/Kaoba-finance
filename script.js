@@ -271,20 +271,20 @@ leadEnviar.addEventListener("click", () => {
   leadForm.reset();
 });
 
-// --- BANNER DE COOKIES ---
-document.addEventListener('DOMContentLoaded', () => {
-  const banner = document.getElementById('cookie-banner');
-  const btnAceptar = document.getElementById('btnAceptarCookies');
-  const btnRechazar = document.getElementById('btnRechazarCookies');
+/* ==============================
+   BANNER DE COOKIES
+============================== */
+const banner = document.getElementById('cookie-banner');
+const btnAceptar = document.getElementById('btnAceptarCookies');
+const btnRechazar = document.getElementById('btnRechazarCookies');
 
-  if (!banner) return;
-
-  // Comprobar decisión previa en localStorage
+if (banner) {
+  // Mostrar u ocultar banner según decisión previa
   const cookiesAceptadas = localStorage.getItem('cookiesAceptadas');
   if (cookiesAceptadas === 'true' || cookiesAceptadas === 'false') {
-    banner.style.display = 'none'; // Oculta banner si ya hay decisión
+    banner.style.display = 'none';
   } else {
-    banner.style.display = 'block'; // Mostrar banner si no hay decisión
+    banner.style.display = 'block';
   }
 
   // Botón Aceptar
@@ -293,7 +293,6 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('cookiesAceptadas', 'true');
       banner.style.display = 'none';
       console.log("Cookies aceptadas ✅");
-      // Aquí puedes inicializar scripts de analítica si deseas
     });
   }
 
@@ -303,7 +302,6 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('cookiesAceptadas', 'false');
       banner.style.display = 'none';
       console.log("Cookies rechazadas ❌");
-      // Evitar cargar scripts de analítica o terceros
     });
   }
-});
+}
