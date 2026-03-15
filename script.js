@@ -281,15 +281,13 @@ if (banner && btnAceptar && btnRechazar) {
 
   // Botón Aceptar
   btnAceptar.addEventListener('click', () => {
-    localStorage.setItem('cookiesAceptadas', 'true');
-    banner.style.display = 'none';
-    console.log("Cookies aceptadas ✅");
-  });
+  localStorage.setItem('cookiesAceptadas', 'true');
+  banner.style.setProperty('display', 'none', 'important'); // fuerza ocultar
+  console.log("Cookies aceptadas ✅");
+})
 
-  // Botón Rechazar
-  btnRechazar.addEventListener('click', () => {
-    localStorage.setItem('cookiesAceptadas', 'false');
-    banner.style.display = 'none';
-    console.log("Cookies rechazadas ❌");
-  });
-});
+btnRechazar.addEventListener('click', () => {
+  localStorage.setItem('cookiesAceptadas', 'false');
+  banner.style.setProperty('display', 'none', 'important'); // fuerza ocultar
+  console.log("Cookies rechazadas ❌");
+})
