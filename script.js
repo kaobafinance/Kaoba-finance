@@ -238,20 +238,23 @@ if(perfilPrimeraSegunda.value === "segunda" && ltv > 70){
   }
 }
 
-perfilPlazo.addEventListener("input", ()=>{
+perfilPlazo.addEventListener("change", ()=>{
   plazoEditadoPorUsuario = true;
+  calcularPerfil();
 });
 
 // Evento para actualizar alerta si se cambia la entrada manual
 document.getElementById("perfilEntrada")?.addEventListener("input", calcularPerfil);
 
 // --- EVENTOS AUTOMÁTICOS PERFIL ---
-[
+  [
   perfilEdad1, perfilEdad2, perfilSalario1, perfilSalario2,
   perfilPagas, perfilAhorros, perfilDeuda, perfilOtroIngreso,
-  perfilPrecio, 
-].forEach(el => el.addEventListener("input", calcularPerfil));
-
+  perfilPrecio
+].forEach(el => {
+  el.addEventListener("input", calcularPerfil);
+  el.addEventListener("change", calcularPerfil);
+});
 [
   perfilTitulares, perfilTipoVivienda, perfilComunidad, perfilPrimeraSegunda
 ].forEach(el => el.addEventListener("change", calcularPerfil));
