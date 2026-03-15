@@ -273,22 +273,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!banner || !btnAceptar || !btnRechazar) return;
 
-  // Mostrar u ocultar banner según decisión previa
   const cookiesAceptadas = localStorage.getItem('cookiesAceptadas');
   if (cookiesAceptadas === 'true' || cookiesAceptadas === 'false') {
     banner.style.display = 'none';
   } else {
-    banner.style.display = 'flex'; // flex porque tu CSS lo usa
+    banner.style.display = 'flex';
   }
 
-  // Función común para ocultar banner y guardar decisión
   function ocultarBanner(valor) {
     localStorage.setItem('cookiesAceptadas', valor);
-    banner.style.display = 'none';
+    banner.style.setProperty('display', 'none', 'important');
     console.log(valor === 'true' ? "Cookies aceptadas ✅" : "Cookies rechazadas ❌");
   }
 
-  // Botones
   btnAceptar.addEventListener('click', () => ocultarBanner('true'));
   btnRechazar.addEventListener('click', () => ocultarBanner('false'));
 });
