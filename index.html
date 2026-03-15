@@ -5,7 +5,6 @@
 <title>Simula tu Hipoteca</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <link rel="stylesheet" href="style.css">
-
 <!-- jsPDF para generar PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
@@ -136,16 +135,18 @@ Euribor actual (referencia hipotecas): 2,25% a marzo 2026
 
   <!-- FORMULARIO DE LEADS -->
   <div id="leadFormContainer">
-    <h3>Recibe tu simulación por correo</h3>
-    <label>Nombre</label>
-    <input type="text" id="leadNombre" placeholder="Ej: Juan Pérez" required>
-    <label>Correo electrónico</label>
-    <input type="email" id="leadEmail" placeholder="Ej: juan@email.com" required>
-    <label>
-      <input type="checkbox" id="leadConsentimiento" required>
-      Acepto la <a href="politica-privacidad.html" target="_blank">política de privacidad</a>.
-    </label>
-    <button id="enviarLead">Recibir simulación</button>
+    <form id="leadForm">
+      <h3>Recibe tu simulación por correo</h3>
+      <label>Nombre</label>
+      <input type="text" id="leadNombre" placeholder="Ej: Juan Pérez" required>
+      <label>Correo electrónico</label>
+      <input type="email" id="leadEmail" placeholder="Ej: juan@email.com" required>
+      <label>
+        <input type="checkbox" id="leadConsentimiento" required>
+        Acepto la <a href="politica-privacidad.html" target="_blank">política de privacidad</a>.
+      </label>
+      <button type="button" id="enviarLead">Recibir simulación</button>
+    </form>
     <button id="descargarPDF">Descargar PDF</button>
     <p id="leadMensaje" class="lead-mensaje">¡Simulación lista! Puedes descargar tu PDF.</p>
   </div>
@@ -164,6 +165,6 @@ Euribor actual (referencia hipotecas): 2,25% a marzo 2026
   <button id="btnRechazarCookies">Rechazar</button>
 </div>
 
-<script src="script.js"></script>
+<script src="script.js" defer></script>
 </body>
 </html>
