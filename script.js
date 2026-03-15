@@ -184,7 +184,6 @@ function calcularPerfil(){
   let ahorros = parseFloat(perfilAhorros.value)||0;
   let entrada = (perfilPrimeraSegunda.value==="segunda")? precio*0.30 : precio*0.20;
   let faltanteEntrada = Math.max(entrada - ahorros, 0);
-  let totalAporte = faltanteEntrada + gastos;
 
   if(yaTieneVivienda.checked){
     capitalPosible = precio + gastos - ahorros;
@@ -261,47 +260,40 @@ leadEnviar.addEventListener("click", () => {
   doc.text(`LTI: ${perfilLTIOut.innerText}`, 20, 120);
   doc.text(`Compatibilidad: ${perfilCompatibleOut.innerText}`, 20, 130);
 
-  // Guardar PDF localmente
   doc.save("Simulacion_Hipoteca.pdf");
-
-  // Mensaje opcional de confirmación
   alert(`Simulación generada y enviada a: ${leadEmail.value}\nGracias ${leadNombre.value}!`);
-
-  // Limpiar formulario
   leadForm.reset();
 });
 
 /* ==============================
    BANNER DE COOKIES
 ============================== */
-const banner = document.getElementById('cookie-banner');
-const btnAceptar = document.getElementById('btnAceptarCookies');
-const btnRechazar = document.getElementById('btnRechazarCookies');
+document.addEventListener('DOMContentLoaded', () => {
+  const banner = document.getElementById('cookie-banner');
+  const btnAceptar = document.getElementById('btnAceptarCookies');
+  const btnRechazar = document.getElementById('btnRechazarCookies');
 
-if (banner) {
+  if (!banner) return;
+
   // Mostrar u ocultar banner según decisión previa
   const cookiesAceptadas = localStorage.getItem('cookiesAceptadas');
   if (cookiesAceptadas === 'true' || cookiesAceptadas === 'false') {
     banner.style.display = 'none';
   } else {
-    banner.style.display = 'block';
+    banner.style.display = 'flex'; // usar flex para tu CSS
   }
 
   // Botón Aceptar
-  if (btnAceptar) {
-    btnAceptar.addEventListener('click', () => {
-      localStorage.setItem('cookiesAceptadas', 'true');
-      banner.style.display = 'none';
-      console.log("Cookies aceptadas ✅");
-    });
-  }
+  btnAceptar?.addEventListener('click', () => {
+    localStorage.setItem('cookiesAceptadas', 'true');
+    banner.style.display = 'none';
+    console.log("Cookies aceptadas ✅");
+  });
 
   // Botón Rechazar
-  if (btnRechazar) {
-    btnRechazar.addEventListener('click', () => {
-      localStorage.setItem('cookiesAceptadas', 'false');
-      banner.style.display = 'none';
-      console.log("Cookies rechazadas ❌");
-    });
-  }
-}
+  btnRechazar?.addEventListener('click', () => {
+    localStorage.setItem('cookiesAceptadas', 'false');
+    banner.style.display = 'none';
+    console.log("Cookies rechazadas ❌");
+  });
+});
