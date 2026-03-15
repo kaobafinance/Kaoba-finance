@@ -235,8 +235,8 @@ calcularPerfil();
 const leadForm = document.getElementById("leadForm");
 const leadNombre = document.getElementById("leadNombre");
 const leadEmail = document.getElementById("leadEmail");
-const leadConsent = document.getElementById("leadConsent");
-const leadEnviar = document.getElementById("leadEnviar");
+const leadConsent = document.getElementById("leadConsentimiento");
+const leadEnviar = document.getElementById("enviarLead");
 
 leadEnviar.addEventListener("click", () => {
   if (!leadNombre.value || !leadEmail.value || !leadConsent.checked) {
