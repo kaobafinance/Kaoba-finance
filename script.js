@@ -271,3 +271,23 @@ enviarLeadBtn.addEventListener("click", ()=>{
   // Aquí puedes hacer fetch a tu API para enviar los datos por email
   // Ej: fetch('/api/sendEmail',{method:'POST', body: JSON.stringify({nombre: leadNombre.value,email:leadEmail.value, ...})})
 });
+// --- ENVIO SIMULACION PDF ---
+const leadForm = document.getElementById("leadForm");
+const leadNombre = document.getElementById("leadNombre");
+const leadEmail = document.getElementById("leadEmail");
+const leadConsent = document.getElementById("leadConsent");
+const leadEnviar = document.getElementById("leadEnviar");
+
+leadEnviar.addEventListener("click", () => {
+  if (!leadNombre.value || !leadEmail.value || !leadConsent.checked) {
+    alert("Por favor, completa todos los campos y acepta la política de privacidad.");
+    return;
+  }
+
+  // Aquí se puede integrar con tu backend / servicio de email
+  // Para pruebas locales simplemente mostramos un alert
+  alert(`Simulación enviada a: ${leadEmail.value}\nGracias ${leadNombre.value}!`);
+
+  // Opcional: limpiar formulario
+  leadForm.reset();
+});
