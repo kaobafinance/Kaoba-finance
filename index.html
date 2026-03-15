@@ -62,7 +62,7 @@ Euribor actual (referencia hipotecas): 2,25% a marzo 2026
 <input id="anos" type="number" placeholder="Ej: 30">
 </div>
 
-<div class="cards" id="resultados" style="display:none;">
+<div class="cards" id="resultados">
 <div class="card"><p>Cuota mensual</p><h3 id="cuota"></h3></div>
 <div class="card"><p>Intereses totales</p><h3 id="interesesTotales"></h3></div>
 <div class="card"><p>Total pagado</p><h3 id="totalPagado"></h3></div>
@@ -90,6 +90,7 @@ Euribor actual (referencia hipotecas): 2,25% a marzo 2026
 </select>
 
 <div class="titulares-grid">
+<!-- TITULAR 1 -->
 <div class="titular">
 <label>Edad titular 1</label>
 <input id="perfilEdad1" type="number" min="18" max="75" placeholder="Ej: 35">
@@ -99,6 +100,7 @@ Euribor actual (referencia hipotecas): 2,25% a marzo 2026
 <input id="perfilPagas" type="number" value="12">
 </div>
 
+<!-- TITULAR 2 -->
 <div class="titular" id="titular2Div" style="display:none;">
 <label>Edad titular 2</label>
 <input id="perfilEdad2" type="number" min="18" max="75" placeholder="Ej: 33">
@@ -118,6 +120,7 @@ Euribor actual (referencia hipotecas): 2,25% a marzo 2026
 <input type="checkbox" id="yaTieneVivienda">
 </div>
 
+<!-- INFO VIVIENDA -->
 <div id="viviendaInfo" class="titular" style="display:none;">
 <label>Precio vivienda (€)</label>
 <input id="perfilPrecio" type="number" placeholder="Ej: 200000">
@@ -144,6 +147,7 @@ Euribor actual (referencia hipotecas): 2,25% a marzo 2026
 <input id="perfilPlazo" type="number" placeholder="Máximo según edad">
 </div>
 
+<!-- RESULTADOS PERFIL -->
 <div class="cards" id="perfilResultados">
 <div class="card"><p>Importe de préstamo</p><h3 id="perfilCapital"></h3></div>
 <div class="card"><p>Cuota mensual</p><h3 id="perfilCuota"></h3></div>
@@ -181,7 +185,6 @@ Acepto la <a href="politica-privacidad.html" target="_blank">política de privac
 </div>
 
 </div> <!-- FIN PERFIL -->
-
 </div> <!-- FIN CONTAINER -->
 
 <!-- BANNER DE COOKIES -->
@@ -194,6 +197,22 @@ Acepto la <a href="politica-privacidad.html" target="_blank">política de privac
 </div>
 
 <script>
+// --- BOTONES PRINCIPALES ---
+const btnCalculadora = document.getElementById("btnCalculadora");
+const btnPerfil = document.getElementById("btnPerfil");
+const calculadora = document.getElementById("calculadora");
+const perfil = document.getElementById("perfil");
+
+btnCalculadora.addEventListener("click", () => {
+  calculadora.style.display = "block";
+  perfil.style.display = "none";
+});
+
+btnPerfil.addEventListener("click", () => {
+  perfil.style.display = "block";
+  calculadora.style.display = "none";
+});
+
 // --- COOKIES ---
 function aceptarCookies(){
   localStorage.setItem("cookiesAceptadas","true");
@@ -220,8 +239,8 @@ enviarLeadBtn.addEventListener("click", () => {
     alert("Debes completar el formulario y aceptar la política de privacidad.");
     return;
   }
-  leadMensaje.style.display = "block";
-  // Aquí podrías enviar los datos a un servidor
+  leadMensaje.style.display="block";
+  // Aquí podrías enviar los datos a tu servidor
 });
 
 descargarPDFBtn.addEventListener("click", () => {
