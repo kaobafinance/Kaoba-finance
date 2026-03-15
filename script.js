@@ -292,6 +292,4 @@ if (banner && btnAceptar && btnRechazar) {
     banner.style.display = 'none';
     console.log("Cookies rechazadas ❌");
   });
-}rechazadas ❌");
-  });
 });
