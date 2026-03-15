@@ -238,6 +238,10 @@ if(perfilPrimeraSegunda.value === "segunda" && ltv > 70){
   }
 }
 
+perfilPlazo.addEventListener("input", ()=>{
+  plazoEditadoPorUsuario = true;
+});
+
 perfilPlazo.addEventListener("change", ()=>{
   plazoEditadoPorUsuario = true;
   calcularPerfil();
