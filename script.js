@@ -134,11 +134,7 @@ function formatMoneyPerfil(n){
 
 // --- PERFIL ---
 perfilTitulares.addEventListener("change", ()=>{
-  if(perfilTitulares.value==="2"){
-    titular2Div.style.display="block";
-  } else {
-    titular2Div.style.display="none";
-  }
+  titular2Div.style.display = perfilTitulares.value==="2" ? "block" : "none";
   calcularPerfil();
 });
 
@@ -153,7 +149,6 @@ yaTieneVivienda.addEventListener("change", ()=>{
 });
 
 // control del plazo automático
-let plazoAutoCalculado = false;
 let plazoEditadoPorUsuario = false;
 
 // --- PERFIL ---
@@ -162,15 +157,12 @@ function calcularPerfil(){
   let edad1 = parseInt(perfilEdad1.value)||0;
   let edad2 = nTitulares===2?parseInt(perfilEdad2.value)||0:0;
   let maxEdad = Math.max(edad1,edad2);
-let plazoMax = Math.min(30,75-maxEdad);
+  let plazoMax = Math.min(30,75-maxEdad);
 
-// establecer límite máximo
-perfilPlazo.max = plazoMax>0?plazoMax:0;
-
-// solo autocalcular la primera vez
-if(!plazoEditadoPorUsuario){
-  perfilPlazo.value = plazoMax>0?plazoMax:0;
-}
+  perfilPlazo.max = plazoMax>0?plazoMax:0;
+  if(!plazoEditadoPorUsuario){
+    perfilPlazo.value = plazoMax>0?plazoMax:0;
+  }
   if(plazoMax <= 0) return;
 
   let ingresos = (parseFloat(perfilSalario1.value)||0) + (nTitulares===2?(parseFloat(perfilSalario2.value)||0):0) + (parseFloat(perfilOtroIngreso.value)||0);
@@ -180,7 +172,7 @@ if(!plazoEditadoPorUsuario){
 
   let tipoRef = 0.028/12;
   let plazo = parseInt(perfilPlazo.value) || plazoMax;
-let n = plazo*12;
+  let n = plazo*12;
   let cuotaMax = ingresosAnuales*0.35/12 - deudas;
   let capitalPosible = cuotaMax*(Math.pow(1+tipoRef,n)-1)/(tipoRef*(Math.pow(1+tipoRef,n)));
 
@@ -189,85 +181,93 @@ let n = plazo*12;
   let impuestos = perfilTipoVivienda.value==="obraNueva"?precio*0.10:precio*parseFloat(perfilComunidad.value);
   let gastos = impuestos + 2500;
 
-  // Entrada editable
-  let entradaManual = parseFloat(document.getElementById("perfilEntrada")?.value) || null;
-  let entrada = (entradaManual !== null && !isNaN(entradaManual)) ? entradaManual
-                : (perfilPrimeraSegunda.value === "segunda" ? precio*0.30 : precio*0.20);
-
   let ahorros = parseFloat(perfilAhorros.value)||0;
+  let entrada = (perfilPrimeraSegunda.value==="segunda")? precio*0.30 : precio*0.20;
   let faltanteEntrada = Math.max(entrada - ahorros, 0);
   let totalAporte = faltanteEntrada + gastos;
 
-  // Si ya tiene vivienda
   if(yaTieneVivienda.checked){
     capitalPosible = precio + gastos - ahorros;
   }
 
   let cuota = capitalPosible*(tipoRef*Math.pow(1+tipoRef,n))/(Math.pow(1+tipoRef,n)-1);
-  let ltv = precio > 0 ? (capitalPosible / precio * 100) : 0;
+  let ltv = precio>0 ? (capitalPosible/precio*100) : 0;
 
-// --- ALERTA SEGUNDA RESIDENCIA ULTRACOMPACTA ---
-if(perfilPrimeraSegunda.value === "segunda" && ltv > 70){
-    avisoSegunda.style.display = "block";
-    avisoSegunda.innerHTML = `
-      <strong>¡Atención! Segunda residencia con alta financiación:</strong>
-      <p>Necesario aportar ${formatMoneyPerfil(faltanteEntrada)}, más gastos aproximados ${formatMoneyPerfil(gastos)}</p>
-    `;
-} else {
-    avisoSegunda.style.display = "none";
-}
+  // Alerta segunda residencia
+  if(perfilPrimeraSegunda.value === "segunda" && ltv>70){
+    avisoSegunda.style.display="block";
+    avisoSegunda.innerHTML = `<strong>¡Atención! Segunda residencia con alta financiación:</strong>
+      <p>Necesario aportar ${formatMoneyPerfil(faltanteEntrada)}, más gastos aproximados ${formatMoneyPerfil(gastos)}</p>`;
+  } else { avisoSegunda.style.display="none"; }
 
   // LTI y compatibilidad
-  let lti = ingresosAnuales > 0 ? (cuota + deudas)*12 / ingresosAnuales : 0;
+  let lti = ingresosAnuales>0 ? (cuota+deudas)*12/ingresosAnuales : 0;
 
   perfilCapitalOut.innerText = formatMoneyPerfil(capitalPosible);
   perfilCuotaOut.innerText = formatMoneyPerfil(cuota);
   perfilLTVOut.innerText = ltv>0?ltv.toFixed(1)+"%":"-";
   perfilGastosOut.innerText = formatMoneyPerfil(gastos);
-  perfilLTIOut.innerText = (lti*100).toFixed(1) + "%";
+  perfilLTIOut.innerText = (lti*100).toFixed(1)+"%";
 
-  if(lti <= 0.35){
-    perfilCompatibleOut.innerText = "Compatible";
-    perfilCompatibleOut.style.color = "green";
-  } else if(lti <= 0.40){
-    perfilCompatibleOut.innerText = "Aceptable";
-    perfilCompatibleOut.style.color = "orange";
-  } else {
-    perfilCompatibleOut.innerText = "No viable";
-    perfilCompatibleOut.style.color = "red";
-  }
+  if(lti<=0.35){ perfilCompatibleOut.innerText="Compatible"; perfilCompatibleOut.style.color="green"; }
+  else if(lti<=0.40){ perfilCompatibleOut.innerText="Aceptable"; perfilCompatibleOut.style.color="orange"; }
+  else{ perfilCompatibleOut.innerText="No viable"; perfilCompatibleOut.style.color="red"; }
 }
 
-perfilPlazo.addEventListener("input", ()=>{
-  plazoEditadoPorUsuario = true;
-});
+perfilPlazo.addEventListener("input", ()=>{ plazoEditadoPorUsuario = true; });
+perfilPlazo.addEventListener("change", ()=>{ plazoEditadoPorUsuario = true; calcularPerfil(); });
 
-perfilPlazo.addEventListener("change", ()=>{
-  plazoEditadoPorUsuario = true;
-  calcularPerfil();
-});
-
-// Evento para actualizar alerta si se cambia la entrada manual
-document.getElementById("perfilEntrada")?.addEventListener("input", calcularPerfil);
-
-// --- EVENTOS AUTOMÁTICOS PERFIL ---
-  [
+[
   perfilEdad1, perfilEdad2, perfilSalario1, perfilSalario2,
   perfilPagas, perfilAhorros, perfilDeuda, perfilOtroIngreso,
   perfilPrecio
-].forEach(el => {
-  el.addEventListener("input", calcularPerfil);
-  el.addEventListener("change", calcularPerfil);
-});
+].forEach(el => { el.addEventListener("input", calcularPerfil); el.addEventListener("change", calcularPerfil); });
+
 [
   perfilTitulares, perfilTipoVivienda, perfilComunidad, perfilPrimeraSegunda
 ].forEach(el => el.addEventListener("change", calcularPerfil));
 
-// --- Mostrar/ocultar segundo titular ---
-perfilTitulares.addEventListener("change", ()=>{
-  titular2Div.style.display = perfilTitulares.value==="2" ? "block" : "none";
-  calcularPerfil();
-});
+perfilTitulares.addEventListener("change", ()=>{ titular2Div.style.display = perfilTitulares.value==="2" ? "block" : "none"; calcularPerfil(); });
 
 // --- Inicializar ---
 calcularPerfil();
+
+// --- PDF Y LEAD FORM ---
+const leadNombre = document.getElementById("leadNombre");
+const leadEmail = document.getElementById("leadEmail");
+const leadTelefono = document.getElementById("leadTelefono");
+const leadConsentimiento = document.getElementById("leadConsentimiento");
+const enviarLeadBtn = document.getElementById("enviarLead");
+const descargarPDFBtn = document.getElementById("descargarPDF");
+const leadMensaje = document.getElementById("leadMensaje");
+
+// Generar PDF
+descargarPDFBtn.addEventListener("click", ()=>{
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.setFontSize(18);
+  doc.text("Simulación Hipotecaria",20,20);
+  doc.setFontSize(12);
+  doc.text(`Nombre: ${leadNombre.value || "-"}`,20,40);
+  doc.text(`Correo: ${leadEmail.value || "-"}`,20,50);
+  doc.text(`Teléfono: ${leadTelefono.value || "-"}`,20,60);
+  doc.text("Resultados del perfil financiero:",20,80);
+  doc.text(`Capital posible: ${perfilCapitalOut.innerText}`,20,90);
+  doc.text(`Cuota mensual: ${perfilCuotaOut.innerText}`,20,100);
+  doc.text(`% Financiación (LTV): ${perfilLTVOut.innerText}`,20,110);
+  doc.text(`Gastos estimados: ${perfilGastosOut.innerText}`,20,120);
+  doc.text(`LTI: ${perfilLTIOut.innerText}`,20,130);
+  doc.text(`Compatibilidad: ${perfilCompatibleOut.innerText}`,20,140);
+  doc.save("Simulacion_Hipoteca.pdf");
+});
+
+// Enviar datos del lead (puedes conectar con backend o servicio externo)
+enviarLeadBtn.addEventListener("click", ()=>{
+  if(!leadNombre.value || !leadEmail.value || !leadConsentimiento.checked){
+    alert("Debes completar el formulario y aceptar la política de privacidad.");
+    return;
+  }
+  leadMensaje.style.display = "block";
+  // Aquí puedes hacer fetch a tu API para enviar los datos por email
+  // Ej: fetch('/api/sendEmail',{method:'POST', body: JSON.stringify({nombre: leadNombre.value,email:leadEmail.value, ...})})
+});
