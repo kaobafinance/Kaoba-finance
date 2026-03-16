@@ -22,64 +22,88 @@
   
 <p class="euribor-info">
 Euribor actual (referencia hipotecas): 2,25% a marzo 2026
-  <section class="operaciones-section">
+<section class="operaciones-section">
   <h2>¿Qué tipo de operación quieres realizar?</h2>
-  <p class="operaciones-sub">
-    Selecciona una opción antes de analizar tu perfil.
-  </p>
+  <p class="operaciones-sub">Selecciona una opción antes de analizar tu perfil.</p>
 
+  <!-- Comprar primera vivienda -->
   <div class="operacion-card" onclick="abrirOperacion('compra')">
     <div class="card-header">🏡 Comprar primera vivienda</div>
     <div id="compra" class="card-content">
       <h4>Cómo funciona</h4>
-      <p>Financiación habitual hasta el 80% del valor.</p>
-
-      <h4>Requisitos</h4>
+      <p>El banco financia hasta el 80% del valor de compra o tasación.</p>
+      <h4>Requisitos habituales</h4>
       <ul>
-        <li>Estabilidad laboral</li>
-        <li>Endeudamiento menor al 35%</li>
-        <li>Ahorros del 30% aprox.</li>
+        <li>Contrato indefinido o ingresos estables</li>
+        <li>Ratio de endeudamiento &lt; 35%</li>
+        <li>Ahorros del 20% + gastos (~10%)</li>
       </ul>
-
-      <button onclick="irAnalisis(event,'Compra Primera Vivienda')">
-        Analizar mi perfil
-      </button>
+      <h4>Gastos aproximados</h4>
+      <ul>
+        <li>Notaría y registro: 1.000–1.500€</li>
+        <li>Tasación: 300–500€</li>
+        <li>Impuestos (ITP o IVA según vivienda)</li>
+      </ul>
+      <h4>Procedimiento</h4>
+      <ol>
+        <li>Estudio de viabilidad</li>
+        <li>Tasación</li>
+        <li>Aprobación bancaria</li>
+        <li>Firma ante notario</li>
+      </ol>
+      <button onclick="irAnalisis(event,'Compra Primera Vivienda')">Analizar mi perfil</button>
     </div>
   </div>
 
+  <!-- Cambiar hipoteca (subrogación) -->
   <div class="operacion-card" onclick="abrirOperacion('cambio')">
     <div class="card-header">🔄 Cambiar mi hipoteca</div>
     <div id="cambio" class="card-content">
       <h4>Cómo funciona</h4>
-      <p>Otro banco mejora tu tipo de interés actual.</p>
-
-      <h4>Requisitos</h4>
+      <p>Otro banco mejora tu interés actual y asume tu préstamo.</p>
+      <h4>Requisitos habituales</h4>
       <ul>
-        <li>Historial de pago correcto</li>
+        <li>Buen historial de pago</li>
+        <li>Capital pendiente atractivo</li>
         <li>Mejora real de condiciones</li>
       </ul>
-
-      <button onclick="irAnalisis(event,'Cambio de Hipoteca')">
-        Analizar mi perfil
-      </button>
+      <h4>Gastos aproximados</h4>
+      <ul>
+        <li>Tasación</li>
+        <li>Posible comisión por subrogación</li>
+        <li>Gestoría</li>
+      </ul>
+      <h4>Procedimiento</h4>
+      <ol>
+        <li>Oferta vinculante del nuevo banco</li>
+        <li>Derecho de tanteo del banco actual</li>
+        <li>Firma de subrogación</li>
+      </ol>
+      <button onclick="irAnalisis(event,'Cambio de Hipoteca')">Analizar mi perfil</button>
     </div>
   </div>
 
+  <!-- Invertir en vivienda -->
   <div class="operacion-card" onclick="abrirOperacion('inversion')">
     <div class="card-header">💼 Invertir en vivienda</div>
     <div id="inversion" class="card-content">
       <h4>Cómo funciona</h4>
       <p>Financiación más restrictiva (60–70%).</p>
-
-      <h4>Requisitos</h4>
+      <h4>Requisitos habituales</h4>
       <ul>
-        <li>Ingresos sólidos</li>
-        <li>Buen perfil financiero</li>
+        <li>Ingresos altos</li>
+        <li>Estabilidad financiera</li>
+        <li>Buen scoring bancario</li>
       </ul>
-
-      <button onclick="irAnalisis(event,'Inversión')">
-        Analizar mi perfil
-      </button>
+      <h4>Gastos aproximados</h4>
+      <ul>
+        <li>Similares a primera vivienda, pero con menor financiación</li>
+      </ul>
+      <h4>Procedimiento</h4>
+      <ol>
+        <li>Igual que compra habitual, pero con análisis más estricto</li>
+      </ol>
+      <button onclick="irAnalisis(event,'Inversión')">Analizar mi perfil</button>
     </div>
   </div>
 </section>
