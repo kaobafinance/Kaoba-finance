@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sobre Nosotros</title>
+
+<style>
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    margin:0;
+    background:#f5f7fb;
+    color:#333;
+    line-height:1.6;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+    padding:40px 20px;
+}
+
+.header{
+    text-align:center;
+    margin-bottom:40px;
+}
+
+.header h1{
+    font-size:36px;
+    color:#1e3a8a;
+}
+
+.header p{
+    font-size:18px;
+    color:#555;
+}
+
+.card{
+    background:white;
+    padding:35px;
+    border-radius:10px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.06);
+    margin-bottom:25px;
+}
+
+.card h2{
+    color:#1e3a8a;
+    margin-bottom:15px;
+}
+
+.features{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+    margin-top:30px;
+}
+
+.feature{
+    background:#ffffff;
+    padding:25px;
+    border-radius:10px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.05);
+    text-align:center;
+}
+
+.feature-icon{
+    font-size:32px;
+    margin-bottom:10px;
+}
+
+.disclaimer{
+    background:#eef2ff;
+    border-left:4px solid #1e3a8a;
+}
+
+.footer{
+    text-align:center;
+    margin-top:40px;
+    font-size:14px;
+    color:#777;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+<h1>Sobre Nosotros</h1>
+<p>Ayudamos a entender y planificar la compra de tu vivienda.</p>
+</div>
+
+<div class="card">
+<p>
+Somos un proyecto creado con el objetivo de ayudar a las personas a entender mejor el proceso de compra de una vivienda y calcular su hipoteca de forma sencilla.
+</p>
+
+<p>
+Sabemos que tomar la decisión de adquirir una casa es uno de los pasos financieros más importantes en la vida. Por eso hemos desarrollado este simulador hipotecario: una herramienta clara, rápida y gratuita que permite estimar las cuotas mensuales, los intereses y los costes aproximados de una hipoteca.
+</p>
+</div>
+
+<div class="features">
+
+<div class="feature">
+<div class="feature-icon">🏠</div>
+<h3>Simulación clara</h3>
+<p>Calcula fácilmente las cuotas mensuales de tu hipoteca.</p>
+</div>
+
+<div class="feature">
+<div class="feature-icon">⚡</div>
+<h3>Rápido y sencillo</h3>
+<p>Obtén resultados en segundos sin procesos complicados.</p>
+</div>
+
+<div class="feature">
+<div class="feature-icon">📊</div>
+<h3>Mejor planificación</h3>
+<p>Visualiza los intereses y el coste total antes de acudir al banco.</p>
+</div>
+
+</div>
+
+<div class="card">
+<h2>Nuestro objetivo</h2>
+
+<p>
+Nuestro objetivo es ofrecer información útil que ayude a los usuarios a planificar mejor su futuro financiero antes de acudir a una entidad bancaria.
+</p>
+
+<p>
+Creemos que tener acceso a simulaciones claras y comprensibles facilita tomar decisiones más informadas.
+</p>
+</div>
+
+<div class="card disclaimer">
+<p>
+Este simulador es una herramienta orientativa y no sustituye el asesoramiento profesional de entidades financieras o especialistas hipotecarios.
+</p>
+</div>
+
+<div class="footer">
+<p>© 2026 Simulador Hipotecario</p>
+</div>
+
+</div>
+
+</body>
+</html>
