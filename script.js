@@ -282,3 +282,60 @@ document.addEventListener("DOMContentLoaded", () => {
   btnAceptar.addEventListener("click", () => ocultarBanner("true"));
   btnRechazar.addEventListener("click", () => ocultarBanner("false"));
 });
+
+// --- FUNCIONES TIPO DE OPERACION ---
+function abrirOperacion(id) {
+  const todas = document.querySelectorAll('.card-content');
+
+  todas.forEach(cc => {
+    if (cc.id === id) {
+      // Si está cerrada, abrirla
+      if (!cc.classList.contains('open')) {
+        cc.classList.add('open');
+      } else {
+        // Si ya estaba abierta, cerrarla
+        cc.classList.remove('open');
+      }
+    } else {
+      // Cerrar todas las demás
+      cc.classList.remove('open');
+    }
+  });
+}
+
+function irAnalisis(event, tipo) {
+  event.stopPropagation(); // evitar que se cierre la tarjeta
+
+  // Mostrar sección perfil
+  btnPerfil.click();
+
+  // Mostrar badge de operación seleccionada
+  const badge = document.getElementById("operacionSeleccionada");
+  badge.style.display = "block";
+  badge.innerText = `Operación seleccionada: ${tipo}`;
+
+  // Ajustar campos según tipo de operación
+  switch(tipo) {
+    case 'Compra Primera Vivienda':
+      perfilPrimeraSegunda.value = 'primera';
+      yaTieneVivienda.checked = false;
+      break;
+    case 'Cambio de Hipoteca':
+      perfilPrimeraSegunda.value = 'segunda';
+      yaTieneVivienda.checked = true;
+      break;
+    case 'Inversión':
+      perfilPrimeraSegunda.value = 'segunda';
+      yaTieneVivienda.checked = false;
+      break;
+  }
+
+  // Mostrar u ocultar info vivienda
+  viviendaInfo.style.display = yaTieneVivienda.checked ? "block" : "none";
+
+  // Recalcular perfil financiero
+  calcularPerfil();
+
+  // Scroll suave al perfil
+  perfilDiv.scrollIntoView({ behavior: 'smooth' });
+}
