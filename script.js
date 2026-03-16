@@ -1,6 +1,5 @@
 // --- SELECCIÓN DE SECCIÓN ---
 const btnCalculadora = document.getElementById("btnCalculadora");
-const btnPerfil = document.getElementById("btnPerfil");
 const calculadoraDiv = document.getElementById("calculadora");
 const perfilDiv = document.getElementById("perfil");
 
@@ -8,12 +7,6 @@ btnCalculadora.addEventListener("click", () => {
   calculadoraDiv.style.display = "block";
   perfilDiv.style.display = "none";
   calculadoraDiv.scrollIntoView({ behavior: "smooth" });
-});
-
-btnPerfil.addEventListener("click", () => {
-  calculadoraDiv.style.display = "none";
-  perfilDiv.style.display = "block";
-  perfilDiv.scrollIntoView({ behavior: "smooth" });
 });
 
 // --- ELEMENTOS CALCULADORA ---
@@ -216,13 +209,11 @@ perfilTitulares.addEventListener("change", () => {
   calcularPerfil();
 });
 
-// Mostrar información de vivienda si el usuario marca el checkbox
 yaTieneVivienda.addEventListener("change", () => {
   viviendaInfo.style.display = yaTieneVivienda.checked ? "block" : "none";
   calcularPerfil();
 });
 
-// Inicializar perfil
 calcularPerfil();
 
 // --- ENVIO SIMULACION PDF ---
@@ -289,27 +280,21 @@ function abrirOperacion(id) {
 
   todas.forEach(cc => {
     if (cc.id === id) {
-      // Si está cerrada, abrirla
-      if (!cc.classList.contains('open')) {
-        cc.classList.add('open');
-      } else {
-        // Si ya estaba abierta, cerrarla
-        cc.classList.remove('open');
-      }
+      cc.classList.toggle('open');
     } else {
-      // Cerrar todas las demás
       cc.classList.remove('open');
     }
   });
 }
 
 function irAnalisis(event, tipo) {
-  event.stopPropagation(); // evitar que se cierre la tarjeta
+  event.stopPropagation();
 
   // Mostrar sección perfil
-  btnPerfil.click();
+  perfilDiv.style.display = "block";
+  calculadoraDiv.style.display = "none";
 
-  // Mostrar badge de operación seleccionada
+  // Badge de operación seleccionada
   const badge = document.getElementById("operacionSeleccionada");
   badge.style.display = "block";
   badge.innerText = `Operación seleccionada: ${tipo}`;
@@ -330,12 +315,7 @@ function irAnalisis(event, tipo) {
       break;
   }
 
-  // Mostrar u ocultar info vivienda
   viviendaInfo.style.display = yaTieneVivienda.checked ? "block" : "none";
-
-  // Recalcular perfil financiero
   calcularPerfil();
-
-  // Scroll suave al perfil
   perfilDiv.scrollIntoView({ behavior: 'smooth' });
 }
