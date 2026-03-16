@@ -329,4 +329,106 @@ input, select, textarea {
   #cookie-banner button {
     width: auto;
   }
+
+   /* ==============================
+   HERO BOTONES ORDENADOS
+============================== */
+.hero-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.hero-buttons .btn {
+  min-width: 150px;
+  padding: 12px 20px;
+  font-size: 16px;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.hero-buttons .btn:hover {
+  background-color: #09407a;
+  transform: scale(1.05);
+}
+
+/* ==============================
+   FAQ - Contenedor y Búsqueda
+============================== */
+.faq-container {
+  max-width: 800px;
+  margin: auto;
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+}
+
+.faq-container h1 {
+  text-align: center;
+  color: #0d4f8b;
+  margin-bottom: 20px;
+}
+
+#faqSearch {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+}
+
+/* ==============================
+   FAQ - Items y Acordeón
+============================== */
+.faq-item {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 12px 0;
+}
+
+.faq-question {
+  font-weight: bold;
+  cursor: pointer;
+  position: relative;
+  padding-right: 25px;
+}
+
+.faq-question::after {
+  content: '+';
+  position: absolute;
+  right: 0;
+  font-weight: bold;
+  font-size: 20px;
+  transition: transform 0.2s;
+}
+
+.faq-answer {
+  display: none;
+  margin-top: 8px;
+  color: #555;
+}
+
+.faq-item.active .faq-answer {
+  display: block;
+}
+
+.faq-item.active .faq-question::after {
+  content: '-';
+  transform: rotate(0deg);
+}
+
+/* ==============================
+   RESPONSIVE FAQ
+============================== */
+@media (max-width: 600px) {
+  .faq-container {
+    padding: 20px;
+  }
+  .hero-buttons .btn {
+    min-width: 120px;
+    font-size: 14px;
+  }
 }
