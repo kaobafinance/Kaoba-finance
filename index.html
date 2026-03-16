@@ -114,7 +114,7 @@ Euribor actual (referencia hipotecas): 2,25% a marzo 2026
   <div class="form-vertical">
     <label>Importe del préstamo (€)</label>
     <input id="prestamo" type="number" placeholder="Ej: 150000">
-    <label>Tipo de interés anual (%)</label>
+    <label>Tipo de interés (%)</label>
     <input id="interes" type="number" step="0.01" placeholder="Ej: 3">
     <label>Plazo (años)</label>
     <input id="anos" type="number" placeholder="Ej: 30">
@@ -123,10 +123,13 @@ Euribor actual (referencia hipotecas): 2,25% a marzo 2026
   <div class="cards" id="resultados">
     <div class="card"><p>Cuota mensual</p><h3 id="cuota"></h3></div>
     <div class="card"><p>Intereses totales</p><h3 id="interesesTotales"></h3></div>
-    <div class="card"><p>Total pagado</p><h3 id="totalPagado"></h3></div>
+    <div class="card"><p>Total a pagar</p><h3 id="totalPagado"></h3></div>
   </div>
 
-  <button id="verTabla" style="display:none;">Ver cuadro de amortización</button>
+<!-- Botón centrado para ver tabla -->
+  <div class="btn-container">
+    <button id="verTabla" style="display:none;">Ver cuadro de amortización</button>
+  </div>
   <div id="tablaContainer" style="display:none;">
     <h2>Tabla de amortización</h2>
     <table id="tabla" class="tabla-amortizacion">
@@ -175,8 +178,8 @@ Euribor actual (referencia hipotecas): 2,25% a marzo 2026
     <input id="perfilDeuda" type="number" placeholder="Ej: 350">
     <label>Otro ingreso mensual opcional (€)</label>
     <input id="perfilOtroIngreso" type="number" placeholder="Opcional">
-    <label>¿Ya tiene vivienda?</label>
-    <input type="checkbox" id="yaTieneVivienda">
+    <label>Agregar datos de la vivienda</label>
+    <input type="checkbox" id="agregardatosdelavivienda">
   </div>
 
   <!-- INFO VIVIENDA -->
@@ -197,10 +200,10 @@ Euribor actual (referencia hipotecas): 2,25% a marzo 2026
       <option value="0.08">Galicia (8%)</option>
       <option value="0.08">Castilla y León (8%)</option>
     </select>
-    <label>Primera o segunda vivienda</label>
+    <label>Vivienda habitual o Segunda residenvia</label>
     <select id="perfilPrimeraSegunda">
-      <option value="primera">Primera vivienda</option>
-      <option value="segunda">Segunda vivienda</option>
+      <option value="primera">Vivienda habitual</option>
+      <option value="segunda">Segunda residencia o inversion</option>
     </select>
     <label>Plazo máximo (años)</label>
     <input id="perfilPlazo" type="number" placeholder="Máximo según edad">
@@ -212,7 +215,7 @@ Euribor actual (referencia hipotecas): 2,25% a marzo 2026
     <div class="card"><p>Cuota mensual</p><h3 id="perfilCuota"></h3></div>
     <div class="card"><p>% Financiación (LTV)</p><h3 id="perfilLTV"></h3></div>
     <div class="card"><p>Gastos</p><h3 id="perfilGastos"></h3></div>
-    <div class="card"><p>LTI</p><h3 id="perfilLTI"></h3></div>
+    <div class="card"><p>Ratio (LTI)</p><h3 id="perfilLTI"></h3></div>
     <div class="card"><p>Compatibilidad</p><h3 id="perfilCompatible"></h3></div>
   </div>
 
