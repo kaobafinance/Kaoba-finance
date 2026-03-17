@@ -244,46 +244,90 @@ leadEnviar.addEventListener("click", () => {
   doc.setFont("helvetica", "bold");
   doc.text("Simulación Hipotecaria 🏡", margin, 40);
 
-  y += 80;
-  doc.setFontSize(12);
-  doc.setTextColor(0, 0, 0);
+  const fecha = new Date().toLocaleString("es-ES");
+  doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
-  doc.text(`Nombre: ${leadNombre.value}`, margin, y);
-  y += 15;
-  doc.text(`Correo: ${leadEmail.value}`, margin, y);
-  y += 25;
+  doc.text(`Fecha: ${fecha}`, 450, 40);
 
-  // --- RESUMEN ORIENTATIVO ---
-  const resumen = "Esta simulación es orientativa, basada en los datos proporcionados. Muestra el capital financiable, cuota mensual, porcentaje de financiación y gastos estimados. No constituye oferta vinculante.";
-  doc.setFillColor(230, 240, 255);
-  const resumenHeight = doc.splitTextToSize(resumen, 515).length * 15 + 10;
-  doc.rect(margin - 10, y - 10, 515, resumenHeight, "F");
-  const resumenLines = doc.splitTextToSize(resumen, 500);
-  resumenLines.forEach(line => { doc.text(line, margin, y); y += 15; });
+  y += 80;
+
+  // --- DATOS DEL CLIENTE ---
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(0, 63, 139);
+  doc.text("1️⃣ Datos del cliente", margin, y); y += 20;
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(0, 0, 0);
+
+  const datosCliente = [
+    `Nombre: ${leadNombre.value}`,
+    `Correo: ${leadEmail.value}`,
+    `Número de titulares: ${perfilTitulares.value}`,
+    `Edad titular 1: ${perfilEdad1.value}`,
+  ];
+  if (perfilTitulares.value === "2") datosCliente.push(`Edad titular 2: ${perfilEdad2.value}`);
+  datosCliente.push(`Ingreso mensual titular 1: ${formatMoneyPerfil(perfilSalario1.value)}`);
+  if (perfilTitulares.value === "2") datosCliente.push(`Ingreso mensual titular 2: ${formatMoneyPerfil(perfilSalario2.value)}`);
+  datosCliente.push(`Número de pagas al año: ${perfilPagas.value}`);
+  datosCliente.push(`Ahorros disponibles: ${formatMoneyPerfil(perfilAhorros.value)}`);
+  datosCliente.push(`Deudas / pagos mensuales: ${formatMoneyPerfil(perfilDeuda.value)}`);
+  if (perfilOtroIngreso.value) datosCliente.push(`Otro ingreso mensual: ${formatMoneyPerfil(perfilOtroIngreso.value)}`);
+
+  datosCliente.forEach(line => { doc.text(line, margin + 10, y); y += 15; });
   y += 10;
 
-  // --- RESULTADOS EN TARJETAS ---
-  const tarjetas = [
+  // --- DATOS DE VIVIENDA ---
+  if (yaTieneVivienda.checked) {
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(0, 63, 139);
+    doc.text("2️⃣ Información de la vivienda", margin, y); y += 20;
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(0, 0, 0);
+
+    const tipoVivienda = perfilTipoVivienda.value === "obraNueva" ? "Obra nueva (IVA 10%)" : "Segunda mano (ITP)";
+    const comunidad = perfilComunidad.options[perfilComunidad.selectedIndex].text;
+    const tipoResidencia = perfilPrimeraSegunda.value === "primera" ? "Vivienda habitual" : "Segunda residencia / inversión";
+
+    const datosVivienda = [
+      `Precio: ${formatMoneyPerfil(perfilPrecio.value)}`,
+      `Tipo de vivienda: ${tipoVivienda}`,
+      `Comunidad Autónoma: ${comunidad}`,
+      `Tipo de residencia: ${tipoResidencia}`,
+      `Plazo máximo (años): ${perfilPlazo.value}`
+    ];
+
+    datosVivienda.forEach(line => { doc.text(line, margin + 10, y); y += 15; });
+    y += 10;
+  }
+
+  // --- RESULTADOS DEL PERFIL ---
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(0, 63, 139);
+  doc.text("3️⃣ Resultados del perfil financiero", margin, y); y += 20;
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(0, 0, 0);
+
+  const resultados = [
     { titulo: "Capital posible 💰", valor: perfilCapitalOut.innerText },
     { titulo: "Cuota mensual 💵", valor: perfilCuotaOut.innerText },
     { titulo: "% Financiación (LTV) 📊", valor: perfilLTVOut.innerText },
     { titulo: "Gastos estimados 🏦", valor: perfilGastosOut.innerText },
     { titulo: "LTI 🔎", valor: perfilLTIOut.innerText },
-    { titulo: "Compatibilidad ✅", valor: perfilCompatibleOut.innerText },
+    { titulo: "Compatibilidad ✅", valor: perfilCompatibleOut.innerText }
   ];
 
-  tarjetas.forEach((t, i) => {
-    const cardHeight = 35;
-    const cardWidth = 250;
+  const cardHeight = 40;
+  const cardWidth = 250;
+  resultados.forEach((r, i) => {
     const x = margin + (i % 2) * (cardWidth + 20);
     if (i % 2 === 0 && i !== 0) y += cardHeight + 10;
     doc.setFillColor(220, 230, 250);
-    doc.roundedRect(x, y, cardWidth, cardHeight, 5, 5, "F");
-    doc.setTextColor(0, 0, 0);
+    doc.roundedRect(x, y, cardWidth, cardHeight, 6, 6, "F");
     doc.setFont("helvetica", "bold");
-    doc.text(t.titulo, x + 5, y + 12);
+    doc.setTextColor(0, 0, 0);
+    doc.text(r.titulo, x + 8, y + 14);
     doc.setFont("helvetica", "normal");
-    doc.text(t.valor, x + 5, y + 27);
+    doc.text(r.valor, x + 8, y + 28);
   });
   y += 60;
 
@@ -294,12 +338,14 @@ leadEnviar.addEventListener("click", () => {
     "Comparar ofertas de diferentes bancos puede reducir el interés total."
   ];
   doc.setFont("helvetica", "bold");
-  doc.text("Consejos prácticos 💡", margin, y);
-  y += 20;
+  doc.setTextColor(0, 63, 139);
+  doc.text("4️⃣ Consejos prácticos 💡", margin, y); y += 20;
   doc.setFont("helvetica", "normal");
+  doc.setTextColor(0, 0, 0);
+
   consejos.forEach(c => {
-    const lines = doc.splitTextToSize(c, 500);
-    lines.forEach(line => { doc.text(`• ${line}`, margin, y); y += 15; });
+    const lines = doc.splitTextToSize(c, 515);
+    lines.forEach(line => { doc.text(`• ${line}`, margin + 10, y); y += 15; });
     y += 5;
   });
 
@@ -307,8 +353,7 @@ leadEnviar.addEventListener("click", () => {
   y += 10;
   doc.setDrawColor(0, 63, 139);
   doc.setLineWidth(1);
-  doc.line(margin, y, 555, y);
-  y += 15;
+  doc.line(margin, y, 555, y); y += 15;
 
   // --- AVISO LEGAL ---
   doc.setFont("helvetica", "italic");
@@ -317,7 +362,7 @@ leadEnviar.addEventListener("click", () => {
   const avisoLines = doc.splitTextToSize(aviso, 515);
   avisoLines.forEach(line => { doc.text(line, margin, y); y += 12; });
 
-  // Guardar PDF
+  // --- GUARDAR PDF ---
   doc.save(`Simulacion_Hipoteca_${leadNombre.value}.pdf`);
   alert(`Simulación generada y enviada a: ${leadEmail.value}\nGracias ${leadNombre.value}!`);
   leadForm.reset();
