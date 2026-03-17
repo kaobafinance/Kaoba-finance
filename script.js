@@ -232,21 +232,93 @@ leadEnviar.addEventListener("click", () => {
   }
 
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  doc.setFontSize(18);
-  doc.text("Simulación Hipotecaria", 20, 20);
-  doc.setFontSize(12);
-  doc.text(`Nombre: ${leadNombre.value}`, 20, 40);
-  doc.text(`Correo: ${leadEmail.value}`, 20, 50);
-  doc.text("Resultados del perfil financiero:", 20, 70);
-  doc.text(`Capital posible: ${perfilCapitalOut.innerText}`, 20, 80);
-  doc.text(`Cuota mensual: ${perfilCuotaOut.innerText}`, 20, 90);
-  doc.text(`% Financiación (LTV): ${perfilLTVOut.innerText}`, 20, 100);
-  doc.text(`Gastos estimados: ${perfilGastosOut.innerText}`, 20, 110);
-  doc.text(`LTI: ${perfilLTIOut.innerText}`, 20, 120);
-  doc.text(`Compatibilidad: ${perfilCompatibleOut.innerText}`, 20, 130);
+  const doc = new jsPDF({ unit: "pt", format: "a4" });
+  const margin = 40;
+  let y = margin;
 
-  doc.save("Simulacion_Hipoteca.pdf");
+  // --- HEADER ---
+  doc.setFillColor(14, 63, 139); // azul corporativo
+  doc.rect(0, 0, 595, 60, "F");
+  doc.setFontSize(24);
+  doc.setTextColor(255, 255, 255);
+  doc.setFont("helvetica", "bold");
+  doc.text("Simulación Hipotecaria 🏡", margin, 40);
+
+  y += 80;
+  doc.setFontSize(12);
+  doc.setTextColor(0, 0, 0);
+  doc.setFont("helvetica", "normal");
+  doc.text(`Nombre: ${leadNombre.value}`, margin, y);
+  y += 15;
+  doc.text(`Correo: ${leadEmail.value}`, margin, y);
+  y += 25;
+
+  // --- RESUMEN ORIENTATIVO ---
+  const resumen = "Esta simulación es orientativa, basada en los datos proporcionados. Muestra el capital financiable, cuota mensual, porcentaje de financiación y gastos estimados. No constituye oferta vinculante.";
+  doc.setFillColor(230, 240, 255);
+  const resumenHeight = doc.splitTextToSize(resumen, 515).length * 15 + 10;
+  doc.rect(margin - 10, y - 10, 515, resumenHeight, "F");
+  const resumenLines = doc.splitTextToSize(resumen, 500);
+  resumenLines.forEach(line => { doc.text(line, margin, y); y += 15; });
+  y += 10;
+
+  // --- RESULTADOS EN TARJETAS ---
+  const tarjetas = [
+    { titulo: "Capital posible 💰", valor: perfilCapitalOut.innerText },
+    { titulo: "Cuota mensual 💵", valor: perfilCuotaOut.innerText },
+    { titulo: "% Financiación (LTV) 📊", valor: perfilLTVOut.innerText },
+    { titulo: "Gastos estimados 🏦", valor: perfilGastosOut.innerText },
+    { titulo: "LTI 🔎", valor: perfilLTIOut.innerText },
+    { titulo: "Compatibilidad ✅", valor: perfilCompatibleOut.innerText },
+  ];
+
+  tarjetas.forEach((t, i) => {
+    const cardHeight = 35;
+    const cardWidth = 250;
+    const x = margin + (i % 2) * (cardWidth + 20);
+    if (i % 2 === 0 && i !== 0) y += cardHeight + 10;
+    doc.setFillColor(220, 230, 250);
+    doc.roundedRect(x, y, cardWidth, cardHeight, 5, 5, "F");
+    doc.setTextColor(0, 0, 0);
+    doc.setFont("helvetica", "bold");
+    doc.text(t.titulo, x + 5, y + 12);
+    doc.setFont("helvetica", "normal");
+    doc.text(t.valor, x + 5, y + 27);
+  });
+  y += 60;
+
+  // --- CONSEJOS PRÁCTICOS ---
+  const consejos = [
+    "Ahorrar al menos el 20% del precio mejora la aprobación bancaria.",
+    "Mantener deudas bajas y pagos puntuales mejora tu historial crediticio.",
+    "Comparar ofertas de diferentes bancos puede reducir el interés total."
+  ];
+  doc.setFont("helvetica", "bold");
+  doc.text("Consejos prácticos 💡", margin, y);
+  y += 20;
+  doc.setFont("helvetica", "normal");
+  consejos.forEach(c => {
+    const lines = doc.splitTextToSize(c, 500);
+    lines.forEach(line => { doc.text(`• ${line}`, margin, y); y += 15; });
+    y += 5;
+  });
+
+  // --- SEPARADOR ---
+  y += 10;
+  doc.setDrawColor(0, 63, 139);
+  doc.setLineWidth(1);
+  doc.line(margin, y, 555, y);
+  y += 15;
+
+  // --- AVISO LEGAL ---
+  doc.setFont("helvetica", "italic");
+  doc.setFontSize(10);
+  const aviso = "Los cálculos de este informe son estimativos y dependen de los datos proporcionados. Las condiciones definitivas serán determinadas por la entidad financiera. Esta simulación no sustituye asesoramiento profesional.";
+  const avisoLines = doc.splitTextToSize(aviso, 515);
+  avisoLines.forEach(line => { doc.text(line, margin, y); y += 12; });
+
+  // Guardar PDF
+  doc.save(`Simulacion_Hipoteca_${leadNombre.value}.pdf`);
   alert(`Simulación generada y enviada a: ${leadEmail.value}\nGracias ${leadNombre.value}!`);
   leadForm.reset();
 });
