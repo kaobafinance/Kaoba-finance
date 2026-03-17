@@ -225,6 +225,7 @@ const leadEmail = document.getElementById("leadEmail");
 const leadConsent = document.getElementById("leadConsentimiento");
 const leadEnviar = document.getElementById("enviarLead");
 
+// --- ENVIO SIMULACION PDF PROFESIONAL ---
 leadEnviar.addEventListener("click", () => {
   if (!leadNombre.value || !leadEmail.value || !leadConsent.checked) {
     alert("Por favor, completa todos los campos y acepta la política de privacidad.");
@@ -239,134 +240,134 @@ leadEnviar.addEventListener("click", () => {
   // --- HEADER ---
   doc.setFillColor(14, 63, 139); // azul corporativo
   doc.rect(0, 0, 595, 60, "F");
-  doc.setFontSize(24);
+  doc.setFontSize(22);
   doc.setTextColor(255, 255, 255);
   doc.setFont("helvetica", "bold");
-  doc.text("Simulación Hipotecaria 🏡", margin, 40);
-
-  const fecha = new Date().toLocaleString("es-ES");
-  doc.setFontSize(10);
-  doc.setFont("helvetica", "normal");
-  doc.text(`Fecha: ${fecha}`, 450, 40);
+  doc.text("Simulación Hipotecaria", margin, 40);
 
   y += 80;
+  doc.setFontSize(12);
+  doc.setTextColor(0, 0, 0);
+  doc.setFont("helvetica", "normal");
 
   // --- DATOS DEL CLIENTE ---
-  doc.setFontSize(12);
+  doc.text("Datos del cliente:", margin, y);
+  y += 15;
+  doc.text(`Nombre: ${leadNombre.value}`, margin, y);
+  y += 15;
+  doc.text(`Correo: ${leadEmail.value}`, margin, y);
+  y += 25;
+
+  // --- DATOS DEL PERFIL FINANCIERO ---
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(0, 63, 139);
-  doc.text("1️⃣ Datos del cliente", margin, y); y += 20;
+  doc.text("Perfil financiero:", margin, y);
+  y += 18;
   doc.setFont("helvetica", "normal");
-  doc.setTextColor(0, 0, 0);
 
-  const datosCliente = [
-    `Nombre: ${leadNombre.value}`,
-    `Correo: ${leadEmail.value}`,
-    `Número de titulares: ${perfilTitulares.value}`,
-    `Edad titular 1: ${perfilEdad1.value}`,
+  const perfilDatos = [
+    { label: "Número de titulares", value: perfilTitulares.value },
+    { label: "Edad titular 1", value: perfilEdad1.value },
+    { label: "Ingreso mensual titular 1", value: perfilSalario1.value ? formatMoneyPerfil(perfilSalario1.value) : "-" },
   ];
-  if (perfilTitulares.value === "2") datosCliente.push(`Edad titular 2: ${perfilEdad2.value}`);
-  datosCliente.push(`Ingreso mensual titular 1: ${formatMoneyPerfil(perfilSalario1.value)}`);
-  if (perfilTitulares.value === "2") datosCliente.push(`Ingreso mensual titular 2: ${formatMoneyPerfil(perfilSalario2.value)}`);
-  datosCliente.push(`Número de pagas al año: ${perfilPagas.value}`);
-  datosCliente.push(`Ahorros disponibles: ${formatMoneyPerfil(perfilAhorros.value)}`);
-  datosCliente.push(`Deudas / pagos mensuales: ${formatMoneyPerfil(perfilDeuda.value)}`);
-  if (perfilOtroIngreso.value) datosCliente.push(`Otro ingreso mensual: ${formatMoneyPerfil(perfilOtroIngreso.value)}`);
 
-  datosCliente.forEach(line => { doc.text(line, margin + 10, y); y += 15; });
-  y += 10;
-
-  // --- DATOS DE VIVIENDA ---
-  if (yaTieneVivienda.checked) {
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(0, 63, 139);
-    doc.text("2️⃣ Información de la vivienda", margin, y); y += 20;
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(0, 0, 0);
-
-    const tipoVivienda = perfilTipoVivienda.value === "obraNueva" ? "Obra nueva (IVA 10%)" : "Segunda mano (ITP)";
-    const comunidad = perfilComunidad.options[perfilComunidad.selectedIndex].text;
-    const tipoResidencia = perfilPrimeraSegunda.value === "primera" ? "Vivienda habitual" : "Segunda residencia / inversión";
-
-    const datosVivienda = [
-      `Precio: ${formatMoneyPerfil(perfilPrecio.value)}`,
-      `Tipo de vivienda: ${tipoVivienda}`,
-      `Comunidad Autónoma: ${comunidad}`,
-      `Tipo de residencia: ${tipoResidencia}`,
-      `Plazo máximo (años): ${perfilPlazo.value}`
-    ];
-
-    datosVivienda.forEach(line => { doc.text(line, margin + 10, y); y += 15; });
-    y += 10;
+  if (perfilTitulares.value === "2") {
+    perfilDatos.push({ label: "Edad titular 2", value: perfilEdad2.value });
+    perfilDatos.push({ label: "Ingreso mensual titular 2", value: perfilSalario2.value ? formatMoneyPerfil(perfilSalario2.value) : "-" });
   }
 
-  // --- RESULTADOS DEL PERFIL ---
+  perfilDatos.push(
+    { label: "Número de pagas al año", value: perfilPagas.value },
+    { label: "Ahorros disponibles", value: perfilAhorros.value ? formatMoneyPerfil(perfilAhorros.value) : "-" },
+    { label: "Deudas / pagos mensuales", value: perfilDeuda.value ? formatMoneyPerfil(perfilDeuda.value) : "-" },
+    { label: "Otro ingreso mensual opcional", value: perfilOtroIngreso.value ? formatMoneyPerfil(perfilOtroIngreso.value) : "-" }
+  );
+
+  perfilDatos.forEach(d => { doc.text(`${d.label}: ${d.value}`, margin, y); y += 15; });
+
+  // --- DATOS VIVIENDA ---
+  if (yaTieneVivienda.checked) {
+    y += 10;
+    doc.setFont("helvetica", "bold");
+    doc.text("Datos de la vivienda:", margin, y);
+    y += 18;
+    doc.setFont("helvetica", "normal");
+
+    const viviendaDatos = [
+      { label: "Precio vivienda", value: perfilPrecio.value ? formatMoneyPerfil(perfilPrecio.value) : "-" },
+      { label: "Tipo de vivienda", value: perfilTipoVivienda.options[perfilTipoVivienda.selectedIndex].text },
+      { label: "Comunidad Autónoma", value: perfilComunidad.options[perfilComunidad.selectedIndex].text },
+      { label: "Vivienda habitual o segunda", value: perfilPrimeraSegunda.options[perfilPrimeraSegunda.selectedIndex].text },
+      { label: "Plazo máximo (años)", value: perfilPlazo.value }
+    ];
+
+    viviendaDatos.forEach(d => { doc.text(`${d.label}: ${d.value}`, margin, y); y += 15; });
+  }
+
+  y += 10;
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(0, 63, 139);
-  doc.text("3️⃣ Resultados del perfil financiero", margin, y); y += 20;
+  doc.text("Resultados simulación:", margin, y);
+  y += 18;
   doc.setFont("helvetica", "normal");
-  doc.setTextColor(0, 0, 0);
 
   const resultados = [
-    { titulo: "Capital posible 💰", valor: perfilCapitalOut.innerText },
-    { titulo: "Cuota mensual 💵", valor: perfilCuotaOut.innerText },
-    { titulo: "% Financiación (LTV) 📊", valor: perfilLTVOut.innerText },
-    { titulo: "Gastos estimados 🏦", valor: perfilGastosOut.innerText },
-    { titulo: "LTI 🔎", valor: perfilLTIOut.innerText },
-    { titulo: "Compatibilidad ✅", valor: perfilCompatibleOut.innerText }
+    { titulo: "Capital posible", valor: perfilCapitalOut.innerText },
+    { titulo: "Cuota mensual", valor: perfilCuotaOut.innerText },
+    { titulo: "% Financiación (LTV)", valor: perfilLTVOut.innerText },
+    { titulo: "Gastos estimados", valor: perfilGastosOut.innerText },
+    { titulo: "LTI", valor: perfilLTIOut.innerText },
+    { titulo: "Compatibilidad", valor: perfilCompatibleOut.innerText }
   ];
 
-  const cardHeight = 40;
   const cardWidth = 250;
+  const cardHeight = 35;
   resultados.forEach((r, i) => {
     const x = margin + (i % 2) * (cardWidth + 20);
     if (i % 2 === 0 && i !== 0) y += cardHeight + 10;
     doc.setFillColor(220, 230, 250);
-    doc.roundedRect(x, y, cardWidth, cardHeight, 6, 6, "F");
+    doc.roundedRect(x, y, cardWidth, cardHeight, 5, 5, "F");
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(0, 0, 0);
-    doc.text(r.titulo, x + 8, y + 14);
+    doc.text(r.titulo, x + 5, y + 12);
     doc.setFont("helvetica", "normal");
-    doc.text(r.valor, x + 8, y + 28);
+    doc.text(r.valor, x + 5, y + 27);
   });
-  y += 60;
 
-  // --- CONSEJOS PRÁCTICOS ---
+  y += cardHeight + 30;
+
+  // --- CONSEJOS ---
   const consejos = [
     "Ahorrar al menos el 20% del precio mejora la aprobación bancaria.",
     "Mantener deudas bajas y pagos puntuales mejora tu historial crediticio.",
     "Comparar ofertas de diferentes bancos puede reducir el interés total."
   ];
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(0, 63, 139);
-  doc.text("4️⃣ Consejos prácticos 💡", margin, y); y += 20;
+  doc.text("Consejos prácticos:", margin, y);
+  y += 20;
   doc.setFont("helvetica", "normal");
-  doc.setTextColor(0, 0, 0);
-
   consejos.forEach(c => {
     const lines = doc.splitTextToSize(c, 515);
-    lines.forEach(line => { doc.text(`• ${line}`, margin + 10, y); y += 15; });
+    lines.forEach(line => { doc.text(`• ${line}`, margin, y); y += 15; });
     y += 5;
   });
 
-  // --- SEPARADOR ---
   y += 10;
   doc.setDrawColor(0, 63, 139);
   doc.setLineWidth(1);
-  doc.line(margin, y, 555, y); y += 15;
+  doc.line(margin, y, 555, y);
+  y += 15;
 
   // --- AVISO LEGAL ---
   doc.setFont("helvetica", "italic");
   doc.setFontSize(10);
-  const aviso = "Los cálculos de este informe son estimativos y dependen de los datos proporcionados. Las condiciones definitivas serán determinadas por la entidad financiera. Esta simulación no sustituye asesoramiento profesional.";
+  const aviso = "Los cálculos son estimativos y dependen de los datos proporcionados. Las condiciones definitivas las determina la entidad financiera. Esta simulación no sustituye asesoramiento profesional.";
   const avisoLines = doc.splitTextToSize(aviso, 515);
   avisoLines.forEach(line => { doc.text(line, margin, y); y += 12; });
 
-  // --- GUARDAR PDF ---
+  // Guardar PDF
   doc.save(`Simulacion_Hipoteca_${leadNombre.value}.pdf`);
   alert(`Simulación generada y enviada a: ${leadEmail.value}\nGracias ${leadNombre.value}!`);
   leadForm.reset();
 });
+
 
 // --- BANNER DE COOKIES ---
 document.addEventListener("DOMContentLoaded", () => {
