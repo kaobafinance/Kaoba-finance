@@ -87,9 +87,36 @@
 </head>
 <body>
 
-<div class="faq-container">
-  <h1>Preguntas Frecuentes</h1>
-  <input type="text" id="faqSearch" placeholder="Buscar pregunta...">
+<body>
+
+  <!-- Otros elementos de tu página (header, hero, simulador, etc.) -->
+
+  <!-- -----------------------
+       BLOQUE FAQ
+  ------------------------ -->
+  <div class="faq-container">
+    <h1>Preguntas Frecuentes</h1>
+    <input type="text" id="faqSearch" placeholder="Buscar pregunta...">
+
+    <div class="faq-item">
+      <div class="faq-question">1. ¿Qué es una hipoteca y cómo funciona?</div>
+      <div class="faq-answer">
+        Una hipoteca es un préstamo que el banco te da para comprar una casa. Pagas una cuota mensual que incluye parte del dinero prestado y los intereses.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">2. Tipos de hipoteca: fija, variable y mixta</div>
+      <div class="faq-answer">
+        <ul>
+          <li><strong>Fija:</strong> cuota e interés constantes.</li>
+          <li><strong>Variable:</strong> interés que puede subir o bajar.</li>
+          <li><strong>Mixta:</strong> periodo inicial fijo y luego variable.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Continúa con las demás preguntas -->
 
   <!-- PREGUNTAS COMPLETAS -->
   <!-- Copia las 20 preguntas aquí como en el ejemplo anterior -->
@@ -260,29 +287,24 @@
 </div>
 
 <script>
-/* =========================
-   ACORDEÓN JS
-========================= */
-const questions = document.querySelectorAll('.faq-question');
+const faqItems = document.querySelectorAll('.faq-item');
+const searchInput = document.getElementById('faqSearch');
 
-questions.forEach(q => {
-  q.addEventListener('click', () => {
-    q.classList.toggle('active');
-    const answer = q.nextElementSibling;
-    answer.style.display = (answer.style.display === 'block') ? 'none' : 'block';
+// Acordeón: solo una pregunta abierta
+faqItems.forEach(item => {
+  const question = item.querySelector('.faq-question');
+  question.addEventListener('click', () => {
+    faqItems.forEach(i => i.classList.remove('active'));
+    item.classList.toggle('active');
   });
 });
 
-/* =========================
-   BUSCADOR DE PREGUNTAS
-========================= */
-const searchInput = document.getElementById('faqSearch');
-
+// Buscador FAQ
 searchInput.addEventListener('input', () => {
   const filter = searchInput.value.toLowerCase();
-  document.querySelectorAll('.faq-item').forEach(item => {
-    const question = item.querySelector('.faq-question').textContent.toLowerCase();
-    if(question.includes(filter)){
+  faqItems.forEach(item => {
+    const questionText = item.querySelector('.faq-question').textContent.toLowerCase();
+    if (questionText.includes(filter)) {
       item.style.display = '';
     } else {
       item.style.display = 'none';
