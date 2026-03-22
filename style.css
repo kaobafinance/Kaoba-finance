@@ -184,8 +184,8 @@ input, select, textarea {
    TABLA DE AMORTIZACION
 ============================== */
 .tabla-amortizacion {
-  width: 100%;
-  min-width: 400px;      /* asegura que la tabla no se haga demasiado estrecha */
+  width: max-content;   /* 👈 este es el cambio importante */
+  min-width: 100%;/
   border-collapse: collapse;
   font-size: 14px;
 }
