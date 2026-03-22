@@ -185,7 +185,7 @@ input, select, textarea {
 ============================== */
 .tabla-amortizacion {
   width: max-content;   /* 👈 este es el cambio importante */
-  min-width: 100%;/
+  min-width: 100%;
   border-collapse: collapse;
   font-size: 14px;
 }
