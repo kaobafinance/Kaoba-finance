@@ -41,8 +41,13 @@ h1:not(.brand-title) {
 ============================== */
 
 .brand-title {
+  display: block;
   text-align: left;
-  margin-bottom: 30px;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0d4f8b;
+  line-height: 1.2;
+  margin-bottom: 10px;
 }
 
 .brand-main {
@@ -53,10 +58,10 @@ h1:not(.brand-title) {
 }
 
 .brand-sub {
+  display: block;
   font-size: 16px;
   font-weight: 400;
   color: #6b7280;
-  margin-left: 8px;
 }
 
 h2 {
