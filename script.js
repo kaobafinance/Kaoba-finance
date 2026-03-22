@@ -4,8 +4,14 @@ const calculadoraDiv = document.getElementById("calculadora");
 const perfilDiv = document.getElementById("perfil");
 
 btnCalculadora.addEventListener("click", () => {
-  calculadoraDiv.style.display = "block";
-  perfilDiv.style.display = "none";
+  // Si calculadora está oculta o vacía -> mostrar
+  if (calculadoraDiv.style.display === "none" || calculadoraDiv.style.display === "") {
+    calculadoraDiv.style.display = "block";
+    perfilDiv.style.display = "none"; // ocultar perfil
+  } else {
+    // Si ya estaba visible -> ocultar
+    calculadoraDiv.style.display = "none";
+  }
   calculadoraDiv.scrollIntoView({ behavior: "smooth" });
 });
 
@@ -410,12 +416,21 @@ function abrirOperacion(id) {
 function irAnalisis(event, tipo) {
   event.stopPropagation(); // evitar que se cierre la tarjeta
 
+  // Si perfil ya está visible y la misma operación se vuelve a seleccionar -> ocultar
+  const badge = document.getElementById("operacionSeleccionada");
+  const mismoTipo = badge.innerText.includes(tipo);
+
+  if (perfilDiv.style.display === "block" && mismoTipo) {
+    perfilDiv.style.display = "none";
+    badge.style.display = "none";
+    return;
+  }
+
   // Mostrar sección perfil y ocultar calculadora
   perfilDiv.style.display = "block";
   calculadoraDiv.style.display = "none";
 
   // Badge de operación seleccionada
-  const badge = document.getElementById("operacionSeleccionada");
   badge.style.display = "block";
   badge.innerText = `Operación seleccionada: ${tipo}`;
 
