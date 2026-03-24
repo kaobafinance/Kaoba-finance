@@ -316,23 +316,32 @@ input, select, textarea {
   .hero-buttons .btn { min-width: 120px; font-size: 14px; }
   .faq-container { padding: 20px; }
 }
-
-/* ==============================
-   BOTÓN FLOTANTE CALCULADORA
-============================== */
-.btn-float {
+/* BOTÓN FLOTANTE CALCULADORA */
+#btnCalculadoraFlotante {
   position: fixed;
-  bottom: 90px; /* se coloca arriba del botón FAQ */
+  bottom: 80px; /* encima del FAQ */
   right: 20px;
-  padding: 14px 18px;
-  border: none;
-  border-radius: 50%;
+  width: 50px;
+  height: 50px;
   background-color: #0d4f8b;
-  color: #fff;
-  font-size: 22px;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-  z-index: 1001; /* más alto que el FAQ */
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 50px;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   transition: background 0.2s, transform 0.2s;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.btn-float:hover { background-color: #09407a; transform: scale(1.1); }
+#btnCalculadoraFlotante svg {
+  width: 24px;
+  height: 24px;
+  fill: white;
+}
+#btnCalculadoraFlotante:hover {
+  background-color: #09407a;
+  transform: scale(1.2);
+}
