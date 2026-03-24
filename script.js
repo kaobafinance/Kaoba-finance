@@ -223,25 +223,17 @@ document.addEventListener("DOMContentLoaded", () => {
     perfilDiv.scrollIntoView({behavior:'smooth'});
   };
 
-  document.addEventListener("DOMContentLoaded", () => {
+// -----------------------------
+// ENVÍO DE LEADS Y PDF
+// -----------------------------
+const enviarBtn = document.getElementById("enviarLead");
+const statusSpan = document.getElementById("leadMensaje"); // ya existe en tu HTML
 
-  const enviarBtn = document.getElementById("enviarLead");
-  if (!enviarBtn) return;
-
+if (enviarBtn && statusSpan) {
   enviarBtn.addEventListener("click", async () => {
     const nombre = document.getElementById("leadNombre")?.value.trim() || "";
     const email = document.getElementById("leadEmail")?.value.trim() || "";
     const consentimiento = document.getElementById("leadConsentimiento")?.checked || false;
-
-    // Elemento para mostrar el estado
-    let statusSpan = document.getElementById("statusEnvio");
-    if (!statusSpan) {
-      // Si no existe, lo creamos dinámicamente debajo del formulario
-      statusSpan = document.createElement("p");
-      statusSpan.id = "statusEnvio";
-      statusSpan.className = "lead-mensaje";
-      document.getElementById("leadFormContainer")?.appendChild(statusSpan);
-    }
 
     // Validación básica
     if (!nombre || !email || !consentimiento) {
@@ -317,5 +309,6 @@ document.addEventListener("DOMContentLoaded", () => {
       statusSpan.innerText = "Error de conexión con el servidor.";
     }
   });
+}
 
 });
