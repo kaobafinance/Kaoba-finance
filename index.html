@@ -141,28 +141,36 @@ Euribor actual (Índice de referencia): 2,36% a marzo 2026
   Simuladores profesionales para analizar y comparar tus opciones.
 </p>
 
-<div class="operaciones-grid">
+<div class="operaciones-section">
 
-  <div class="operacion-card-simple">
+  <!-- CONSOLIDACIÓN -->
+  <div class="operacion-card" onclick="abrirOperacion('consolidacion')">
     <div class="card-header">💳 Consolidación de deudas</div>
-    <p>
-      Unifica tus préstamos y tarjetas en una sola cuota.
-      Descubre cuánto puedes ahorrar.
-    </p>
-    <a href="consolidacion.html" class="btn">
-      Simular consolidación
-    </a>
+    <div id="consolidacion" class="card-content">
+      <p>
+        Unifica tus préstamos y tarjetas en una sola cuota mensual.
+        Reduce tu ratio de endeudamiento y mejora tu perfil financiero.
+      </p>
+
+      <button onclick="irAnalisis(event,'Consolidación de deudas')">
+        Analizar mi caso
+      </button>
+    </div>
   </div>
 
-  <div class="operacion-card-simple">
+  <!-- COMPARADOR -->
+  <div class="operacion-card" onclick="abrirOperacion('comparador')">
     <div class="card-header">🏦 Comparador de hipotecas</div>
-    <p>
-      Compara ofertas fijas, variables o mixtas incluyendo
-      bonificaciones, seguros y comisiones.
-    </p>
-    <a href="comparador-hipotecas.html" class="btn">
-      Comparar bancos
-    </a>
+    <div id="comparador" class="card-content">
+      <p>
+        Compara hipotecas fijas, variables y mixtas incluyendo
+        bonificaciones, seguros y comisiones.
+      </p>
+
+      <button onclick="irAnalisis(event,'Comparador de hipotecas')">
+        Comparar ahora
+      </button>
+    </div>
   </div>
 
 </div>
