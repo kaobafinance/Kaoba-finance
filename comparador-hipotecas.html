@@ -4,77 +4,46 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kaoba Finance | Comparador de Hipotecas</title>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
 <style>
-/* ====== RESET Y BASE ====== */
+/* ===== RESET ===== */
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif;}
-body{background:#f8f9fa;color:#333;line-height:1.6;padding:20px;}
+body{background:#f5f5f5;color:#333;padding:20px;}
 h1,h2{color:#0d4f8b;}
+a{text-decoration:none;color:#0d4f8b;}
 
-/* ====== HEADER ====== */
-header{
-  background:#0d4f8b;color:#fff;
-  padding:18px;
-  text-align:center;
-  border-radius:8px;
-}
+/* ===== HEADER ===== */
+header{background:#0d4f8b;color:#fff;padding:16px;text-align:center;border-radius:8px;margin-bottom:16px;}
 header p{font-size:1rem;margin-top:6px;}
 
-/* ====== BOTÓN VOLVER ====== */
-.volver{
-  display:inline-block;
-  background:#0d4f8b;color:#fff;
-  padding:8px 14px;
-  border-radius:6px;
-  text-decoration:none;
-  font-weight:600;
-  transition:0.2s;
-  margin-bottom:12px;
-}
+/* ===== BOTÓN VOLVER ===== */
+.volver{display:inline-block;background:#0d4f8b;color:#fff;padding:8px 14px;border-radius:6px;margin-bottom:12px;}
 .volver:hover{background:#09407a;}
 
-/* ====== CONTENEDOR ====== */
-main{
-  background:#fff;
-  padding:25px;
-  border-radius:12px;
-  max-width:1100px;
-  margin:auto;
-  box-shadow:0 6px 18px rgba(0,0,0,0.1);
-}
+/* ===== MAIN ===== */
+main{background:#fff;padding:25px;border-radius:12px;max-width:1100px;margin:auto;box-shadow:0 6px 18px rgba(0,0,0,0.1);}
 label{display:block;margin-top:14px;font-weight:600;}
-input, select{width:100%;padding:10px;margin-top:6px;border:1px solid #d1d5db;border-radius:6px;font-size:0.95rem;}
-button{background:#0d4f8b;color:#fff;border:none;padding:10px 18px;border-radius:8px;cursor:pointer;transition:0.2s;margin-top:16px;font-size:1rem;}
+input, select{width:100%;padding:10px;margin-top:6px;border:1px solid #d1d5db;border-radius:6px;}
+button{background:#0d4f8b;color:#fff;border:none;padding:10px 18px;border-radius:8px;cursor:pointer;margin-top:16px;}
 button:hover{background:#09407a;}
 
-/* ====== TARJETAS BANCOS ====== */
-.banco-card{
-  background:#fafbff;border:1px solid #e3e8ef;
-  padding:18px;border-radius:10px;
-  margin-top:20px;position:relative;
-  transition:0.25s;
-}
+/* ===== TARJETAS BANCOS ===== */
+.banco-card{background:#fafbff;border:1px solid #e3e8ef;padding:18px;border-radius:10px;margin-top:20px;position:relative;}
 .banco-card:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(0,0,0,0.07);}
-.remove-btn{
-  position:absolute;top:12px;right:12px;
-  width:28px;height:28px;border-radius:50%;
-  background:#fff;color:#dc3545;font-size:18px;border:none;
-  box-shadow:0 2px 6px rgba(0,0,0,0.15);
-  cursor:pointer;transition:0.15s;
-}
-.remove-btn:hover{background:#dc3545;color:#fff;transform:scale(1.1);}
+.remove-btn{position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:50%;background:#fff;color:#dc3545;font-size:18px;border:none;cursor:pointer;}
+.remove-btn:hover{background:#dc3545;color:#fff;}
 
-/* ====== TABLA ====== */
+/* ===== TABLA ===== */
 .table-container{overflow-x:auto;margin-top:22px;}
 table{width:100%;border-collapse:collapse;margin-top:10px;}
-th,td{padding:10px;border-bottom:1px solid #e5e7eb;text-align:center;font-size:0.95rem;}
+th,td{padding:10px;border-bottom:1px solid #e5e7eb;text-align:center;}
 th{background:#f1f3f6;}
 .mejor{background:#198754;color:#fff !important;}
+.ahorro{color:#198754;font-weight:600;}
 
-/* ====== AMORTIZACIÓN ====== */
+/* ===== AMORTIZACIÓN ===== */
 .amort-table{margin-top:12px;width:100%;border-collapse:collapse;}
 .amort-table th,.amort-table td{border:1px solid #ddd;padding:6px;font-size:13px;text-align:center;}
 .amort-toggle{color:#0d4f8b;cursor:pointer;font-weight:600;text-decoration:underline;}
@@ -92,15 +61,9 @@ th{background:#f1f3f6;}
 
 <main>
   <h2>Datos generales</h2>
-  <label>Capital (€)
-    <input type="number" id="capital" value="0" onfocus="clearZero(this)">
-  </label>
-  <label>Plazo total (años)
-    <input type="number" id="plazo" value="20" step="0.5" onfocus="clearZero(this)">
-  </label>
-  <label>Euríbor actual (%)
-    <input type="number" id="euribor" value="3.50" step="0.01">
-  </label>
+  <label>Capital (€)<input type="number" id="capital" value="150000"></label>
+  <label>Plazo total (años)<input type="number" id="plazo" value="20"></label>
+  <label>Euríbor actual (%)<input type="number" id="euribor" value="3.5" step="0.01"></label>
 
   <hr style="margin:18px 0;">
   <h2>Ofertas bancarias</h2>
@@ -109,13 +72,8 @@ th{background:#f1f3f6;}
 
   <hr style="margin:18px 0;">
   <h2>Resultados</h2>
-
-  <label>Nombre
-    <input type="text" id="nombreUsuario" placeholder="Tu nombre">
-  </label>
-  <label>Email
-    <input type="email" id="emailUsuario" placeholder="tu@email.com">
-  </label>
+  <label>Nombre<input type="text" id="nombreUsuario" placeholder="Tu nombre"></label>
+  <label>Email<input type="email" id="emailUsuario" placeholder="tu@email.com"></label>
   <label><input type="checkbox" id="acepta"> Acepto política de privacidad</label>
 
   <button onclick="calcular()">Calcular</button>
@@ -124,18 +82,15 @@ th{background:#f1f3f6;}
   <div class="table-container">
     <table id="tabla">
       <thead>
-        <tr><th>Banco</th><th>Tipo</th><th>Cuota media</th><th>Intereses</th><th>Total</th><th>Amortización</th></tr>
+        <tr><th>Banco</th><th>Tipo</th><th>Cuota media</th><th>Intereses</th><th>Total</th><th>Ahorro vs mejor</th><th>Amortización</th></tr>
       </thead>
       <tbody></tbody>
     </table>
   </div>
-
 </main>
 
 <script>
 let contador = 0;
-
-function clearZero(input){ if(input.value==="0") input.value=""; }
 
 function addBanco(){
   contador++;
@@ -144,49 +99,28 @@ function addBanco(){
   div.id="banco-"+contador;
   div.innerHTML=`
     <button class="remove-btn" onclick="removeBanco(${contador})">×</button>
-    <label>Nombre
-      <input type="text" id="nombre-${contador}" placeholder="Banco ${contador}">
-    </label>
-    <label>Tipo
-      <select id="tipo-${contador}" onchange="toggleTipo(${contador})">
+    <label>Nombre<input type="text" id="nombre-${contador}" placeholder="Banco ${contador}"></label>
+    <label>Tipo<select id="tipo-${contador}" onchange="toggleTipo(${contador}); calcular()">
         <option value="fija">Fija</option>
         <option value="mixta">Mixta</option>
         <option value="variable">Variable</option>
-      </select>
-    </label>
+    </select></label>
 
-    <div id="bloque-fija-${contador}">
-      <label>TIN fijo (%)
-        <input type="number" id="tinFijo-${contador}" step="0.01">
-      </label>
-    </div>
-
+    <div id="bloque-fija-${contador}"><label>TIN fijo (%)<input type="number" id="tinFijo-${contador}" step="0.01" onchange="calcular()"></label></div>
     <div id="bloque-mixta-${contador}" style="display:none;">
-      <label>Meses fijo
-        <input type="number" id="mesesFijo-${contador}" value="60">
-      </label>
-      <label>TIN fijo (%)
-        <input type="number" id="tinMixtoFijo-${contador}" step="0.01">
-      </label>
-      <label>Diferencial (%)
-        <input type="number" id="diferencial-${contador}" step="0.01">
-      </label>
+      <label>Meses fijo<input type="number" id="mesesFijo-${contador}" value="60" onchange="calcular()"></label>
+      <label>TIN fijo (%)<input type="number" id="tinMixtoFijo-${contador}" step="0.01" onchange="calcular()"></label>
+      <label>Diferencial (%)<input type="number" id="diferencial-${contador}" step="0.01" onchange="calcular()"></label>
     </div>
-
     <div id="bloque-variable-${contador}" style="display:none;">
-      <label>Diferencial (%)
-        <input type="number" id="difVar-${contador}" step="0.01">
-      </label>
+      <label>Diferencial (%)<input type="number" id="difVar-${contador}" step="0.01" onchange="calcular()"></label>
     </div>
-
     <label><input type="checkbox" id="amortSi-${contador}"> Se cobra comisión por amortización</label>
   `;
   document.getElementById("bancos").appendChild(div);
 }
 
-function removeBanco(id){
-  document.getElementById("banco-"+id)?.remove();
-}
+function removeBanco(id){document.getElementById("banco-"+id)?.remove();}
 
 function toggleTipo(id){
   const tipo=document.getElementById("tipo-"+id).value;
@@ -195,108 +129,76 @@ function toggleTipo(id){
   document.getElementById("bloque-variable-"+id).style.display = tipo==="variable"?"block":"none";
 }
 
-// ====== GENERADOR DE AMORTIZACIÓN REAL ======
+// ====== AMORTIZACIÓN ======
 function generarAmortizacion(capital, tin, plazoMeses, tipo, amortSi){
-  const amortRows=[];
-  let capPend = capital;
-  const i = tin/100/12;
-
-  for(let m=1; m<=plazoMeses; m++){
-    // Cuota mensual con fórmula estándar
-    let cuotaBase = (capPend * i) / (1 - Math.pow(1+i, -(plazoMeses - m + 1)));
-    let amortizacion = 0;
-
-    // Comisiones
-    if(amortSi){
-      if(tipo==="fija"){
-        const año = Math.ceil(m/12);
-        if(año<=10) amortizacion = capPend*0.02/12;
-        else amortizacion = capPend*0.015/12;
-      }
-      if(tipo==="mixta"){
-        const año = Math.ceil(m/12);
-        if(año<=3) amortizacion = capPend*0.0025;
-        else amortizacion = capPend*0.0015;
-      }
-    }
-
-    const intereses = capPend * i;
-    const pagoCapital = cuotaBase - intereses + amortizacion;
-    capPend -= pagoCapital;
-    if(capPend < 0) capPend = 0;
-
-    amortRows.push({
-      mes: m,
-      cuota: (cuotaBase + amortizacion).toFixed(2),
-      amort: pagoCapital.toFixed(2),
-      pendiente: capPend.toFixed(2)
-    });
+  const amortRows=[]; let capPend=capital; const i=tin/100/12;
+  for(let m=1;m<=plazoMeses;m++){
+    let cuotaBase=(capPend*i)/(1-Math.pow(1+i,-(plazoMeses-m+1))); let amortizacion=0;
+    if(amortSi){amortizacion=capPend*0.002;} // simplificado
+    const intereses=capPend*i;
+    const pagoCapital=cuotaBase-intereses+amortizacion;
+    capPend-=pagoCapital; if(capPend<0) capPend=0;
+    amortRows.push({mes:m,cuota:(cuotaBase+amortizacion).toFixed(2),amort:pagoCapital.toFixed(2),pendiente:capPend.toFixed(2)});
   }
-
   return amortRows;
 }
 
+// ===== CALCULAR =====
 function calcular(){
   const capital=parseFloat(document.getElementById("capital").value)||0;
   const plazoAños=parseFloat(document.getElementById("plazo").value)||1;
   const plazoMeses=Math.round(plazoAños*12);
   const euribor=parseFloat(document.getElementById("euribor").value)||0;
-
   const tbody=document.querySelector("#tabla tbody");
   tbody.innerHTML="";
   const resultados=[];
 
   for(let i=1;i<=contador;i++){
-    const div=document.getElementById("banco-"+i);
-    if(!div) continue;
-
+    const div=document.getElementById("banco-"+i); if(!div) continue;
     const nombre=document.getElementById("nombre-"+i).value||("Banco "+i);
     const tipo=document.getElementById("tipo-"+i).value;
     const amortSi=document.getElementById("amortSi-"+i).checked;
     let amortRows=[];
 
-    if(tipo==="fija"){
+    if(tipo==="fija"){ 
       const tin=parseFloat(document.getElementById("tinFijo-"+i).value)||0;
       amortRows=generarAmortizacion(capital,tin,plazoMeses,tipo,amortSi);
-    }
-    else if(tipo==="variable"){
+    } else if(tipo==="variable"){
       const dif=parseFloat(document.getElementById("difVar-"+i).value)||0;
       amortRows=generarAmortizacion(capital,euribor+dif,plazoMeses,tipo,amortSi);
-    }
-    else{
+    } else {
       const mesesFijo=parseInt(document.getElementById("mesesFijo-"+i).value)||0;
       const tinFijo=parseFloat(document.getElementById("tinMixtoFijo-"+i).value)||0;
       const dif=parseFloat(document.getElementById("diferencial-"+i).value)||0;
-
       const amortFija=generarAmortizacion(capital,tinFijo,mesesFijo,"fija",amortSi);
       const pagadoFija=amortFija.reduce((a,b)=>a+parseFloat(b.amort),0);
-      const restante=capital - pagadoFija;
+      const restante=capital-pagadoFija;
       const amortVariable=generarAmortizacion(restante,euribor+dif,plazoMeses-mesesFijo,"variable",amortSi);
-
       amortRows=[...amortFija,...amortVariable];
     }
 
     const cuotaMedia=amortRows.reduce((a,b)=>a+parseFloat(b.cuota),0)/plazoMeses;
-    const intereses=amortRows.reduce((a,b)=>a+parseFloat(b.cuota),0) - capital;
+    const intereses=amortRows.reduce((a,b)=>a+parseFloat(b.cuota),0)-capital;
     resultados.push({nombre,tipo,cuotaMedia,intereses,total:capital+intereses,amortRows});
   }
 
   resultados.sort((a,b)=>a.total-b.total);
+  const mejorTotal=resultados[0]?.total||0;
 
   resultados.forEach((r,index)=>{
     const row=document.createElement("tr");
     if(index===0) row.classList.add("mejor");
+    const ahorro=(r.total-mejorTotal).toFixed(2);
     row.innerHTML=`
       <td>${r.nombre}</td>
       <td>${r.tipo}</td>
       <td>${r.cuotaMedia.toFixed(2)} €</td>
       <td>${r.intereses.toFixed(2)} €</td>
       <td>${r.total.toFixed(2)} €</td>
-      <td><span class="amort-toggle" onclick="toggleAmort(${index})">Ver</span>
-      <div id="amort-${index}" style="display:none;"></div></td>
+      <td class="ahorro">${ahorro>0?ahorro+' €':''}</td>
+      <td><span class="amort-toggle" onclick="toggleAmort(${index})">Ver</span><div id="amort-${index}" style="display:none;"></div></td>
     `;
     tbody.appendChild(row);
-
     const amortDiv=document.getElementById("amort-"+index);
     let html="<table class='amort-table'><tr><th>Mes</th><th>Cuota</th><th>Amort</th><th>Pendiente</th></tr>";
     r.amortRows.forEach(m=>html+=`<tr><td>${m.mes}</td><td>${m.cuota} €</td><td>${m.amort} €</td><td>${m.pendiente} €</td></tr>`);
