@@ -22,28 +22,39 @@ button:hover{background:#09407a}
 table{width:100%;border-collapse:collapse;margin-top:15px}
 th,td{border:1px solid #ddd;padding:8px;text-align:center}
 th{background:#e8f0fe}
+
+/* BOTÓN VOLVER AL INICIO */
+.volver-inicio{
+  position: fixed;
+  top:20px;
+  left:20px;
+  z-index:1000;
+  display:inline-block;
+  padding:8px 16px;
+  background:#0d4f8b;
+  color:#fff;
+  border-radius:6px;
+  text-decoration:none;
+  font-weight:600;
+  transition:0.2s;
+}
+.volver-inicio:hover{background:#09407a}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .container{margin:15px;padding:20px;}
+}
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 </head>
 
-  <div style="position: absolute; top: 20px; left: 20px;">
-  <a href="/" style="
-      display:inline-block;
-      padding:8px 16px;
-      background:#0d4f8b;
-      color:#fff;
-      border-radius:6px;
-      text-decoration:none;
-      font-weight:600;
-      transition:0.2s;
-  ">
-    ← Volver al inicio
-  </a>
-</div>
-
 <body>
+
+<!-- BOTÓN VOLVER AL INICIO -->
+<a href="/" class="volver-inicio">← Volver al inicio</a>
+
 <div class="container">
 <h1>Simulador de Hipotecas - Kaoba Finance</h1>
 
@@ -136,7 +147,6 @@ let count=0;
 function actualizarCampos(){
   const op=document.getElementById("tipoOperacion").value;
   const hip=document.getElementById("tipoHipoteca").value;
-
   document.getElementById("camposDeudas").style.display=op==="consolidacion"?"block":"none";
   document.getElementById("camposSubrogacion").style.display=op==="subrogacion"?"block":"none";
   document.getElementById("camposMixta").style.display=hip==="mixta"?"block":"none";
@@ -194,7 +204,7 @@ function calcular(){
     if(hip==="fija"){
       cuotaDespues=cuota(totalCapital+comisiones,tinNuevo,plazoNuevo);
       interesesDespues=cuotaDespues*plazoNuevo*12-totalCapital-comisiones;
-    }else{ // mixta
+    }else{
       const plazoFijo=parseInt(document.getElementById("plazoFijo").value)||1;
       const tinFijo=parseFloat(document.getElementById("tinFijo").value)||0;
       const plazoVariable=plazoNuevo-plazoFijo;
@@ -204,15 +214,13 @@ function calcular(){
       cuotaDespues=(cuotaFija*plazoFijo*12 + cuotaVar*plazoVariable*12)/ (plazoNuevo*12);
       interesesDespues=(cuotaFija*plazoFijo*12 + cuotaVar*plazoVariable*12)-(totalCapital+comisiones);
     }
-  }else{ // subrogacion
+  }else{
     const capitalPendiente=parseFloat(document.getElementById("capitalPendiente").value)||0;
     const tinActual=parseFloat(document.getElementById("tinActual").value)||0;
     const plazoRestante=parseInt(document.getElementById("plazoRestante").value)||1;
     if(capitalPendiente<=0||plazoRestante<=0)return alert("Revisa la hipoteca actual");
-
     cuotaAntes=cuota(capitalPendiente,tinActual,plazoRestante);
     interesesAntes=cuotaAntes*plazoRestante*12-capitalPendiente;
-
     if(hip==="fija"){
       cuotaDespues=cuota(capitalPendiente+comisiones,tinNuevo,plazoNuevo);
       interesesDespues=cuotaDespues*plazoNuevo*12-capitalPendiente-comisiones;
