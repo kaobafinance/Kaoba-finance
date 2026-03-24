@@ -319,29 +319,43 @@ input, select, textarea {
 /* BOTÓN FLOTANTE CALCULADORA */
 #btnCalculadoraFlotante {
   position: fixed;
-  bottom: 80px; /* encima del FAQ */
+  bottom: 90px; /* deja espacio sobre el FAQ */
   right: 20px;
   width: 50px;
   height: 50px;
   background-color: #0d4f8b;
   color: white;
   border-radius: 50%;
-  text-align: center;
-  line-height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-decoration: none;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   transition: background 0.2s, transform 0.2s;
   z-index: 1000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
+
 #btnCalculadoraFlotante svg {
   width: 24px;
   height: 24px;
   fill: white;
 }
+
 #btnCalculadoraFlotante:hover {
   background-color: #09407a;
   transform: scale(1.2);
+}
+
+/* Ajustes para móviles */
+@media (max-width: 600px) {
+  #btnCalculadoraFlotante {
+    bottom: 80px; /* un poco más arriba que el FAQ */
+    width: 45px;
+    height: 45px;
+  }
+
+  #btnCalculadoraFlotante svg {
+    width: 20px;
+    height: 20px;
+  }
 }
