@@ -1,3 +1,5 @@
+document.addEventListener("DOMContentLoaded", () => {
+  // TODO tu código JS aquí
 // -----------------------------
 // ELEMENTOS MODAL CALCULADORA
 // -----------------------------
@@ -272,7 +274,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   const btnRechazar=document.getElementById("btnRechazarCookies");
   if(!banner || !btnAceptar || !btnRechazar) return;
   const cookiesAceptadas=localStorage.getItem("cookiesAceptadas");
- if(cookiesAceptadas === "true" || cookiesAceptadas === "false") {
+if(cookiesAceptadas === "true" || cookiesAceptadas === "false")
     banner.style.display = "none";
   } else {
     banner.style.display = "flex";
@@ -345,3 +347,5 @@ function irAnalisis(event, tipo) {
   // Scroll suave al perfil
   perfilDiv.scrollIntoView({ behavior: 'smooth' });
 }
+});
+                          
