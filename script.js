@@ -223,4 +223,94 @@ document.addEventListener("DOMContentLoaded", () => {
     perfilDiv.scrollIntoView({behavior:'smooth'});
   };
 
+  document.getElementById("enviarLead").addEventListener("click", function () {
+
+  const nombre = document.getElementById("leadNombre").value;
+  const email = document.getElementById("leadEmail").value;
+  const consentimiento = document.getElementById("leadConsentimiento").checked;
+
+  if (!nombre || !email || !consentimiento) {
+    alert("Por favor completa todos los campos y acepta la política.");
+    return;
+  }
+
+  // Obtener datos calculados del perfil
+  const capital = document.getElementById("perfilCapital").innerText || "-";
+  const cuota = document.getElementById("perfilCuota").innerText || "-";
+  const ltv = document.getElementById("perfilLTV").innerText || "-";
+  const gastos = document.getElementById("perfilGastos").innerText || "-";
+  const lti = document.getElementById("perfilLTI").innerText || "-";
+  const compatibilidad = document.getElementById("perfilCompatible").innerText || "-";
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  // --- CABECERA ---
+  doc.setFillColor(13, 79, 139);
+  doc.rect(0, 0, 210, 25, "F");
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(18);
+  doc.text("KAOBA FINANCE", 20, 15);
+
+  doc.setFontSize(11);
+  doc.text("Informe de Simulación Hipotecaria", 20, 21);
+
+  // Reset color texto
+  doc.setTextColor(0, 0, 0);
+
+  // --- DATOS CLIENTE ---
+  doc.setFontSize(14);
+  doc.text("Datos del solicitante", 20, 40);
+
+  doc.setFontSize(11);
+  doc.text("Nombre: " + nombre, 20, 48);
+  doc.text("Email: " + email, 20, 55);
+  doc.text("Fecha: " + new Date().toLocaleDateString(), 20, 62);
+
+  // Línea separadora
+  doc.setDrawColor(200);
+  doc.line(20, 68, 190, 68);
+
+  // --- RESULTADOS ---
+  doc.setFontSize(14);
+  doc.text("Resultado del análisis financiero", 20, 80);
+
+  doc.setFontSize(11);
+
+  doc.text("Importe estimado de préstamo: " + capital, 20, 90);
+  doc.text("Cuota mensual estimada: " + cuota, 20, 98);
+  doc.text("Porcentaje financiación (LTV): " + ltv, 20, 106);
+  doc.text("Gastos aproximados: " + gastos, 20, 114);
+  doc.text("Ratio endeudamiento (LTI): " + lti, 20, 122);
+  doc.text("Compatibilidad bancaria: " + compatibilidad, 20, 130);
+
+  // --- CONCLUSIÓN ---
+  doc.setFontSize(13);
+  doc.text("Conclusión profesional", 20, 150);
+
+  doc.setFontSize(11);
+  doc.text(
+    "Este análisis se basa en criterios bancarios estándar actuales.",
+    20,
+    160
+  );
+  doc.text(
+    "La aprobación definitiva dependerá del estudio individual de la entidad financiera.",
+    20,
+    167
+  );
+
+  // --- PIE DE PÁGINA ---
+  doc.setFontSize(8);
+  doc.setTextColor(120);
+  doc.text(
+    "Documento generado automáticamente por Kaoba Finance. Uso orientativo, no vinculante.",
+    20,
+    285
+  );
+
+  doc.save("Simulacion_Kaoba_Finance.pdf");
+
+});
 });
