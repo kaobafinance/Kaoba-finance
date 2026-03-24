@@ -3,262 +3,344 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kaoba Finance | Comparador de Hipotecas Mixtas</title>
-<style>
-/* --- Estilo global Kaoba Finance --- */
-body { font-family: Arial, sans-serif; background:#f7f9fb; margin:0; padding:0;}
-header, footer { background:#0d4f8b; color:#fff; text-align:center; padding:20px;}
-main { max-width:1000px; margin:30px auto; padding:20px; background:#fff; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1);}
-h1,h2 { color:#0d4f8b;}
-label { display:block; margin-top:10px;}
-input, select, button { width:100%; padding:8px; margin-top:5px; border-radius:4px; border:1px solid #ccc; font-size:14px;}
-input:focus, select:focus { border-color:#0d4f8b; outline:none;}
-button { background:#0d4f8b; color:#fff; border:none; cursor:pointer; font-size:16px; margin-top:20px; transition:0.2s;}
-button:hover { background:#09407a;}
-.table-container { overflow-x:auto; margin-top:20px;}
-table { width:100%; border-collapse: collapse; margin-top:10px;}
-th, td { border:1px solid #ddd; padding:10px; text-align:center;}
-.remove-btn { background:red; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; position:absolute; top:10px; right:10px;}
-.banco-card { border:1px solid #ddd; padding:10px; margin-top:10px; position:relative; border-radius:6px; background:#f9faff;}
-a { color:#0d4f8b; text-decoration:underline;}
-</style>
+<title>Kaoba Finance | Comparador de Hipotecas</title>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+<style>
+body{
+  font-family: Arial, sans-serif;
+  background:#f5f6fa;
+  margin:0;
+}
+header{
+  background:#0d4f8b;
+  color:#fff;
+  padding:25px;
+  text-align:center;
+}
+main{
+  max-width:1100px;
+  margin:30px auto;
+  background:#fff;
+  padding:30px;
+  border-radius:12px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.05);
+}
+h2{color:#0d4f8b;}
+
+label{display:block;margin-top:10px;}
+input,select{
+  width:100%;
+  padding:8px;
+  margin-top:4px;
+  border:1px solid #d1d5db;
+  border-radius:6px;
+}
+
+button{
+  background:#0d4f8b;
+  color:#fff;
+  border:none;
+  padding:10px 18px;
+  border-radius:8px;
+  cursor:pointer;
+  margin-top:15px;
+  transition:0.2s;
+}
+button:hover{background:#09407a;}
+
+.banco-card{
+  border:1px solid #e3e8ef;
+  padding:20px;
+  border-radius:12px;
+  margin-top:20px;
+  position:relative;
+  background:#fafbff;
+  transition:0.25s;
+}
+.banco-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 8px 25px rgba(0,0,0,0.08);
+}
+
+/* BOTÓN ELIMINAR PREMIUM */
+.remove-btn{
+  position:absolute;
+  top:15px;
+  right:15px;
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  background:#fff;
+  color:#dc3545;
+  font-size:18px;
+  font-weight:bold;
+  border:none;
+  box-shadow:0 2px 6px rgba(0,0,0,0.15);
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:0.2s;
+}
+.remove-btn:hover{
+  background:#dc3545;
+  color:#fff;
+  transform:scale(1.1);
+}
+
+.table-container{
+  overflow-x:auto;
+  margin-top:20px;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+th,td{
+  padding:10px;
+  border-bottom:1px solid #e5e7eb;
+  text-align:center;
+}
+th{background:#f1f3f6;}
+
+.mejor{
+  background:#198754 !important;
+  color:#fff;
+}
+
+@media(max-width:600px){
+  main{margin:15px;padding:20px;}
+}
+</style>
 </head>
+
 <body>
 
 <header>
 <h1>Kaoba Finance</h1>
-<p>Comparador avanzado de hipotecas mixtas</p>
+<p>Comparador profesional de hipotecas</p>
 </header>
 
 <main>
-<section>
-<h2>Datos de la hipoteca</h2>
-<label>Capital deseado (€):
-<input type="number" id="capitalOperacion" value="0" min="0" onfocus="clearZero(this)">
-</label>
-<label>Plazo total (meses):
-<input type="number" id="plazoOperacion" value="240" min="1" onfocus="clearZero(this)">
-</label>
-</section>
 
-<section>
-<h2>Ofertas de bancos</h2>
-<div id="bancos-container"></div>
-<button type="button" onclick="addBanco()">+ Añadir banco</button>
-</section>
+<h2>Datos generales</h2>
 
-<section>
+<label>Capital (€)
+<input type="number" id="capital" value="0" onfocus="clearZero(this)">
+</label>
+
+<label>Plazo total (meses)
+<input type="number" id="plazo" value="240">
+</label>
+
+<label>Euríbor actual (%)
+<input type="number" id="euribor" value="3.50" step="0.01">
+</label>
+
+<hr>
+
+<h2>Ofertas bancarias</h2>
+<div id="bancos"></div>
+<button onclick="addBanco()">+ Añadir banco</button>
+
+<hr>
+
 <h2>Resultados</h2>
-<label>Correo electrónico para enviar PDF:
-<input type="email" id="emailUsuario" placeholder="tuemail@ejemplo.com"></label>
 
-<label style="margin-top:10px;">
-<input type="checkbox" id="aceptaDatos">
-Acepto la <a href="/politica-privacidad" target="_blank">política de privacidad</a>
+<label>Email para recibir PDF
+<input type="email" id="email">
 </label>
 
-<button onclick="calcularComparacion()">Calcular comparativa</button>
-<button onclick="descargarPDFCorreo()">Descargar PDF y enviar al correo</button>
+<label>
+<input type="checkbox" id="acepta">
+Acepto política de privacidad
+</label>
+
+<button onclick="calcular()">Calcular</button>
+<button onclick="descargarPDF()">Descargar PDF</button>
 <button onclick="descargarCSV()">Descargar CSV</button>
 
 <div class="table-container">
-<table id="tablaResultados">
+<table id="tabla">
 <thead>
 <tr>
 <th>Banco</th>
-<th>TIN Inicial (%)</th>
-<th>Período Fijo (meses)</th>
-<th>TIN Variable (%)</th>
-<th>Bonificación (%)</th>
-<th>Comisión (€)</th>
-<th>Seguros (€)</th>
-<th>Comisión amortización (%)</th>
-<th>Cuota Media (€)</th>
-<th>Intereses (€)</th>
-<th>Total (€)</th>
+<th>Tipo</th>
+<th>Cuota media</th>
+<th>Intereses</th>
+<th>Total</th>
 </tr>
 </thead>
 <tbody></tbody>
 </table>
 </div>
-</section>
+
 </main>
 
-<footer>
-<p>© 2026 Kaoba Finance | Todos los derechos reservados</p>
-</footer>
-
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  let bancoCount = 0;
+let contador=0;
 
-  // --- Añadir banco ---
-  function addBanco() {
-    bancoCount++;
-    const container = document.getElementById('bancos-container');
-    if (!container) return;
+function clearZero(input){
+  if(input.value==="0") input.value="";
+}
 
-    const div = document.createElement('div');
-    div.id = `banco-${bancoCount}`;
-    div.className = "banco-card";
-    div.innerHTML = `
-      <button class="remove-btn" onclick="removeBanco(${bancoCount})">×</button>
-      <label>Nombre del banco:<input type="text" id="nombre-${bancoCount}" placeholder="Banco Ejemplo"></label>
-      <label>Periodo inicial fijo (meses):<input type="number" id="plazoFijo-${bancoCount}" value="60" min="0" onfocus="clearZero(this)"></label>
-      <label>TIN inicial fijo (%):<input type="number" id="tinFijo-${bancoCount}" value="2.5" step="0.01" min="0" onfocus="clearZero(this)"></label>
-      <label>TIN variable restante (%):<input type="number" id="tinVariable-${bancoCount}" value="3.5" step="0.01" min="0" onfocus="clearZero(this)"></label>
-      <label>Bonificación (%):<input type="number" id="bonificacion-${bancoCount}" value="0" step="0.01" min="0" onfocus="clearZero(this)"></label>
-      <label>Comisión (€):<input type="number" id="comision-${bancoCount}" value="0" step="0.01" min="0" onfocus="clearZero(this)"></label>
-      <label>Coste de seguros (€):<input type="number" id="seguros-${bancoCount}" value="0" step="0.01" min="0" onfocus="clearZero(this)"></label>
-      <label>Comisión por amortización (%):<input type="number" id="amortizacion-${bancoCount}" value="0" step="0.01" min="0" onfocus="clearZero(this)"></label>
+function addBanco(){
+  contador++;
+  const div=document.createElement("div");
+  div.className="banco-card";
+  div.id="banco-"+contador;
+  div.innerHTML=`
+  <button class="remove-btn" onclick="removeBanco(${contador})">×</button>
+  <label>Nombre
+  <input type="text" id="nombre-${contador}" placeholder="Banco ${contador}">
+  </label>
+
+  <label>Tipo
+  <select id="tipo-${contador}" onchange="toggleTipo(${contador})">
+    <option value="fija">Fija</option>
+    <option value="mixta">Mixta</option>
+    <option value="variable">Variable</option>
+  </select>
+  </label>
+
+  <div id="bloque-fija-${contador}">
+    <label>TIN fijo (%)
+    <input type="number" id="tinFijo-${contador}" step="0.01">
+    </label>
+  </div>
+
+  <div id="bloque-mixta-${contador}" style="display:none;">
+    <label>Meses fijo
+    <input type="number" id="mesesFijo-${contador}" value="60">
+    </label>
+    <label>TIN fijo (%)
+    <input type="number" id="tinMixtoFijo-${contador}" step="0.01">
+    </label>
+    <label>Diferencial (%)
+    <input type="number" id="diferencial-${contador}" step="0.01">
+    </label>
+  </div>
+
+  <div id="bloque-variable-${contador}" style="display:none;">
+    <label>Diferencial (%)
+    <input type="number" id="difVar-${contador}" step="0.01">
+    </label>
+  </div>
+
+  <label>Amortización anticipada (€ opcional)
+  <input type="number" id="amortizacion-${contador}" value="0">
+  </label>
+  `;
+  document.getElementById("bancos").appendChild(div);
+}
+
+function removeBanco(id){
+  const div=document.getElementById("banco-"+id);
+  div.style.opacity="0";
+  div.style.transform="scale(0.9)";
+  setTimeout(()=>div.remove(),200);
+}
+
+function toggleTipo(id){
+  const tipo=document.getElementById("tipo-"+id).value;
+  document.getElementById("bloque-fija-"+id).style.display=tipo==="fija"?"block":"none";
+  document.getElementById("bloque-mixta-"+id).style.display=tipo==="mixta"?"block":"none";
+  document.getElementById("bloque-variable-"+id).style.display=tipo==="variable"?"block":"none";
+}
+
+function cuota(capital,tin,plazo){
+  const i=tin/100/12;
+  return (capital*i*Math.pow(1+i,plazo))/(Math.pow(1+i,plazo)-1);
+}
+
+function calcular(){
+  const capital=parseFloat(document.getElementById("capital").value)||0;
+  const plazo=parseInt(document.getElementById("plazo").value)||1;
+  const euribor=parseFloat(document.getElementById("euribor").value)||0;
+
+  const tbody=document.querySelector("#tabla tbody");
+  tbody.innerHTML="";
+  let resultados=[];
+
+  for(let i=1;i<=contador;i++){
+    const div=document.getElementById("banco-"+i);
+    if(!div) continue;
+
+    const nombre=document.getElementById("nombre-"+i).value||("Banco "+i);
+    const tipo=document.getElementById("tipo-"+i).value;
+    let cuotaMedia=0, intereses=0;
+
+    if(tipo==="fija"){
+      const tin=parseFloat(document.getElementById("tinFijo-"+i).value)||0;
+      cuotaMedia=cuota(capital,tin,plazo);
+      intereses=cuotaMedia*plazo-capital;
+    }
+
+    if(tipo==="variable"){
+      const dif=parseFloat(document.getElementById("difVar-"+i).value)||0;
+      const tin=euribor+dif;
+      cuotaMedia=cuota(capital,tin,plazo);
+      intereses=cuotaMedia*plazo-capital;
+    }
+
+    if(tipo==="mixta"){
+      const mesesFijo=parseInt(document.getElementById("mesesFijo-"+i).value)||0;
+      const tinFijo=parseFloat(document.getElementById("tinMixtoFijo-"+i).value)||0;
+      const dif=parseFloat(document.getElementById("diferencial-"+i).value)||0;
+
+      const cuotaFija=cuota(capital,tinFijo,mesesFijo);
+      const restante=capital - (cuotaFija*mesesFijo - capital);
+      const tinVar=euribor+dif;
+      const cuotaVar=cuota(restante,tinVar,plazo-mesesFijo);
+
+      cuotaMedia=((cuotaFija*mesesFijo)+(cuotaVar*(plazo-mesesFijo)))/plazo;
+      intereses=cuotaFija*mesesFijo+cuotaVar*(plazo-mesesFijo)-capital;
+    }
+
+    const total=capital+intereses;
+    resultados.push({nombre,tipo,cuotaMedia,intereses,total});
+  }
+
+  resultados.sort((a,b)=>a.total-b.total);
+
+  resultados.forEach((r,index)=>{
+    const row=document.createElement("tr");
+    if(index===0) row.classList.add("mejor");
+    row.innerHTML=`
+      <td>${r.nombre}</td>
+      <td>${r.tipo}</td>
+      <td>${r.cuotaMedia.toFixed(2)} €</td>
+      <td>${r.intereses.toFixed(2)} €</td>
+      <td>${r.total.toFixed(2)} €</td>
     `;
-    container.appendChild(div);
-  }
+    tbody.appendChild(row);
+  });
+}
 
-  window.addBanco = addBanco;
+function descargarPDF(){
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF();
+  doc.text("Comparativa Hipotecas - Kaoba Finance",20,20);
+  doc.autoTable({html:'#tabla',startY:30});
+  doc.save("Comparativa.pdf");
+}
 
-  // --- Remover banco ---
-  function removeBanco(id) {
-    const div = document.getElementById(`banco-${id}`);
-    if (div) div.remove();
-  }
-  window.removeBanco = removeBanco;
-
-  // --- Limpiar ceros ---
-  function clearZero(input) { if(input.value==='0') input.value=''; }
-  window.clearZero = clearZero;
-
-  // --- Calcular cuota ---
-  function calcularCuota(capital, tin, plazo) {
-    if (plazo <= 0 || tin <= 0) return 0;
-    const i = tin / 100 / 12;
-    return (capital * i * Math.pow(1 + i, plazo)) / (Math.pow(1 + i, plazo) - 1);
-  }
-
-  // --- Comparación ---
-  window.calcularComparacion = function() {
-    const capital = parseFloat(document.getElementById('capitalOperacion')?.value) || 0;
-    const plazoTotal = parseInt(document.getElementById('plazoOperacion')?.value) || 1;
-    if (capital <= 0 || plazoTotal <= 0) { alert("Capital y plazo deben ser positivos"); return; }
-
-    const tbody = document.querySelector("#tablaResultados tbody");
-    if (!tbody) return;
-    tbody.innerHTML = "";
-    const mejores = [];
-
-    for (let i = 1; i <= bancoCount; i++) {
-      const div = document.getElementById(`banco-${i}`);
-      if (!div) continue;
-
-      const nombre = document.getElementById(`nombre-${i}`)?.value || `Banco ${i}`;
-      const plazoFijo = parseInt(document.getElementById(`plazoFijo-${i}`)?.value) || 0;
-      const tinFijo = parseFloat(document.getElementById(`tinFijo-${i}`)?.value) || 0;
-      const tinVariable = parseFloat(document.getElementById(`tinVariable-${i}`)?.value) || 0;
-      const bonificacion = parseFloat(document.getElementById(`bonificacion-${i}`)?.value) || 0;
-      const comision = parseFloat(document.getElementById(`comision-${i}`)?.value) || 0;
-      const seguros = parseFloat(document.getElementById(`seguros-${i}`)?.value) || 0;
-      const amortizacion = parseFloat(document.getElementById(`amortizacion-${i}`)?.value) || 0;
-
-      const tinFijoReal = Math.max(0, tinFijo - bonificacion);
-      const tinVariableReal = Math.max(0, tinVariable - bonificacion);
-      const capitalTotal = capital + comision + seguros + capital * amortizacion / 100;
-
-      const plazoVariable = plazoTotal - plazoFijo;
-      const cuotaFija = calcularCuota(capitalTotal, tinFijoReal, plazoFijo>0?plazoFijo:1);
-      let capitalRestante = cuotaFija * (plazoFijo>0?plazoFijo:1) - capitalTotal;
-      if (capitalRestante < 0) capitalRestante = 0;
-      const cuotaVariable = plazoVariable>0 ? calcularCuota(capitalRestante, tinVariableReal, plazoVariable) : 0;
-
-      const cuotaMedia = ((cuotaFija*plazoFijo) + (cuotaVariable*plazoVariable)) / plazoTotal;
-      const interesesTotales = cuotaFija*plazoFijo + cuotaVariable*plazoVariable - capital;
-      const totalPagar = capital + interesesTotales + comision + seguros + capital*amortizacion/100;
-
-      tbody.innerHTML += `<tr>
-        <td>${nombre}</td>
-        <td>${tinFijo.toFixed(2)}</td>
-        <td>${plazoFijo}</td>
-        <td>${tinVariable.toFixed(2)}</td>
-        <td>${bonificacion.toFixed(2)}</td>
-        <td>${comision.toFixed(2)}</td>
-        <td>${seguros.toFixed(2)}</td>
-        <td>${amortizacion.toFixed(2)}</td>
-        <td>${cuotaMedia.toFixed(2)}</td>
-        <td>${interesesTotales.toFixed(2)}</td>
-        <td>${totalPagar.toFixed(2)}</td>
-      </tr>`;
-
-      mejores.push({nombre, total: totalPagar});
-    }
-
-    // Resaltar mejor oferta
-    if(mejores.length>0){
-      mejores.sort((a,b)=>a.total-b.total);
-      const rows = tbody.querySelectorAll("tr");
-      rows.forEach(row=>{
-        if(row.cells[0].innerText === mejores[0].nombre){
-          row.style.backgroundColor = "#198754";
-          row.style.color = "#fff";
-        } else {
-          row.style.backgroundColor = "";
-          row.style.color = "";
-        }
-      });
-    }
-  }
-
-  // --- Descargar PDF ---
-  window.descargarPDFCorreo = function() {
-    const email = document.getElementById('emailUsuario')?.value.trim();
-    const acepta = document.getElementById('aceptaDatos')?.checked;
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert("Introduce un correo válido"); return; }
-    if (!acepta) { alert("Debes aceptar la política de privacidad"); return; }
-
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    doc.setFontSize(16);
-    doc.text("Comparativa avanzada de hipotecas mixtas", 20, 20);
-
-    const tableData = [];
-    document.querySelectorAll("#tablaResultados tbody tr").forEach(tr => {
-      const row = [];
-      tr.querySelectorAll("td").forEach(td => row.push(td.innerText));
-      tableData.push(row);
-    });
-
-    doc.autoTable({head:[["Banco","TIN Fijo","Período Fijo","TIN Variable","Bonificación","Comisión","Seguros","Amortización (%)","Cuota Media","Intereses","Total"]], body:tableData, startY:30});
-    const pdfBlob = doc.output('blob');
-
-    const formData = new FormData();
-    formData.append('pdf', pdfBlob, 'Comparativa_Hipotecas_Mixtas.pdf');
-    formData.append('email', email);
-
-    fetch('/enviar-pdf-correo',{method:'POST',body:formData})
-      .then(resp=>resp.json())
-      .then(data=>alert(data.message || "PDF enviado al correo"))
-      .catch(err=>{ console.error(err); alert("Error enviando PDF"); });
-  }
-
-  // --- Descargar CSV ---
-  window.descargarCSV = function() {
-    const rows = [["Banco","TIN Fijo","Período Fijo","TIN Variable","Bonificación","Comisión","Seguros","Amortización (%)","Cuota Media","Intereses","Total"]];
-    document.querySelectorAll("#tablaResultados tbody tr").forEach(tr=>{
-      const row=[];
-      tr.querySelectorAll("td").forEach(td=>row.push(td.innerText));
-      rows.push(row);
-    });
-    const csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download","Comparativa_Hipotecas_Mixtas.csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
-
-});
+function descargarCSV(){
+  let csv="";
+  document.querySelectorAll("#tabla tr").forEach(tr=>{
+    let row=[];
+    tr.querySelectorAll("th,td").forEach(td=>row.push(td.innerText));
+    csv+=row.join(",")+"\\n";
+  });
+  const blob=new Blob([csv],{type:"text/csv"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="comparativa.csv";
+  a.click();
+}
 </script>
 
 </body>
