@@ -309,6 +309,6 @@ if (enviarBtn && statusSpan) {
       statusSpan.innerText = "Error de conexión con el servidor.";
     }
   });
-}
+
 
 });
