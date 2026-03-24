@@ -223,138 +223,137 @@ document.addEventListener("DOMContentLoaded", () => {
     perfilDiv.scrollIntoView({behavior:'smooth'});
   };
 
- document.getElementById("enviarLead").addEventListener("click", function () {
-  const nombre = document.getElementById("leadNombre").value;
-  const email = document.getElementById("leadEmail").value;
+ document.getElementById("enviarLead").addEventListener("click", async function () {
+  const nombre = document.getElementById("leadNombre").value.trim();
+  const email = document.getElementById("leadEmail").value.trim();
   const consentimiento = document.getElementById("leadConsentimiento").checked;
 
+  const statusSpan = document.getElementById("statusEnvio");
+  if (!statusSpan) return;
+
+  // --- Validación ---
   if (!nombre || !email || !consentimiento) {
-    alert("Por favor completa todos los campos y acepta la política.");
+    statusSpan.style.color = "red";
+    statusSpan.innerText = "Por favor completa todos los campos y acepta la política.";
     return;
   }
 
-  const capital = document.getElementById("perfilCapital").innerText || "No disponible";
-  const cuota = document.getElementById("perfilCuota").innerText || "No disponible";
-  const ltv = document.getElementById("perfilLTV").innerText || "No disponible";
-  const gastos = document.getElementById("perfilGastos").innerText || "No disponible";
-  const lti = document.getElementById("perfilLTI").innerText || "No disponible";
-  const compatibilidad = document.getElementById("perfilCompatible").innerText || "No disponible";
+  // --- Preparar datos del PDF ---
+  const capital = document.getElementById("perfilCapital").innerText || "0";
+  const cuota = document.getElementById("perfilCuota").innerText || "0";
+  const ltv = document.getElementById("perfilLTV").innerText || "0";
+  const gastos = document.getElementById("perfilGastos").innerText || "0";
+  const lti = document.getElementById("perfilLTI").innerText || "0";
+  const compatibilidad = document.getElementById("perfilCompatible").innerText || "-";
 
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
-  // --- CABECERA ---
+  // --- Cabecera ---
   doc.setFillColor(13, 79, 139);
   doc.rect(0, 0, 210, 25, "F");
-
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(18);
   doc.setFont("helvetica", "bold");
   doc.text("KAOBA FINANCE", 20, 15);
-
   doc.setFontSize(11);
   doc.setFont("helvetica", "normal");
   doc.text("Informe de Simulación Hipotecaria", 20, 21);
-
   doc.setTextColor(0, 0, 0);
 
-  // --- DATOS DEL CLIENTE ---
+  // --- Datos del cliente ---
   doc.setFontSize(14);
   doc.setFont("helvetica", "bold");
   doc.text("Datos del solicitante", 20, 40);
-
   doc.setFontSize(11);
   doc.setFont("helvetica", "normal");
   doc.text(`Nombre: ${nombre}`, 20, 48);
   doc.text(`Email: ${email}`, 20, 55);
   doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 20, 62);
 
-  // --- RESULTADOS FINANCIEROS EN TABLA ---
-  const results = [
-    ["Concepto", "Valor"],
-    ["Importe estimado de préstamo", capital !== "No disponible" ? `€ ${parseFloat(capital).toLocaleString()}` : capital],
-    ["Cuota mensual estimada", cuota !== "No disponible" ? `€ ${parseFloat(cuota).toLocaleString()}` : cuota],
-    ["Porcentaje financiación (LTV)", ltv !== "No disponible" ? `${ltv}%` : ltv],
-    ["Gastos aproximados", gastos !== "No disponible" ? `€ ${parseFloat(gastos).toLocaleString()}` : gastos],
-    ["Ratio endeudamiento (LTI)", lti !== "No disponible" ? `${lti}%` : lti],
-    ["Compatibilidad bancaria", compatibilidad],
+  // --- Resultados en tabla ---
+  const startY = 75;
+  const lineHeight = 8;
+  const data = [
+    ["Importe estimado de préstamo", capital],
+    ["Cuota mensual estimada", cuota],
+    ["Porcentaje financiación (LTV)", ltv],
+    ["Gastos aproximados", gastos],
+    ["Ratio endeudamiento (LTI)", lti],
+    ["Compatibilidad bancaria", compatibilidad]
   ];
 
-  doc.autoTable({
-    startY: 75,
-    head: [results[0]],
-    body: results.slice(1),
-    theme: 'grid',
-    headStyles: { fillColor: [13, 79, 139], textColor: 255, fontStyle: 'bold' },
-    bodyStyles: { fontSize: 11 },
-    columnStyles: {
-      0: { cellWidth: 90, fontStyle: 'bold' },
-      1: { cellWidth: 90 },
-    },
+  data.forEach((row, i) => {
+    doc.setFont("helvetica", "bold");
+    doc.text(row[0] + ":", 20, startY + i * lineHeight);
+    doc.setFont("helvetica", "normal");
+    doc.text(row[1], 110, startY + i * lineHeight);
   });
 
-  // --- GRÁFICO DE BARRAS LTV vs LTI ---
-  const chartY = doc.lastAutoTable.finalY + 10;
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(12);
-  doc.text("Gráfico de LTV vs LTI", 20, chartY);
-
-  // Datos numéricos para el gráfico
-  const ltvNum = ltv !== "No disponible" ? parseFloat(ltv) : 0;
-  const ltiNum = lti !== "No disponible" ? parseFloat(lti) : 0;
-
-  // Dimensiones del gráfico
+  // --- Gráfico LTV vs LTI ---
+  const chartY = startY + data.length * lineHeight + 10;
   const chartX = 20;
-  const chartWidth = 100;
-  const chartHeight = 30;
+  const chartWidth = 70;
+  const chartHeight = 25;
   const maxPercent = 100;
+  const ltvNum = parseFloat(ltv) || 0;
+  const ltiNum = parseFloat(lti) || 0;
 
-  // Dibujar fondo gris para barra
   doc.setFillColor(220);
-  doc.rect(chartX, chartY + 5, chartWidth, chartHeight, "F");
+  doc.rect(chartX, chartY, chartWidth, chartHeight, "F");
+  doc.rect(chartX, chartY + chartHeight + 5, chartWidth, chartHeight, "F");
 
-  // Dibujar barra LTV en azul
   doc.setFillColor(13, 79, 139);
-  doc.rect(chartX, chartY + 5, (ltvNum / maxPercent) * chartWidth, chartHeight, "F");
+  doc.rect(chartX, chartY, (ltvNum / maxPercent) * chartWidth, chartHeight, "F");
 
-  // Dibujar barra LTI en verde
   doc.setFillColor(0, 150, 0);
-  doc.rect(chartX, chartY + 5 + chartHeight + 5, (ltiNum / maxPercent) * chartWidth, chartHeight, "F");
+  doc.rect(chartX, chartY + chartHeight + 5, (ltiNum / maxPercent) * chartWidth, chartHeight, "F");
 
-  // Etiquetas
   doc.setFontSize(10);
   doc.setTextColor(0, 0, 0);
-  doc.text(`LTV: ${ltvNum}%`, chartX + chartWidth + 5, chartY + 5 + chartHeight / 2 + 3);
-  doc.text(`LTI: ${ltiNum}%`, chartX + chartWidth + 5, chartY + 5 + chartHeight * 1.5 + 8);
+  doc.text(`LTV: ${ltvNum}%`, chartX + chartWidth + 5, chartY + chartHeight / 2 + 3);
+  doc.text(`LTI: ${ltiNum}%`, chartX + chartWidth + 5, chartY + chartHeight * 1.5 + 8);
 
-  // --- CONCLUSIÓN ---
-  const conclusionY = chartY + 5 + chartHeight * 2 + 15;
+  // --- Conclusión ---
+  const conclusionY = chartY + chartHeight * 2 + 15;
   doc.setFontSize(13);
   doc.setFont("helvetica", "bold");
   doc.text("Conclusión profesional", 20, conclusionY);
-
   doc.setFontSize(11);
   doc.setFont("helvetica", "normal");
-  doc.text(
-    "Este análisis se basa en criterios bancarios estándar actuales.",
-    20,
-    conclusionY + 10
-  );
-  doc.text(
-    "La aprobación definitiva dependerá del estudio individual de la entidad financiera.",
-    20,
-    conclusionY + 17
-  );
+  doc.text("Este análisis se basa en criterios bancarios estándar actuales.", 20, conclusionY + 10);
+  doc.text("La aprobación definitiva dependerá del estudio individual de la entidad financiera.", 20, conclusionY + 17);
 
-  // --- PIE DE PÁGINA ---
   doc.setFontSize(8);
   doc.setTextColor(120);
-  doc.text(
-    "Documento generado automáticamente por Kaoba Finance. Uso orientativo, no vinculante.",
-    20,
-    285
-  );
+  doc.text("Documento generado automáticamente por Kaoba Finance. Uso orientativo, no vinculante.", 20, 285);
 
-  doc.save("Simulacion_Kaoba_Finance.pdf");
-});
+  // --- Enviar PDF al backend ---
+  const pdfBlob = doc.output("blob");
+  const formData = new FormData();
+  formData.append("nombre", nombre);
+  formData.append("email", email);
+  formData.append("pdf", pdfBlob, "Simulacion_Kaoba_Finance.pdf");
+
+  try {
+    const response = await fetch("https://tu-backend.onrender.com/api/enviar-pdf", {
+      method: "POST",
+      body: formData
+    });
+    const data = await response.json();
+
+    // Mensaje unificado en la página
+    if (data.ok) {
+      statusSpan.style.color = "green";
+      statusSpan.innerText = `Simulación enviada a ${email}`;
+    } else {
+      statusSpan.style.color = "red";
+      statusSpan.innerText = "Error enviando simulación";
+    }
+
+  } catch (err) {
+    console.error("Error de conexión con el servidor", err);
+    statusSpan.style.color = "red";
+    statusSpan.innerText = "Error de conexión con el servidor";
+  }
 });
