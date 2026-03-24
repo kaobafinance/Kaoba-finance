@@ -5,30 +5,35 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kaoba Finance | Simulador Hipotecas</title>
 
-<style>
-body{font-family:Arial,sans-serif;background:#f7f9fb;margin:0;padding:0}
-.container{max-width:900px;margin:30px auto;background:#fff;padding:30px;border-radius:10px;box-shadow:0 3px 12px rgba(0,0,0,0.1)}
-h1,h2{color:#0d4f8b;text-align:center;margin-bottom:20px}
-h2{text-align:left;margin-top:30px}
-label{display:block;margin-top:12px;font-weight:600}
-input,select,button{width:100%;padding:10px;margin-top:5px;border-radius:6px;border:1px solid #ccc;font-size:14px}
-input:focus,select:focus{border-color:#0d4f8b;outline:none}
-button{background:#0d4f8b;color:#fff;border:none;font-size:15px;margin-top:20px;cursor:pointer;transition:0.2s}
-button:hover{background:#09407a}
-.deuda{border:1px solid #ddd;padding:15px;border-radius:8px;margin-top:15px;position:relative;background:#fafafa}
-.remove{position:absolute;top:8px;right:8px;background:#dc3545;color:#fff;border:none;border-radius:50%;width:22px;height:22px;cursor:pointer}
-.resultado{margin-top:25px;padding:15px;border-radius:8px;background:#f1f5ff}
-.resultado strong{color:#0d4f8b}
-table{width:100%;border-collapse:collapse;margin-top:15px}
-th,td{border:1px solid #ddd;padding:8px;text-align:center}
-th{background:#e8f0fe}
+<!-- jsPDF para PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
-/* BOTÓN VOLVER AL INICIO */
+<style>
+/* ====== BASE GLOBAL ====== */
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif;}
+body{background:#f8f9fa;color:#333;padding:20px;line-height:1.5;}
+h1,h2{color:#0d4f8b;}
+h1{text-align:center;margin-bottom:20px;}
+h2{margin-top:25px;margin-bottom:10px;}
+label{display:block;margin-top:12px;font-weight:600;}
+input, select, button{width:100%;padding:10px;margin-top:6px;border-radius:6px;border:1px solid #d1d5db;font-size:0.95rem;}
+input:focus,select:focus{border-color:#0d4f8b;outline:none;}
+button{background:#0d4f8b;color:#fff;border:none;cursor:pointer;font-size:0.95rem;transition:0.2s;margin-top:12px;}
+button:hover{background:#09407a;}
+
+/* ====== CONTENEDOR ====== */
+.container{
+  max-width:900px;
+  margin:30px auto;
+  background:#fff;
+  padding:30px;
+  border-radius:10px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* ====== BOTÓN VOLVER ====== */
 .volver-inicio{
-  position: fixed;
-  top:20px;
-  left:20px;
-  z-index:1000;
   display:inline-block;
   padding:8px 16px;
   background:#0d4f8b;
@@ -37,22 +42,30 @@ th{background:#e8f0fe}
   text-decoration:none;
   font-weight:600;
   transition:0.2s;
+  margin-bottom:15px;
 }
-.volver-inicio:hover{background:#09407a}
+.volver-inicio:hover{background:#09407a;}
+
+/* ====== BLOQUES ====== */
+.deuda, .resultado{background:#fafbff;padding:15px;border-radius:8px;border:1px solid #e3e8ef;margin-top:12px;}
+.deuda{position:relative;}
+.remove{position:absolute;top:8px;right:8px;background:#dc3545;color:#fff;border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;}
+.resultado strong{color:#0d4f8b;}
+
+/* ====== TABLA ====== */
+table{width:100%;border-collapse:collapse;margin-top:15px;}
+th,td{padding:10px;border-bottom:1px solid #e5e7eb;text-align:center;font-size:0.9rem;}
+th{background:#f1f3f6;}
 
 /* RESPONSIVE */
 @media(max-width:600px){
   .container{margin:15px;padding:20px;}
 }
 </style>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 </head>
 
 <body>
 
-<!-- BOTÓN VOLVER AL INICIO -->
 <a href="/" class="volver-inicio">← Volver al inicio</a>
 
 <div class="container">
@@ -61,8 +74,8 @@ th{background:#e8f0fe}
 <h2>1️⃣ Tipo de operación</h2>
 <label>Selecciona la operación:</label>
 <select id="tipoOperacion" onchange="actualizarCampos()">
-  <option value="consolidacion">Consolidación</option>
-  <option value="subrogacion">Subrogación</option>
+  <option value="consolidacion">Consolidación de deudas</option>
+  <option value="subrogacion">Subrogación hipoteca</option>
 </select>
 
 <h2>2️⃣ Tipo de hipoteca</h2>
@@ -79,40 +92,22 @@ th{background:#e8f0fe}
 </div>
 
 <div id="camposSubrogacion" style="display:none">
-<h2>3️⃣ Datos de la hipoteca actual</h2>
-<label>Capital pendiente (€):
-<input type="number" id="capitalPendiente" value="0" min="0" onfocus="clearZero(this)">
-</label>
-<label>TIN actual (%):
-<input type="number" id="tinActual" value="3.5" step="0.01" min="0" onfocus="clearZero(this)">
-</label>
-<label>Plazo restante (años):
-<input type="number" id="plazoRestante" value="20" min="1" onfocus="clearZero(this)">
-</label>
+<h2>3️⃣ Hipoteca actual</h2>
+<label>Capital pendiente (€)<input type="number" id="capitalPendiente" value="0" min="0" onfocus="clearZero(this)"></label>
+<label>TIN actual (%)<input type="number" id="tinActual" value="3.5" step="0.01" min="0" onfocus="clearZero(this)"></label>
+<label>Plazo restante (años)<input type="number" id="plazoRestante" value="20" min="1" onfocus="clearZero(this)"></label>
 </div>
 
 <div id="camposMixta" style="display:none">
-<h2>Plazo fijo inicial (solo para mixta)</h2>
-<label>Años a tipo fijo:
-<input type="number" id="plazoFijo" value="5" min="0" onfocus="clearZero(this)">
-</label>
-<label>TIN fijo inicial (%):
-<input type="number" id="tinFijo" value="2.5" step="0.01" min="0" onfocus="clearZero(this)">
-</label>
+<h2>Plazo fijo inicial (solo mixta)</h2>
+<label>Años a tipo fijo<input type="number" id="plazoFijo" value="5" min="0" onfocus="clearZero(this)"></label>
+<label>TIN fijo inicial (%)<input type="number" id="tinFijo" value="2.5" step="0.01" min="0" onfocus="clearZero(this)"></label>
 </div>
 
 <h2>4️⃣ Nuevo préstamo</h2>
-<label>Plazo total (años):
-<input type="number" id="plazoNuevo" value="20" min="1" onfocus="clearZero(this)">
-</label>
-
-<label>Tipo de interés deseado (%):
-<input type="number" id="tinNuevo" value="3" step="0.01" min="0" onfocus="clearZero(this)">
-</label>
-
-<label>Gastos / comisiones (€):
-<input type="number" id="comisionesNuevo" value="0" min="0" onfocus="clearZero(this)">
-</label>
+<label>Plazo total (años)<input type="number" id="plazoNuevo" value="20" min="1" onfocus="clearZero(this)"></label>
+<label>Tipo de interés deseado (%)<input type="number" id="tinNuevo" value="3" step="0.01" min="0" onfocus="clearZero(this)"></label>
+<label>Gastos / comisiones (€)<input type="number" id="comisionesNuevo" value="0" min="0" onfocus="clearZero(this)"></label>
 
 <button onclick="calcular()">Calcular ahorro</button>
 
@@ -130,13 +125,8 @@ th{background:#e8f0fe}
 <tr><td>Ahorro total</td><td></td><td id="ahorroTotalTabla"></td></tr>
 </table>
 
-<label>Email para enviar PDF:
-<input type="email" id="email">
-</label>
-<label>
-<input type="checkbox" id="rgpd"> Acepto la política de privacidad
-</label>
-
+<label>Email para enviar PDF:<input type="email" id="email"></label>
+<label><input type="checkbox" id="rgpd"> Acepto la política de privacidad</label>
 <button onclick="enviarPDF()">Descargar PDF y enviar</button>
 </div>
 </div>
@@ -154,30 +144,20 @@ function actualizarCampos(){
 
 function addDeuda(){
   count++;
-  let div=document.createElement("div");
+  const div=document.createElement("div");
   div.className="deuda";
   div.id="d"+count;
   div.innerHTML=`<button class="remove" onclick="removeDeuda(${count})">×</button>
-<label>Capital (€)
-<input type="number" id="capital${count}" value="0" min="0" onfocus="clearZero(this)">
-</label>
-<label>TIN (%)
-<input type="number" id="interes${count}" value="0" min="0" step="0.01" onfocus="clearZero(this)">
-</label>
-<label>Plazo (años)
-<input type="number" id="plazo${count}" value="1" min="1" onfocus="clearZero(this)">
-</label>`;
+<label>Capital (€)<input type="number" id="capital${count}" value="0" min="0" onfocus="clearZero(this)"></label>
+<label>TIN (%)<input type="number" id="interes${count}" value="0" min="0" step="0.01" onfocus="clearZero(this)"></label>
+<label>Plazo (años)<input type="number" id="plazo${count}" value="1" min="1" onfocus="clearZero(this)"></label>`;
   document.getElementById("deudas").appendChild(div);
 }
 
-function removeDeuda(id){ let d=document.getElementById("d"+id); if(d)d.remove(); }
-function clearZero(i){if(i.value==="0")i.value=""}
+function removeDeuda(id){ document.getElementById("d"+id)?.remove(); }
+function clearZero(i){if(i.value==="0")i.value="";}
 
-function cuota(c,i,p){
-  let r=i/100/12;
-  let m=p*12;
-  return (c*r*Math.pow(1+r,m))/(Math.pow(1+r,m)-1);
-}
+function cuota(c,i,p){let r=i/100/12,m=p*12;return (c*r*Math.pow(1+r,m))/(Math.pow(1+r,m)-1);}
 
 function calcular(){
   const op=document.getElementById("tipoOperacion").value;
@@ -191,8 +171,7 @@ function calcular(){
   if(op==="consolidacion"){
     let totalCapital=0;
     for(let i=1;i<=count;i++){
-      const cap=document.getElementById("capital"+i);
-      if(!cap)continue;
+      const cap=document.getElementById("capital"+i); if(!cap)continue;
       const c=parseFloat(cap.value)||0;
       const tin=parseFloat(document.getElementById("interes"+i).value)||0;
       const p=parseInt(document.getElementById("plazo"+i).value)||1;
@@ -211,7 +190,7 @@ function calcular(){
       const cuotaFija=cuota(totalCapital+comisiones,tinFijo,plazoFijo);
       const capitalRestante=cuotaFija*plazoFijo*12-(totalCapital+comisiones);
       const cuotaVar=plazoVariable>0?cuota(capitalRestante,tinNuevo,plazoVariable):0;
-      cuotaDespues=(cuotaFija*plazoFijo*12 + cuotaVar*plazoVariable*12)/ (plazoNuevo*12);
+      cuotaDespues=(cuotaFija*plazoFijo*12 + cuotaVar*plazoVariable*12)/(plazoNuevo*12);
       interesesDespues=(cuotaFija*plazoFijo*12 + cuotaVar*plazoVariable*12)-(totalCapital+comisiones);
     }
   }else{
@@ -231,7 +210,7 @@ function calcular(){
       const cuotaFija=cuota(capitalPendiente+comisiones,tinFijo,plazoFijo);
       const capitalRestante=cuotaFija*plazoFijo*12-(capitalPendiente+comisiones);
       const cuotaVar=plazoVariable>0?cuota(capitalRestante,tinNuevo,plazoVariable):0;
-      cuotaDespues=(cuotaFija*plazoFijo*12 + cuotaVar*plazoVariable*12)/ (plazoNuevo*12);
+      cuotaDespues=(cuotaFija*plazoFijo*12 + cuotaVar*plazoVariable*12)/(plazoNuevo*12);
       interesesDespues=(cuotaFija*plazoFijo*12 + cuotaVar*plazoVariable*12)-(capitalPendiente+comisiones);
     }
   }
@@ -243,7 +222,6 @@ function calcular(){
 
   const ahorroMensual=(cuotaAntes-cuotaDespues).toFixed(2);
   const ahorroTotal=(interesesAntes-interesesDespues).toFixed(2);
-
   document.getElementById("ahorroMensual").innerText=ahorroMensual+" €";
   document.getElementById("ahorroTotal").innerText=ahorroTotal+" €";
   document.getElementById("ahorroMensualTabla").innerText=ahorroMensual+" €";
