@@ -212,16 +212,59 @@ function toggleAmort(index){
 }
 
 function descargarPDF(){
-  const nombre=document.getElementById("nombreUsuario").value.trim();
-  const email=document.getElementById("emailUsuario").value.trim();
-  if(!nombre||!email){ alert("Completa nombre y correo"); return; }
-  const {jsPDF}=window.jspdf;
-  const doc=new jsPDF();
-  doc.text("Comparativa Hipotecas - Kaoba Finance",20,20);
-  doc.autoTable({html:'#tabla',startY:30});
-  doc.save("Comparativa_Hipotecas.pdf");
-}
-</script>
+  const nombreUsuario = document.getElementById("nombreUsuario").value.trim();
+  const emailUsuario = document.getElementById("emailUsuario").value.trim();
+  if(!nombreUsuario || !emailUsuario){ 
+    alert("Completa nombre y correo"); 
+    return; 
+  }
 
-</body>
-</html>
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  // Encabezado
+  doc.setFontSize(16);
+  doc.text("Comparativa Hipotecas - Kaoba Finance", 20, 20);
+  doc.setFontSize(12);
+  doc.text(`Nombre: ${nombreUsuario}`, 20, 30);
+  doc.text(`Email: ${emailUsuario}`, 20, 37);
+  doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 20, 44);
+
+  // Recoger datos de la tabla HTML
+  const tbody = document.querySelector("#tabla tbody");
+  const data = [];
+
+  for (let row of tbody.rows){
+    const banco = row.cells[0].innerText;
+    const tipo = row.cells[1].innerText;
+    const cuota = row.cells[2].innerText;
+    const intereses = row.cells[3].innerText;
+    const total = row.cells[4].innerText;
+    const ahorro = row.cells[5].innerText || "-";
+
+    // Si es la fila mejor, lo resaltamos con un asterisco
+    const esMejor = row.classList.contains("mejor") ? "★ " : "";
+
+    data.push([esMejor + banco, tipo, cuota, intereses, total, ahorro]);
+  }
+
+  // Tabla PDF con estilo parecido al primer modelo
+  doc.autoTable({
+    head: [["Banco", "Tipo", "Cuota media", "Intereses", "Total", "Ahorro"]],
+    body: data,
+    startY: 55,
+    headStyles: { fillColor: [13,79,139], textColor: 255, fontStyle: 'bold' },
+    alternateRowStyles: { fillColor: [245,245,245] },
+    columnStyles: {
+      0: { cellWidth: 40 },
+      1: { cellWidth: 25 },
+      2: { cellWidth: 30 },
+      3: { cellWidth: 30 },
+      4: { cellWidth: 30 },
+      5: { cellWidth: 30 }
+    },
+    styles: { fontSize: 10, cellPadding: 3 }
+  });
+
+  doc.save("Comparativa_Hipotecas_Resumen.pdf");
+}
