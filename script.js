@@ -229,9 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // -----------------------------
 const statusSpan = document.getElementById("leadMensaje");
 const enviarBtn = document.getElementById("enviarLead");
-
-// Configura aquí tu endpoint si quieres enviar los leads al servidor
-const SERVER_URL = ""; // ej: "https://mi-servidor.com/api/enviar-lead"
+const SERVER_URL = ""; // Aquí pon tu endpoint si quieres enviar la simulación
 
 if (enviarBtn && statusSpan) {
   enviarBtn.addEventListener("click", async () => {
@@ -285,7 +283,6 @@ if (enviarBtn && statusSpan) {
     // Descargar PDF siempre
     doc.save("Simulacion_Kaoba_Finance.pdf");
 
-    // Mensaje demo inicial
     statusSpan.style.color = "green";
     statusSpan.innerText = "Simulación generada y PDF descargado (modo demo)";
 
