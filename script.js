@@ -304,7 +304,7 @@ const doc = new jsPDF();
     statusSpan.innerText = "Simulación generada y PDF descargado (modo demo)";
 
     // Si no hay servidor configurado, salimos
-    if (!SERVER_URL) return;
+    
 
     // Intentar enviar al servidor
     try {
