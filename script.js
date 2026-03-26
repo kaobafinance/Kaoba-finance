@@ -312,16 +312,25 @@ if (enviarBtn && statusSpan) {
     // -----------------------------
     if (typeof SERVER_URL === "undefined" || !SERVER_URL) return;
 
-    try {
-      const formData = new FormData();
-      formData.append("nombre", nombre);
-      formData.append("email", email);
+    let doc;
+try {
+  const { jsPDF } = window.jspdf;
+  doc = new jsPDF();
+} catch (e) {
+  console.warn("jsPDF no cargado, PDF no se generará:", e);
+  doc = null;
+}
 
-      if (doc) {
-        const pdfBlob = doc.output("blob");
-        formData.append("pdf", pdfBlob, "Simulacion_Kaoba_Finance.pdf");
-      }
-
+// Más tarde, solo genera PDF si doc existe
+if (doc) {
+  doc.setFontSize(16);
+  doc.text("Simulación Kaoba Finance", 20, 20);
+  // ... resto de tu código PDF
+  doc.save("Simulacion_Kaoba_Finance.pdf");
+} else {
+  statusSpan.style.color = "orange";
+  statusSpan.innerText = "Simulación generada, pero PDF no disponible.";
+}
 
       const result = await response.json();
 
