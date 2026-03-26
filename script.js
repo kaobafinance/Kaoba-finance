@@ -223,15 +223,17 @@ document.addEventListener("DOMContentLoaded", () => {
     perfilDiv.scrollIntoView({behavior:'smooth'});
   };
 
-// -----------------------------
-// ENVÍO DE LEADS Y PDF
-// -----------------------------
-  // Elemento de estado ya existente
-  const statusSpan = document.getElementById("leadMensaje");
-  const enviarBtn = document.getElementById("enviarLead");
 
-  if (!enviarBtn || !statusSpan) return;
+ // -----------------------------
+// ENVÍO DE LEADS Y PDF (demo + envío opcional)
+// -----------------------------
+const statusSpan = document.getElementById("leadMensaje");
+const enviarBtn = document.getElementById("enviarLead");
 
+// Configura aquí tu endpoint si quieres enviar los leads al servidor
+const SERVER_URL = ""; // ej: "https://mi-servidor.com/api/enviar-lead"
+
+if (enviarBtn && statusSpan) {
   enviarBtn.addEventListener("click", async () => {
     const nombre = document.getElementById("leadNombre")?.value.trim() || "";
     const email = document.getElementById("leadEmail")?.value.trim() || "";
@@ -280,33 +282,42 @@ document.addEventListener("DOMContentLoaded", () => {
       y += 7;
     });
 
- doc.save("Simulacion_Kaoba_Finance.pdf");
+    // Descargar PDF siempre
+    doc.save("Simulacion_Kaoba_Finance.pdf");
 
-const pdfBlob = doc.output("blob");
+    // Mensaje demo inicial
+    statusSpan.style.color = "green";
+    statusSpan.innerText = "Simulación generada y PDF descargado (modo demo)";
 
-const formData = new FormData();
-formData.append("nombre", nombre);
-formData.append("email", email);
-formData.append("pdf", pdfBlob, "Simulacion_Kaoba_Finance.pdf");
+    // Si no hay servidor configurado, salimos
+    if (!SERVER_URL) return;
 
+    // Intentar enviar al servidor
     try {
-   statusSpan.innerText = "Simulación generada (modo demo)";
+      const pdfBlob = doc.output("blob");
+      const formData = new FormData();
+      formData.append("nombre", nombre);
+      formData.append("email", email);
+      formData.append("pdf", pdfBlob, "Simulacion_Kaoba_Finance.pdf");
+
+      const response = await fetch(SERVER_URL, {
         method: "POST",
         body: formData
       });
+
       const result = await response.json();
 
       if (result.ok) {
         statusSpan.style.color = "green";
         statusSpan.innerText = `Simulación enviada a ${email}`;
       } else {
-        statusSpan.style.color = "red";
-        statusSpan.innerText = "Error enviando simulación. Intenta de nuevo.";
+        statusSpan.style.color = "orange";
+        statusSpan.innerText = "Simulación generada, pero error enviando al servidor.";
       }
     } catch (err) {
       console.error(err);
-      statusSpan.style.color = "red";
-      statusSpan.innerText = "Error de conexión con el servidor.";
+      statusSpan.style.color = "orange";
+      statusSpan.innerText = "Simulación generada, pero no se pudo conectar con el servidor.";
     }
   });
-});
+}
