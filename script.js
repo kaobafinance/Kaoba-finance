@@ -312,14 +312,6 @@ if (enviarBtn && statusSpan) {
     // -----------------------------
     if (typeof SERVER_URL === "undefined" || !SERVER_URL) return;
 
-    let doc;
-try {
-  const { jsPDF } = window.jspdf;
-  doc = new jsPDF();
-} catch (e) {
-  console.warn("jsPDF no cargado, PDF no se generará:", e);
-  doc = null;
-}
 
 // Más tarde, solo genera PDF si doc existe
 if (doc) {
