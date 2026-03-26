@@ -1,4 +1,4 @@
- document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
 
   // -----------------------------
   // FUNCIONES AUXILIARES
@@ -176,19 +176,18 @@
     .forEach(el => { if(el){ el.addEventListener("input",calcularPerfil); el.addEventListener("change",calcularPerfil); } });
   [perfilTitulares,perfilTipoVivienda,perfilComunidad,perfilPrimeraSegunda]
     .forEach(el => { if(el) el.addEventListener("change",calcularPerfil); });
-if (perfilTitulares && titular2Div) {
-  perfilTitulares.addEventListener("change", () => {
-    titular2Div.style.display = perfilTitulares.value === "2" ? "block" : "none";
-    calcularPerfil();
-  });
-}
-if (yaTieneVivienda && viviendaInfo) {
-  yaTieneVivienda.addEventListener("change", () => {
-    viviendaInfo.style.display = yaTieneVivienda.checked ? "block" : "none";
-    calcularPerfil();
-  });
-}
-
+  if (perfilTitulares && titular2Div) {
+    perfilTitulares.addEventListener("change", () => {
+      titular2Div.style.display = perfilTitulares.value === "2" ? "block" : "none";
+      calcularPerfil();
+    });
+  }
+  if (yaTieneVivienda && viviendaInfo) {
+    yaTieneVivienda.addEventListener("change", () => {
+      viviendaInfo.style.display = yaTieneVivienda.checked ? "block" : "none";
+      calcularPerfil();
+    });
+  }
 
   // -----------------------------
   // COOKIES
@@ -221,123 +220,121 @@ if (yaTieneVivienda && viviendaInfo) {
     if(calculadoraDiv) calculadoraDiv.style.display="none";
     operacionBadge.style.display="block";
     operacionBadge.innerText = `Operación seleccionada: ${tipo}`;
-    if(perfilPrimeraSegunda && yaTieneVivienda){
+    if(perfilPrimeraSegunda && yaTieneVivienda && viviendaInfo){
       switch(tipo){
         case 'Compra Primera Vivienda': perfilPrimeraSegunda.value='primera'; yaTieneVivienda.checked=false; break;
         case 'Cambio de Hipoteca': perfilPrimeraSegunda.value='segunda'; yaTieneVivienda.checked=true; break;
         case 'Inversión': perfilPrimeraSegunda.value='segunda'; yaTieneVivienda.checked=false; break;
       }
-      if(viviendaInfo) viviendaInfo.style.display = yaTieneVivienda.checked?"block":"none";
+      viviendaInfo.style.display = yaTieneVivienda.checked?"block":"none";
     }
     calcularPerfil();
     perfilDiv.scrollIntoView({behavior:'smooth'});
   };
 
+  // -----------------------------
+  // ENVÍO DE LEADS Y PDF
+  // -----------------------------
+  const statusSpan = document.getElementById("leadMensaje");
+  const enviarBtn = document.getElementById("enviarLead");
 
-// -----------------------------
-// ENVÍO DE LEADS Y PDF (demo + envío opcional)
-// -----------------------------
-const statusSpan = document.getElementById("leadMensaje");
-const enviarBtn = document.getElementById("enviarLead");
+  // Define tu URL de envío aquí si quieres
+  const SERVER_URL = ""; // Ej: "https://tu-servidor.com/api/lead"
 
-if (enviarBtn && statusSpan) {
-  enviarBtn.addEventListener("click", async () => {
-    const nombre = document.getElementById("leadNombre")?.value.trim() || "";
-    const email = document.getElementById("leadEmail")?.value.trim() || "";
-    const consentimiento = document.getElementById("leadConsentimiento")?.checked || false;
+  if (enviarBtn && statusSpan) {
+    enviarBtn.addEventListener("click", async () => {
+      const nombre = document.getElementById("leadNombre")?.value.trim() || "";
+      const email = document.getElementById("leadEmail")?.value.trim() || "";
+      const consentimiento = document.getElementById("leadConsentimiento")?.checked || false;
 
-    // Validación básica
-    if (!nombre || !email || !consentimiento) {
-      statusSpan.style.color = "red";
-      statusSpan.innerText = "Por favor completa todos los campos y acepta la política.";
-      return;
-    }
+      if (!nombre || !email || !consentimiento) {
+        statusSpan.style.color = "red";
+        statusSpan.innerText = "Por favor completa todos los campos y acepta la política.";
+        return;
+      }
 
-    // Datos del perfil
-    const capital = document.getElementById("perfilCapital")?.innerText || "0";
-    const cuota = document.getElementById("perfilCuota")?.innerText || "0";
-    const ltv = document.getElementById("perfilLTV")?.innerText || "0";
-    const gastos = document.getElementById("perfilGastos")?.innerText || "0";
-    const lti = document.getElementById("perfilLTI")?.innerText || "0";
-    const compatibilidad = document.getElementById("perfilCompatible")?.innerText || "-";
+      // Datos del perfil
+      const capital = document.getElementById("perfilCapital")?.innerText || "0";
+      const cuota = document.getElementById("perfilCuota")?.innerText || "0";
+      const ltv = document.getElementById("perfilLTV")?.innerText || "0";
+      const gastos = document.getElementById("perfilGastos")?.innerText || "0";
+      const lti = document.getElementById("perfilLTI")?.innerText || "0";
+      const compatibilidad = document.getElementById("perfilCompatible")?.innerText || "-";
 
-    // -----------------------------
-    // GENERACIÓN DE PDF (solo si jsPDF está cargado)
-    // -----------------------------
-    let doc = null;
-    try {
-      if (window.jspdf) {
-        const { jsPDF } = window.jspdf.jsPDF ? window.jspdf : window.jspdf;
-        doc = new jsPDF();
+      // -----------------------------
+      // GENERACIÓN DE PDF
+      // -----------------------------
+      let doc = null;
+      try {
+        if (window.jspdf) {
+          const { jsPDF } = window.jspdf.jsPDF ? window.jspdf : window.jspdf;
+          doc = new jsPDF();
 
-        doc.setFontSize(16);
-        doc.text("Simulación Kaoba Finance", 20, 20);
-        doc.setFontSize(12);
-        doc.text(`Nombre: ${nombre}`, 20, 30);
-        doc.text(`Email: ${email}`, 20, 37);
-        doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 20, 44);
+          doc.setFontSize(16);
+          doc.text("Simulación Kaoba Finance", 20, 20);
+          doc.setFontSize(12);
+          doc.text(`Nombre: ${nombre}`, 20, 30);
+          doc.text(`Email: ${email}`, 20, 37);
+          doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 20, 44);
 
-        const data = [
-          ["Importe estimado de préstamo", capital],
-          ["Cuota mensual estimada", cuota],
-          ["% Financiación (LTV)", ltv],
-          ["Gastos aproximados", gastos],
-          ["Ratio endeudamiento (LTI)", lti],
-          ["Compatibilidad bancaria", compatibilidad]
-        ];
+          const data = [
+            ["Importe estimado de préstamo", capital],
+            ["Cuota mensual estimada", cuota],
+            ["% Financiación (LTV)", ltv],
+            ["Gastos aproximados", gastos],
+            ["Ratio endeudamiento (LTI)", lti],
+            ["Compatibilidad bancaria", compatibilidad]
+          ];
 
-        let y = 55;
-        data.forEach(row => {
-          doc.setFont("helvetica", "bold");
-          doc.text(row[0] + ":", 20, y);
-          doc.setFont("helvetica", "normal");
-          doc.text(row[1], 110, y);
-          y += 7;
+          let y = 55;
+          data.forEach(row => {
+            doc.setFont("helvetica", "bold");
+            doc.text(row[0] + ":", 20, y);
+            doc.setFont("helvetica", "normal");
+            doc.text(row[1], 110, y);
+            y += 7;
+          });
+
+          doc.save("Simulacion_Kaoba_Finance.pdf");
+        } else {
+          console.warn("jsPDF no cargado, PDF no se generará.");
+        }
+      } catch (e) {
+        console.error("Error generando PDF:", e);
+      }
+
+      statusSpan.style.color = "green";
+      statusSpan.innerText = doc ? "Simulación generada y PDF descargado (modo demo)" : "Simulación generada (PDF no disponible)";
+
+      // -----------------------------
+      // ENVÍO AL SERVIDOR
+      // -----------------------------
+      if (!SERVER_URL) return;
+
+      try {
+        const response = await fetch(SERVER_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            nombre, email, capital, cuota, ltv, gastos, lti, compatibilidad
+          })
         });
+        const result = await response.json();
 
-        // Descargar PDF siempre que jsPDF esté disponible
-        doc.save("Simulacion_Kaoba_Finance.pdf");
-      } else {
-        console.warn("jsPDF no cargado, PDF no se generará.");
+        if (result.ok) {
+          statusSpan.style.color = "green";
+          statusSpan.innerText = `Simulación enviada a ${email}`;
+        } else {
+          statusSpan.style.color = "orange";
+                   statusSpan.style.color = "orange";
+          statusSpan.innerText = `Simulación enviada, pero hubo un detalle en el servidor.`;
+        }
+      } catch (err) {
+        console.error(err);
+        statusSpan.style.color = "red";
+        statusSpan.innerText = "Error al enviar la simulación al servidor.";
       }
-    } catch (e) {
-      console.error("Error generando PDF:", e);
-    }
+    });
+  }
 
-    statusSpan.style.color = "green";
-    statusSpan.innerText = doc ? "Simulación generada y PDF descargado (modo demo)" : "Simulación generada (PDF no disponible)";
-
-    // -----------------------------
-    // ENVÍO AL SERVIDOR (opcional)
-    // -----------------------------
-    if (typeof SERVER_URL === "undefined" || !SERVER_URL) return;
-
-
-// Más tarde, solo genera PDF si doc existe
-if (doc) {
-  doc.setFontSize(16);
-  doc.text("Simulación Kaoba Finance", 20, 20);
-  // ... resto de tu código PDF
-  doc.save("Simulacion_Kaoba_Finance.pdf");
-} else {
-  statusSpan.style.color = "orange";
-  statusSpan.innerText = "Simulación generada, pero PDF no disponible.";
-}
-
-      // const response = await fetch(SERVER_URL, { method: "POST", body: JSON.stringify(datos) });
-// const result = await response.json();
-
-      if (result.ok) {
-        statusSpan.style.color = "green";
-        statusSpan.innerText = `Simulación enviada a ${email}`;
-      } else {
-        statusSpan.style.color = "orange";
-        statusSpan.innerText = "Simulación generada, pero error enviando al servidor.";
-      }
-    } catch (err) {
-      console.error(err);
-      statusSpan.style.color = "orange";
-      statusSpan.innerText = "Simulación generada, pero no se pudo conectar con el servidor.";
-    }
-  });
-}
+});
