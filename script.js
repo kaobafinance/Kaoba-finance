@@ -290,7 +290,7 @@ formData.append("email", email);
 formData.append("pdf", pdfBlob, "Simulacion_Kaoba_Finance.pdf");
 
     try {
-      const response = await fetch("https://tu-backend.onrender.com/api/enviar-pdf", {
+   statusSpan.innerText = "Simulación generada (modo demo)";
         method: "POST",
         body: formData
       });
