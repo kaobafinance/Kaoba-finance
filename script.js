@@ -281,6 +281,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const pdfBlob = doc.output("blob");
+    // Descargar
+doc.save("Simulacion_Kaoba_Finance.pdf");
+
+// Crear blob DESPUÉS (más fiable)
+const pdfBlob = doc.output("blob");
+    
     const formData = new FormData();
     formData.append("nombre", nombre);
     formData.append("email", email);
