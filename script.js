@@ -267,7 +267,7 @@ if (enviarBtn && statusSpan) {
     let doc = null;
     try {
       if (window.jspdf) {
-        const { jsPDF } = window.jspdf;
+        const { jsPDF } = window.jspdf.jsPDF ? window.jspdf : window.jspdf;
         doc = new jsPDF();
 
         doc.setFontSize(16);
