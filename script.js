@@ -280,12 +280,14 @@ document.addEventListener("DOMContentLoaded", () => {
       y += 7;
     });
 
-    doc.save("Simulacion_Kaoba_Finance.pdf");
+ doc.save("Simulacion_Kaoba_Finance.pdf");
+
 const pdfBlob = doc.output("blob");
-    const formData = new FormData();
-    formData.append("nombre", nombre);
-    formData.append("email", email);
-    formData.append("pdf", pdfBlob, "Simulacion_Kaoba_Finance.pdf");
+
+const formData = new FormData();
+formData.append("nombre", nombre);
+formData.append("email", email);
+formData.append("pdf", pdfBlob, "Simulacion_Kaoba_Finance.pdf");
 
     try {
       const response = await fetch("https://tu-backend.onrender.com/api/enviar-pdf", {
