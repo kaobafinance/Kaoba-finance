@@ -407,12 +407,7 @@ try {
 } catch (e) {
   console.error("Error generando PDF:", e);
 }
-        } else {
-          console.warn("jsPDF no cargado, PDF no se generará.");
-        }
-      } catch (e) {
-        console.error("Error generando PDF:", e);
-      }
+    
 
       statusSpan.style.color = "green";
       statusSpan.innerText = doc ? "Simulación generada y PDF descargado (modo demo)" : "Simulación generada (PDF no disponible)";
