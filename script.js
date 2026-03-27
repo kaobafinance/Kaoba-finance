@@ -264,38 +264,149 @@ document.addEventListener("DOMContentLoaded", () => {
       // -----------------------------
       // GENERACIÓN DE PDF
       // -----------------------------
-      let doc = null;
-      try {
-        if (window.jspdf) {
-          const { jsPDF } = window.jspdf.jsPDF ? window.jspdf : window.jspdf;
-          doc = new jsPDF();
+     let doc = null;
 
-          doc.setFontSize(16);
-          doc.text("Simulación Kaoba Finance", 20, 20);
-          doc.setFontSize(12);
-          doc.text(`Nombre: ${nombre}`, 20, 30);
-          doc.text(`Email: ${email}`, 20, 37);
-          doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 20, 44);
+try {
+  if (window.jspdf) {
+    const { jsPDF } = window.jspdf.jsPDF ? window.jspdf : window.jspdf;
+    doc = new jsPDF();
 
-          const data = [
-            ["Importe estimado de préstamo", capital],
-            ["Cuota mensual estimada", cuota],
-            ["% Financiación (LTV)", ltv],
-            ["Gastos aproximados", gastos],
-            ["Ratio endeudamiento (LTI)", lti],
-            ["Compatibilidad bancaria", compatibilidad]
-          ];
+    // =========================
+    // CABECERA
+    // =========================
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.text("KAOBA FINANCE", 20, 20);
 
-          let y = 55;
-          data.forEach(row => {
-            doc.setFont("helvetica", "bold");
-            doc.text(row[0] + ":", 20, y);
-            doc.setFont("helvetica", "normal");
-            doc.text(row[1], 110, y);
-            y += 7;
-          });
+    doc.setFontSize(12);
+    doc.text("Informe de Simulación Hipotecaria", 20, 28);
 
-          doc.save("Simulacion_Kaoba_Finance.pdf");
+    // Línea separadora
+    doc.setLineWidth(0.5);
+    doc.line(20, 32, 190, 32);
+
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 150, 20);
+
+    // =========================
+    // CLIENTE
+    // =========================
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("Datos del cliente", 20, 45);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text(`Nombre: ${nombre}`, 20, 53);
+    doc.text(`Email: ${email}`, 20, 59);
+
+    // =========================
+    // RESUMEN FINANCIERO (CAJA)
+    // =========================
+    doc.setDrawColor(200);
+    doc.rect(20, 70, 170, 50);
+
+    doc.setFont("helvetica", "bold");
+    doc.text("Resumen de la simulación", 25, 78);
+
+    doc.setFont("helvetica", "normal");
+
+    const resumen = [
+      ["Importe préstamo", capital],
+      ["Cuota mensual", cuota],
+      ["Financiación (LTV)", ltv],
+      ["Gastos aproximados", gastos],
+      ["Ratio endeudamiento", lti],
+      ["Compatibilidad", compatibilidad]
+    ];
+
+    let y = 86;
+    resumen.forEach(row => {
+      doc.setFont("helvetica", "bold");
+      doc.text(row[0], 25, y);
+      doc.setFont("helvetica", "normal");
+      doc.text(row[1], 120, y);
+      y += 6;
+    });
+
+    // =========================
+    // ANÁLISIS
+    // =========================
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.text("Análisis del perfil financiero", 20, 135);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+
+    let analisis = "";
+
+    if (compatibilidad === "Compatible") {
+      analisis = "Tu perfil presenta una alta probabilidad de aprobación según criterios bancarios actuales.";
+    } else if (compatibilidad === "Aceptable") {
+      analisis = "Tu perfil es viable, aunque algunas entidades podrían requerir condiciones adicionales o garantías.";
+    } else {
+      analisis = "Actualmente tu perfil no cumple con los criterios habituales de riesgo bancario.";
+    }
+
+    doc.text(analisis, 20, 143, { maxWidth: 170 });
+
+    // =========================
+    // RECOMENDACIONES DINÁMICAS
+    // =========================
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.text("Recomendaciones personalizadas", 20, 165);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+
+    let recomendaciones = [];
+
+    if (parseFloat(lti) > 35) {
+      recomendaciones.push("- Reducir deudas para mejorar ratio de endeudamiento");
+    }
+
+    if (ltv.includes("%") && parseFloat(ltv) > 80) {
+      recomendaciones.push("- Aportar mayor entrada para reducir financiación");
+    }
+
+    recomendaciones.push("- Mantener estabilidad laboral");
+    recomendaciones.push("- Comparar ofertas entre entidades bancarias");
+
+    recomendaciones.forEach((rec, i) => {
+      doc.text(rec, 20, 173 + (i * 6));
+    });
+
+    // =========================
+    // DISCLAIMER
+    // =========================
+    doc.setFontSize(8);
+    doc.setTextColor(120);
+
+    doc.text(
+      "Este documento es una simulación orientativa basada en criterios financieros estándar. No constituye una oferta vinculante ni garantiza la concesión del préstamo. La aprobación final dependerá de cada entidad bancaria tras el estudio de riesgo correspondiente.",
+      20,
+      250,
+      { maxWidth: 170 }
+    );
+
+    // =========================
+    // FOOTER
+    // =========================
+    doc.setTextColor(0);
+    doc.setFontSize(9);
+    doc.text("Kaoba Finance © 2026", 20, 285);
+
+    // =========================
+    // EXPORTAR
+    // =========================
+    doc.save("Informe_Hipotecario_Kaoba.pdf");
+  }
+} catch (e) {
+  console.error("Error generando PDF:", e);
+}
         } else {
           console.warn("jsPDF no cargado, PDF no se generará.");
         }
