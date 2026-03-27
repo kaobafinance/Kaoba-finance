@@ -32,19 +32,24 @@ button:hover{background:#09407a;}
   box-shadow:0 6px 18px rgba(0,0,0,0.08);
 }
 
-/* ====== BOTÓN VOLVER ====== */
-.volver-inicio{
-  display:inline-block;
-  padding:8px 16px;
-  background:#0d4f8b;
-  color:#fff;
-  border-radius:6px;
-  text-decoration:none;
-  font-weight:600;
-  transition:0.2s;
-  margin-bottom:15px;
+/* ===== BOTÓN VOLVER ===== */
+.volver {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 2px solid #0d4f8b; /* borde azul */
+  border-radius: 6px;
+  background: transparent;
+  color: #0d4f8b;
+  font-weight: 600;
+  transition: all 0.2s;
 }
-.volver-inicio:hover{background:#09407a;}
+.volver:hover {
+  background: #0d4f8b;
+  color: #fff;
+  transform: translateY(-2px);
+}
 
 /* ====== BLOQUES ====== */
 .deuda, .resultado{background:#fafbff;padding:15px;border-radius:8px;border:1px solid #e3e8ef;margin-top:12px;}
