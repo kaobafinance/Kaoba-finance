@@ -89,6 +89,9 @@ th{background:#f1f3f6;}
   <label>Nombre<input type="text" id="nombreUsuario" placeholder="Tu nombre"></label>
   <label>Email<input type="email" id="emailUsuario" placeholder="tu@email.com"></label>
   <label><input type="checkbox" id="acepta"> Acepto política de privacidad</label>
+  <p id="aviso-mixta-${contador}" style="display:none; font-size:12px; color:#b45309; margin-top:6px;">
+  * En la fase variable se utiliza el Euríbor actual como estimación. Este valor puede variar en el futuro.
+</p>
 
   <button onclick="calcular()">Calcular</button>
   <button onclick="descargarPDF()">Descargar PDF</button>
@@ -136,10 +139,17 @@ function addBanco(){
 
 function removeBanco(id){document.getElementById("banco-"+id)?.remove();}
 function toggleTipo(id){
-  const tipo=document.getElementById("tipo-"+id).value;
+  const tipo = document.getElementById("tipo-"+id).value;
+
   document.getElementById("bloque-fija-"+id).style.display = tipo==="fija"?"block":"none";
   document.getElementById("bloque-mixta-"+id).style.display = tipo==="mixta"?"block":"none";
   document.getElementById("bloque-variable-"+id).style.display = tipo==="variable"?"block":"none";
+
+  // Mostrar aviso mixta
+  const aviso = document.getElementById("aviso-mixta-"+id);
+  if(aviso){
+    aviso.style.display = tipo==="mixta" ? "block" : "none";
+  }
 }
 
 // ====== AMORTIZACIÓN ======
@@ -365,6 +375,16 @@ function descargarPDF(){
     doc.text(rec, 20, finalY + 63 + (i * 6));
   });
 
+  // Aviso específico mixta
+doc.setFont("helvetica", "italic");
+doc.setFontSize(9);
+
+doc.text(
+  "* Las hipotecas mixtas incluyen una fase variable calculada utilizando el Euríbor actual como referencia. Este valor es orientativo y puede variar durante la vida del préstamo.",
+  20,
+  265,
+  { maxWidth: 170 }
+);
   // =========================
   // DISCLAIMER
   // =========================
