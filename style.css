@@ -68,12 +68,36 @@ h2 {
 .operacion-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 12px 30px rgba(0,0,0,0.10);
+  border-color: #c7d2fe;
 }
+
 .card-header {
+  display: flex;
+  gap: 15px;
+  align-items: center;
   font-weight: 600;
   font-size: 16px;
   margin-bottom: 10px;
 }
+
+.card-header span {
+  font-size: 24px;
+  background: #eef2ff;
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.card-header strong {
+  display: block;
+  font-size: 15px;
+}
+
+.card-sub {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
 .card-content {
   max-height: 0;
   overflow: hidden;
@@ -83,12 +107,6 @@ h2 {
   max-height: 800px;
   padding-top: 10px;
 }
-.card-content h4 {
-  font-size: 14px;
-  color: #1e3a8a;
-  margin-top: 10px;
-}
-.card-content ul, .card-content ol { margin-left: 18px; }
 .card-content button {
   margin-top: 15px;
   width: 100%;
@@ -97,8 +115,49 @@ h2 {
   color: #fff;
   border-radius: 8px;
   padding: 10px;
+  border: none;
+  cursor: pointer;
 }
 .card-content button:hover { background-color: #09407a; }
+
+/* ==============================
+   GRID OPERACIONES
+============================== */
+.operaciones-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.operaciones-grid.operaciones-grid-centro {
+  display: grid;
+  grid-template-columns: repeat(2, 260px);
+  justify-content: center;
+  gap: 25px;
+  margin: 30px auto 40px auto;
+}
+
+/* Posiciones tipo ajedrez */
+.operaciones-grid .operacion-card:nth-child(1) { grid-column: 1; }
+.operaciones-grid .operacion-card:nth-child(2) { grid-column: 2; }
+.operaciones-grid .operacion-card:nth-child(3) { grid-column: 3; }
+.operaciones-grid .operacion-card:nth-child(4) { grid-column: 2; }
+
+/* ==============================
+   EURIBOR BADGE
+============================== */
+.euribor-badge {
+  display: inline-block;
+  margin: 10px auto 25px auto;
+  padding: 8px 16px;
+  background: #eef2ff;
+  color: #1e40af;
+  border-radius: 999px;
+  font-size: 14px;
+  text-align: center;
+}
 
 /* ==============================
    PERFIL FINANCIERO
@@ -119,7 +178,11 @@ h2 {
   border-radius: 12px;
   border: 1px solid #e5e7eb;
 }
-.titular label { font-weight: 600; margin-top: 8px; display: block; }
+.titular label {
+  font-weight: 600;
+  margin-top: 8px;
+  display: block;
+}
 .titular input, .titular select {
   width: 100%;
   padding: 10px;
@@ -128,7 +191,7 @@ h2 {
   margin-bottom: 10px;
 }
 
-/* TARJETAS DE RESULTADOS */
+/* RESULTADOS PERFIL */
 #perfilResultados {
   display: flex;
   flex-wrap: wrap;
@@ -145,7 +208,9 @@ h2 {
 }
 #perfilResultados .card h3 { font-size: 18px; margin-top: 5px; }
 
-/* BOTÓN PRINCIPAL */
+/* ==============================
+   BOTONES GENERALES
+============================== */
 button, .btn {
   padding: 12px 18px;
   border-radius: 8px;
@@ -188,7 +253,30 @@ button:hover, .btn:hover { background: #09407a; }
   height: 28px;
   fill: white;
 }
-/* Modal y fondo */
+
+/* BOTÓN FAQ */
+#faqButton {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  z-index: 1000;
+  background-color: #0d4f8b;
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 40px;
+  font-weight: bold;
+  font-size: 20px;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+#faqButton:hover { background-color: #22c55e; }
+
+/* ==============================
+   MODAL
+============================== */
 .modal {
   display: none;
   position: fixed;
@@ -211,7 +299,6 @@ button:hover, .btn:hover { background: #09407a; }
   font-family: 'Arial', sans-serif;
 }
 
-/* Close */
 .close {
   position: absolute;
   top: 15px; right: 20px;
@@ -220,186 +307,83 @@ button:hover, .btn:hover { background: #09407a; }
   color: #333;
 }
 
-/* Título */
 .modal-content h2 {
   text-align: center;
   margin-bottom: 20px;
   color: #0d4f8b;
 }
 
-/* Inputs con icono */
-.input-group {
+/* ==============================
+   INPUTS CALCULADORA
+============================== */
+.inputs {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.inputs label {
   display: flex;
-  align-items: center;
-  margin-bottom: 12px;
+  flex-direction: column;
 }
 
-.input-group .icon {
+.inputs input {
   padding: 10px;
-  background-color: #f0f0f0;
-  border-radius: 8px 0 0 8px;
+  border-radius: 8px;
   border: 1px solid #ccc;
-  font-size: 16px;
-}
-
-.input-group input {
-  flex: 1;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-left: none;
-  border-radius: 0 8px 8px 0;
   font-size: 14px;
 }
 
-/* Botón flotante */
-.floating-btn {
-  position: fixed;
-  bottom: 25px; right: 25px;
-  background-color: #0d4f8b;
-  color: #fff;
-  border-radius: 50px;
-  padding: 15px 20px;
-  border: none;
-  font-size: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-  cursor: pointer;
-}
-
-.floating-btn:hover {
-  background-color: #09407a;
-}
-
-/* Resultados */
+/* ==============================
+   RESULTADOS CALCULADORA
+============================== */
 .resultados-container {
   display: flex;
+  gap: 12px;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 15px;
+  justify-content: space-between;
+  margin-bottom: 15px;
 }
 
 .resultado-card {
   flex: 1 1 30%;
+  min-width: 120px;
   background-color: #f7f9fc;
-  padding: 12px;
+  padding: 15px;
   border-radius: 10px;
   text-align: center;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
+.resultado-card h3 { margin-top: 6px; font-size: 16px; }
 
-.resultado-card p {
-  margin: 0 0 6px 0;
-  font-weight: bold;
-}
-
-/* Botones */
-.modal-content button {
-  background-color: #0d4f8b;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 10px;
-  width: 100%;
-  margin-top: 10px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.modal-content button:hover {
-  background-color: #09407a;
-}
-
-/* Tabla de amortización */
+/* ==============================
+   TABLA AMORTIZACIÓN
+============================== */
 #tablaContainer {
   margin-top: 15px;
   max-height: 250px;
   overflow-y: auto;
 }
-
 #tabla {
   width: 100%;
   border-collapse: collapse;
   font-size: 12px;
 }
-
 #tabla th, #tabla td {
   border: 1px solid #ddd;
   padding: 6px;
   text-align: right;
 }
-
 #tabla th {
   background-color: #0d4f8b;
   color: white;
   text-align: center;
 }
+#tabla tr:nth-child(even) { background-color: #f0f4f8; }
 
-#tabla tr:nth-child(even) {
-  background-color: #f0f4f8;
-}
 /* ==============================
    FOOTER
-============================== */
-footer {
-  text-align: center;
-  padding: 20px;
-  font-size: 13px;
-  color: #555;
-  border-top: 1px solid #ddd;
-  background: #f9fafb;
-  margin-top: 40px;
-}
-
-/* ==============================
-   MEDIA QUERIES
-============================== */
-@media (max-width: 768px) {
-  .titulares-grid { flex-direction: column; }
-  .cards .card { flex: 1 1 100%; }
-  body > .container { margin: 20px; padding: 20px; }
-}
-
-/* ==============================
-   GRID OPERACIONES (NUEVO)
-============================== */
-.operaciones-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 25px;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-/* HEADER CARD MODERNO */
-.card-header {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.card-header span {
-  font-size: 24px;
-}
-
-/* SUBTEXTO */
-.card-sub {
-  font-size: 12px;
-  color: #6b7280;
-  margin: 2px 0 0 0;
-}
-
-/* EFECTO TARJETAS MÁS PRO */
-.operacion-card {
-  transition: all 0.25s ease;
-}
-
-.operacion-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-  border-color: #c7d2fe;
-}
-
-/* ==============================
-   FOOTER PRO
 ============================== */
 footer {
   background: #111827;
@@ -424,20 +408,10 @@ footer {
   flex-direction: column;
   gap: 8px;
 }
+.footer-links a { color: #cbd5f5; font-size: 14px; }
+.footer-links a:hover { color: #fff; }
 
-.footer-links a {
-  color: #cbd5f5;
-  font-size: 14px;
-}
-
-.footer-links a:hover {
-  color: #fff;
-}
-
-.footer-social a {
-  font-size: 20px;
-  margin-right: 10px;
-}
+.footer-social a { font-size: 20px; margin-right: 10px; }
 
 .footer-bottom {
   margin-top: 20px;
@@ -446,143 +420,23 @@ footer {
   color: #9ca3af;
 }
 
-.card-header {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.card-header span {
-  font-size: 22px;
-  background: #eef2ff;
-  padding: 10px;
-  border-radius: 12px;
-}
-
-.card-header strong {
-  display: block;
-  font-size: 15px;
-}
-
-.card-sub {
-  font-size: 12px;
-  color: #6b7280;
-}
-
-.euribor-badge {
-  display: inline-block;
-  margin: 10px auto 25px auto;
-  padding: 8px 16px;
-  background: #eef2ff;
-  color: #1e40af;
-  border-radius: 999px;
-  font-size: 14px;
-  text-align: center;
-}
-
-/* POSICIONAMIENTO AJEDREZ */
-
-/* Fila 1 */
-.operaciones-grid .operacion-card:nth-child(1) { grid-column: 1; }
-.operaciones-grid .operacion-card:nth-child(2) { grid-column: 2; }
-.operaciones-grid .operacion-card:nth-child(3) { grid-column: 3; }
-
-/* Centro */
-.operaciones-grid .operacion-card:nth-child(4) { 
-  grid-column: 2;
-}
-
-.operaciones-grid.operaciones-grid-centro {
-  display: grid;
-  grid-template-columns: repeat(2, 260px); /* anchura fija para centrar */
-  justify-content: center; /* centrado horizontal */
-  gap: 25px;
-  margin: 30px auto 40px auto;
-}
-
 /* ==============================
    RESPONSIVE
 ============================== */
 @media (max-width: 768px) {
+  .titulares-grid { flex-direction: column; }
+  .cards .card { flex: 1 1 100%; }
+  body > .container { margin: 20px; padding: 20px; }
   .operaciones-grid, 
   .operaciones-grid.operaciones-grid-centro {
     grid-template-columns: 1fr;
     justify-content: center;
   }
 }
-#faqButton {
-  position: fixed;
-  bottom: 80px; /* ajusta según tu botón de calculadora */
-  right: 20px;
-  z-index: 1000;
-  background-color: #0d4f8b;
-  color: #fff;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  text-align: center;
-  line-height: 40px;
-  font-weight: bold;
-  font-size: 20px;
-  text-decoration: none;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-}
-#faqButton:hover {
-  background-color: #22c55e;
-}
-
-/* ==============================
-   CALCULADORA SIMPLIFICADA
-============================== */
-.inputs {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.inputs label {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 15px; /* espacio entre preguntas */
-}
-
-.inputs input {
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-}
-
-/* Tarjetas de resultados alineadas */
-.resultados-container {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin-bottom: 15px;
-}
-
-.resultado-card {
-  flex: 1 1 30%;
-  min-width: 120px;
-  background-color: #f7f9fc;
-  padding: 15px;
-  border-radius: 10px;
-  text-align: center;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-.resultado-card h3 {
-  margin-top: 6px;
-  font-size: 16px;
-}
 
 @media (max-width: 600px) {
   .resultados-container {
     flex-direction: column;
   }
-  .resultado-card {
-    flex: 1 1 100%;
-  }
+  .resultado-card { flex: 1 1 100%; }
 }
