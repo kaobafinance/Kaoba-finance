@@ -193,18 +193,43 @@ function calcular(){
     } else if(tipo==="variable"){
       const dif=parseFloat(document.getElementById("difVar-"+i).value)||0;
       amortRows=generarAmortizacion(capital,euribor+dif,plazoMeses,tipo,amortSi);
-    } else {
-      // Mixta correcta
-      const mesesFijo=parseInt(document.getElementById("mesesFijo-"+i).value)||0;
-      const tinFijo=parseFloat(document.getElementById("tinMixtoFijo-"+i).value)||0;
-      const dif=parseFloat(document.getElementById("diferencial-"+i).value)||0;
-      const amortFija=generarAmortizacion(capital,tinFijo,mesesFijo,"fija",amortSi);
-      const pagadoFija=amortFija.reduce((a,b)=>a+parseFloat(b.amort),0);
-      const restante=capital-pagadoFija;
-      const mesesVariable=plazoMeses-mesesFijo;
-      const amortVariable=generarAmortizacion(restante,euribor+dif,mesesVariable,"variable",amortSi);
-      amortRows=[...amortFija,...amortVariable];
-    }
+  } else {
+  // ===== HIPOTECA MIXTA CORRECTA =====
+  const mesesFijo = parseInt(document.getElementById("mesesFijo-"+i).value) || 0;
+  const tinFijo = parseFloat(document.getElementById("tinMixtoFijo-"+i).value) || 0;
+  const dif = parseFloat(document.getElementById("diferencial-"+i).value) || 0;
+
+  // 1️⃣ Simular TODA la hipoteca como fija (plazo total)
+  const amortCompletaFija = generarAmortizacion(
+    capital,
+    tinFijo,
+    plazoMeses,
+    "fija",
+    amortSi
+  );
+
+  // 2️⃣ Cortar solo los meses del tramo fijo real
+  const amortFija = amortCompletaFija.slice(0, mesesFijo);
+
+  // 3️⃣ Obtener capital pendiente REAL tras el tramo fijo
+  const restante = mesesFijo > 0
+    ? parseFloat(amortCompletaFija[mesesFijo - 1].pendiente)
+    : capital;
+
+  // 4️⃣ Calcular tramo variable
+  const mesesVariable = plazoMeses - mesesFijo;
+
+  const amortVariable = generarAmortizacion(
+    restante,
+    euribor + dif,
+    mesesVariable,
+    "variable",
+    amortSi
+  );
+
+  // 5️⃣ Unir ambas fases
+  amortRows = [...amortFija, ...amortVariable];
+}
 
     const cuotaMedia=amortRows.reduce((a,b)=>a+parseFloat(b.cuota),0)/plazoMeses;
     const intereses=amortRows.reduce((a,b)=>a+parseFloat(b.cuota),0)-capital;
