@@ -168,6 +168,40 @@ document.addEventListener("DOMContentLoaded", () => {
       if(lti<=0.35){ perfilCompatibleOut.innerText="Compatible"; perfilCompatibleOut.style.color="green"; }
       else if(lti<=0.40){ perfilCompatibleOut.innerText="Aceptable"; perfilCompatibleOut.style.color="orange"; }
       else { perfilCompatibleOut.innerText="No viable"; perfilCompatibleOut.style.color="red"; }
+      // RESET DE CLASES
+perfilCompatibleOut.className = "";
+perfilLTVOut.className = "";
+perfilLTIOut.className = "";
+
+// COMPATIBILIDAD
+if(lti <= 0.35){
+  perfilCompatibleOut.innerText = "Compatible";
+  perfilCompatibleOut.classList.add("green");
+} else if(lti <= 0.40){
+  perfilCompatibleOut.innerText = "Aceptable";
+  perfilCompatibleOut.classList.add("orange");
+} else {
+  perfilCompatibleOut.innerText = "No viable";
+  perfilCompatibleOut.classList.add("red");
+}
+
+// LTV
+if(ltv > 80){
+  perfilLTVOut.classList.add("high");
+} else if(ltv > 70){
+  perfilLTVOut.classList.add("medium");
+} else {
+  perfilLTVOut.classList.add("low");
+}
+
+// LTI
+if(lti*100 > 40){
+  perfilLTIOut.classList.add("high");
+} else if(lti*100 > 35){
+  perfilLTIOut.classList.add("medium");
+} else {
+  perfilLTIOut.classList.add("low");
+}
     }
   };
 
