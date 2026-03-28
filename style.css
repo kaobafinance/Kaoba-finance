@@ -232,43 +232,81 @@ input, select, textarea {
    FOOTER
 ============================== */
 footer {
-  text-align: center;
-  padding: 20px 15px;
-  font-size: 13px;
-  color: #555;
   background: #f9fafb;
   border-top: 1px solid #ddd;
-  margin-top: auto;
+  padding: 25px 20px;
+  color: #555;
+  font-family: Arial, sans-serif;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 15px;
+  margin-top: auto;
 }
 
-footer p {
-  margin: 0;
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
-footer a {
+.footer-logo .brand-main {
+  font-weight: 600;
+  color: #0d4f8b;
+  font-size: 18px;
+}
+
+.footer-logo .brand-sub {
+  font-weight: 400;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.footer-links a {
   color: #2563eb;
+  margin: 0 10px;
   text-decoration: none;
+  font-size: 14px;
 }
 
-footer a:hover {
+.footer-links a:hover {
   text-decoration: underline;
 }
 
-/* Footer responsive */
-@media (max-width: 768px) {
-  footer {
-    font-size: 14px;
-    padding: 15px;
-  }
-  footer a {
-    display: block;
-    margin: 4px 0;
-  }
+.footer-social a {
+  margin: 0 6px;
+  font-size: 18px;
+  text-decoration: none;
 }
 
+.footer-social a:hover {
+  transform: scale(1.2);
+  transition: transform 0.2s;
+}
+
+.footer-bottom {
+  text-align: center;
+  font-size: 13px;
+  color: #555;
+  border-top: 1px solid #ddd;
+  padding-top: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-top {
+    flex-direction: column;
+    text-align: center;
+  }
+  .footer-links a {
+    display: block;
+    margin: 5px 0;
+  }
+  .footer-social a {
+    margin: 0 8px;
+  }
+}
 /* ==============================
    BANNER DE COOKIES
 ============================== */
