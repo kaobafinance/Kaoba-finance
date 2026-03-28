@@ -345,36 +345,19 @@ footer {
   grid-column: 2;
 }
 
-/* Fila inferior */
-.operaciones-grid .operacion-card:nth-child(5) { 
-  grid-column: 1;
-}
-
-.operaciones-grid .operacion-card:nth-child(6) { 
-  grid-column: 3;
-}
-
-@media (max-width: 768px) {
-  .operaciones-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .operaciones-grid .operacion-card {
-    grid-column: auto !important;
-    transform: none;
-  }
-
-/* Fila inferior centrada: 2 tarjetas */
 .operaciones-grid.operaciones-grid-centro {
   display: grid;
-  grid-template-columns: repeat(2, 260px); /* ancho fijo de cada tarjeta */
-  justify-content: center; /* centra las tarjetas horizontalmente */
+  grid-template-columns: repeat(2, 260px); /* anchura fija para centrar */
+  justify-content: center; /* centrado horizontal */
   gap: 25px;
   margin: 30px auto 40px auto;
 }
 
-/* Responsive: en móviles apilan verticalmente */
+/* ==============================
+   RESPONSIVE
+============================== */
 @media (max-width: 768px) {
+  .operaciones-grid, 
   .operaciones-grid.operaciones-grid-centro {
     grid-template-columns: 1fr;
     justify-content: center;
