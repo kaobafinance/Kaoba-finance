@@ -1,241 +1,245 @@
 /* ==============================
 RESET
 ============================== */
-
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  }
+}
 
 /* ==============================
 BASE
 ============================== */
 body {
-font-family: 'Inter', Arial, sans-serif;
-background: #f5f6fa;
-color: #2c3e50;
+  font-family: 'Inter', Arial, sans-serif;
+  background: #f5f6fa;
+  color: #2c3e50;
 }
 
 .container {
-max-width: 1100px;
-margin: auto;
-padding: 20px;
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px;
 }
 
 /* ==============================
 TIPOGRAFÍA
 ============================== */
 h1, h2, h3 {
-color: #0d4f8b;
-text-align: center;
-margin-bottom: 15px;
+  color: #0d4f8b;
+  text-align: center;
+  margin-bottom: 15px;
 }
 
 /* ==============================
 BRAND
 ============================== */
 .brand-title {
-text-align: center;
-margin-bottom: 10px;
+  text-align: center;
+  margin-bottom: 10px;
 }
 
 .brand-main {
-font-size: 28px;
-font-weight: bold;
+  font-size: 28px;
+  font-weight: bold;
 }
 
 .brand-sub {
-font-size: 14px;
-color: #6b7280;
+  font-size: 14px;
+  color: #6b7280;
 }
 
 .euribor-badge {
-text-align: center;
-margin-bottom: 25px;
-font-size: 14px;
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 14px;
 }
 
 /* ==============================
 GRID OPERACIONES
 ============================== */
 .operaciones-grid {
-display: flex;
-gap: 20px;
-flex-wrap: wrap;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
-/* 3 arriba */
 .operaciones-grid .operacion-card {
-flex: 1 1 calc(33.33% - 20px);
+  flex: 1 1 calc(33.33% - 20px);
 }
 
-/* 2 centradas abajo */
 .operaciones-grid-centro {
-justify-content: center;
+  justify-content: center;
 }
 
 .operaciones-grid-centro .operacion-card {
-flex: 0 1 calc(33.33% - 20px);
+  flex: 0 1 calc(33.33% - 20px);
 }
 
 /* ==============================
 TARJETAS
 ============================== */
 .operacion-card {
-background: #fff;
-border-radius: 12px;
-padding: 18px;
-cursor: pointer;
-border: 1px solid #e5e7eb;
-transition: all 0.3s ease;
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px;
+  cursor: pointer;
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
 }
 
 .operacion-card:hover {
-transform: translateY(-6px);
-box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.12);
 }
 
 .card-header {
-display: flex;
-gap: 10px;
-align-items: center;
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
 .operacion-card strong {
-font-size: 16px;
+  font-size: 16px;
 }
 
 .card-sub {
-font-size: 13px;
-color: #9ca3af;
+  font-size: 13px;
+  color: #9ca3af;
 }
 
 /* ==============================
 ACORDEÓN
 ============================== */
 .card-content {
-max-height: 0;
-overflow: hidden;
-transition: max-height 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
 }
 
 .card-content.open {
-max-height: 500px;
-margin-top: 10px;
+  max-height: 500px;
+  margin-top: 10px;
 }
 
 /* ==============================
 FORMULARIOS
 ============================== */
 input, select {
-width: 100%;
-padding: 10px;
-margin: 6px 0 14px 0;
-border-radius: 8px;
-border: 1px solid #d1d5db;
-font-size: 14px;
+  width: 100%;
+  padding: 10px;
+  margin: 6px 0 14px 0;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
 }
 
 input:focus, select:focus {
-border-color: #0072CE;
-outline: none;
-box-shadow: 0 0 4px rgba(0,114,206,0.3);
+  border-color: #0072CE;
+  outline: none;
+  box-shadow: 0 0 4px rgba(0,114,206,0.3);
 }
 
 /* ==============================
 BOTONES
 ============================== */
 button {
-background-color: #0072CE;
-color: #fff;
-border: none;
-border-radius: 8px;
-padding: 10px 18px;
-cursor: pointer;
-font-weight: 600;
-transition: 0.3s;
+  background-color: #0072CE;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
 }
 
 button:hover {
-background-color: #005bb5;
+  background-color: #005bb5;
 }
 
 /* ==============================
 TITULARES
 ============================== */
 .titulares-grid {
-display: flex;
-flex-direction: column;
-gap: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .titular {
-background: #f9fafb;
-border: 1px solid #ddd;
-border-radius: 10px;
-padding: 15px;
+  background: #f9fafb;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
 }
 
 /* ==============================
 TARJETAS RESULTADOS
 ============================== */
 .cards {
-display: flex;
-gap: 12px;
-flex-wrap: wrap;
-justify-content: center;
-margin-top: 20px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
 }
 
 .card {
-background: #fff;
-border: 1px solid #ddd;
-border-radius: 10px;
-padding: 12px;
-min-width: 130px;
-text-align: center;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 12px;
+  min-width: 130px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .card h3 {
-margin: 5px 0;
-color: #0072CE;
+  margin: 5px 0;
+  color: #0072CE;
+}
+
+.card p {
+  margin: 3px 0 0 0;
+  font-size: 14px;
+  color: #333;
 }
 
 /* ==============================
 TABLA
 ============================== */
 #tablaContainer {
-overflow-x: auto;
-margin-top: 20px;
+  overflow-x: auto;
+  margin-top: 20px;
 }
 
 #tablaContainer table {
-width: 100%;
-border-collapse: collapse;
-background: #fff;
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
 }
 
 #tablaContainer th,
 #tablaContainer td {
-padding: 10px;
-border-bottom: 1px solid #eee;
-text-align: right;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  text-align: right;
 }
 
 #tablaContainer th {
-background: #f3f4f6;
-text-align: center;
+  background: #f3f4f6;
+  text-align: center;
 }
 
 /* ==============================
-MODAL
+CALCULADORA FLOTANTE (widget)
 ============================== */
 #btnCalculadoraFlotante {
   position: fixed;
-  bottom: 20px;   /* distancia desde el borde inferior */
-  right: 20px;    /* distancia desde el borde derecho */
-  z-index: 9999;  /* siempre encima de otros elementos */
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
   background-color: #0077cc;
   color: #fff;
   padding: 12px 16px;
@@ -243,40 +247,59 @@ MODAL
   font-size: 18px;
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-.modal-content {
-background: #fff;
-padding: 25px;
-border-radius: 12px;
-width: 90%;
-max-width: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+#calculadoraModal {
+  display: none; /* se oculta por defecto */
+  position: fixed;
+  bottom: 70px;
+  right: 20px;
+  z-index: 9998;
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+}
+
+#calculadoraModal.open {
+  display: block;
+}
+
+/* Cierre al hacer click fuera */
+#calculadoraModal::backdrop {
+  display: none;
+}
 /* ==============================
 COOKIES
 ============================== */
 #cookie-banner {
-position: fixed;
-bottom: 0;
-width: 100%;
-background: #0072CE;
-color: #fff;
-padding: 10px 15px;
-display: flex;
-justify-content: space-between;
-align-items: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #0072CE;
+  color: #fff;
+  padding: 10px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 #cookie-banner button {
-background: #fff;
-color: #0072CE;
+  background: #fff;
+  color: #0072CE;
 }
 
 /* ==============================
 FOOTER
 ============================== */
 footer {
-  background-color: #1a1a1a; /* gris oscuro */
+  background-color: #1a1a1a;
   color: #fff;
   padding: 20px 0;
   text-align: center;
@@ -291,20 +314,11 @@ footer a {
   color: #fff;
   text-decoration: underline;
 }
+
 /* ==============================
-RESPONSIVE
+FAQ FLOTANTE
 ============================== */
-@media (max-width: 768px) {
-.operaciones-grid {
-flex-direction: column;
-}
-
-.cards {
-flex-direction: column;
-align-items: center;
-}
-
-  #btnFAQ {
+#btnFAQ {
   position: fixed;
   bottom: 80px;
   right: 20px;
@@ -316,4 +330,104 @@ align-items: center;
   cursor: pointer;
   box-shadow: 0 4px 6px rgba(0,0,0,0.15);
 }
+
+/* ==============================
+PERFIL FINANCIERO
+============================== */
+#perfil {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  max-width: 900px;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.perfil-section {
+  flex: 1 1 250px;
+  background: #f9fafb;
+  border-radius: 10px;
+  padding: 15px;
+}
+
+.perfil-section h3 {
+  color: #0072CE;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.mensaje-perfil {
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.mensaje-perfil.mensaje-ok { 
+  background: #e6f7ff; 
+  color: #005bb5; 
+}
+
+.mensaje-perfil.mensaje-warning { 
+  background: #fff4e6; 
+  color: #b37400; 
+}
+
+.mensaje-perfil.mensaje-bad { 
+  background: #ffe6e6; 
+  color: #b50000; 
+}
+
+#avisoSegunda {
+  padding: 10px;
+  border-radius: 8px;
+  background: #fff4e6;
+  color: #b37400;
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* ==============================
+RESPONSIVE
+============================== */
+@media (max-width: 768px) {
+  .operaciones-grid {
+    flex-direction: column;
   }
+
+  .cards {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .cards .card {
+    flex: 1 1 45%;
+    min-width: auto;
+  }
+
+  #perfil {
+    flex-direction: column;
+    padding: 15px;
+  }
+
+  .perfil-section {
+    flex: 1 1 100%;
+    margin-bottom: 12px;
+  }
+
+  #avisoSegunda {
+    font-size: 13px;
+    padding: 8px;
+  }
+
+  #btnFAQ {
+    bottom: 80px;
+  }
+}
