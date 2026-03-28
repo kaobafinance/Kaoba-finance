@@ -332,3 +332,35 @@ footer {
   font-size: 14px;
   text-align: center;
 }
+
+/* POSICIONAMIENTO AJEDREZ */
+
+/* Fila 1 */
+.operaciones-grid .operacion-card:nth-child(1) { grid-column: 1; }
+.operaciones-grid .operacion-card:nth-child(2) { grid-column: 2; }
+.operaciones-grid .operacion-card:nth-child(3) { grid-column: 3; }
+
+/* Centro */
+.operaciones-grid .operacion-card:nth-child(4) { 
+  grid-column: 2;
+}
+
+/* Fila inferior */
+.operaciones-grid .operacion-card:nth-child(5) { 
+  grid-column: 1;
+}
+
+.operaciones-grid .operacion-card:nth-child(6) { 
+  grid-column: 3;
+}
+
+@media (max-width: 768px) {
+  .operaciones-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .operaciones-grid .operacion-card {
+    grid-column: auto !important;
+    transform: none;
+  }
+}
