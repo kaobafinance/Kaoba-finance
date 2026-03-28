@@ -544,7 +544,7 @@ footer {
 .inputs label {
   display: flex;
   flex-direction: column;
-  font-weight: 600;
+  margin-bottom: 15px; /* espacio entre preguntas */
 }
 
 .inputs input {
