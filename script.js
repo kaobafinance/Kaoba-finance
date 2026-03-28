@@ -165,6 +165,26 @@ const calcularPerfil = () => {
   const ltv = precio > 0 ? (capitalPosible / precio) * 100 : 0;
   const lti = ingresosAnuales > 0 ? ((cuota + deudas) * 12) / ingresosAnuales : 0;
 
+  const mensajePerfil = document.getElementById("mensajePerfil");
+
+if (mensajePerfil) {
+  mensajePerfil.style.display = "block";
+  mensajePerfil.className = "mensaje-perfil"; // reset
+
+  if (lti <= 0.35) {
+    mensajePerfil.innerText = "¡Buen perfil financiero! Puedes optar a condiciones favorables.";
+    mensajePerfil.classList.add("mensaje-ok");
+
+  } else if (lti <= 0.40) {
+    mensajePerfil.innerText = "Perfil aceptable. Podrías obtener financiación con algunas condiciones.";
+    mensajePerfil.classList.add("mensaje-warning");
+
+  } else {
+    mensajePerfil.innerText = "Perfil con riesgo elevado. Será difícil acceder a financiación en condiciones estándar.";
+    mensajePerfil.classList.add("mensaje-bad");
+  }
+}
+
   // Aviso segunda residencia
   if (perfilPrimeraSegunda?.value === "segunda" && ltv > 70 && avisoSegunda) {
     avisoSegunda.style.display = "block";
