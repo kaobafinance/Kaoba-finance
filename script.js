@@ -213,7 +213,6 @@ const calcularPerfil = () => {
     else if (lti * 100 > 35) perfilLTIOut.classList.add("medium");
     else perfilLTIOut.classList.add("low");
   }
-};}
   };
 
   if(perfilPlazo) perfilPlazo.addEventListener("input",()=>plazoEditadoPorUsuario=true);
