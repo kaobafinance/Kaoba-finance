@@ -14,7 +14,10 @@ html, body {
 body > .container {
   max-width: 1100px;
   margin: 30px auto;
-  padding: 20px;
+  padding: 20px 15px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto; /* permite scroll horizontal si algo sobresale */
 }
 
 /* ==============================
@@ -63,6 +66,7 @@ h2 {
   box-shadow: 0 8px 25px rgba(0,0,0,0.06);
   transition: all 0.25s ease;
   cursor: pointer;
+  min-width: 0; /* evita romper el grid */
 }
 
 .operacion-card:hover {
@@ -123,27 +127,23 @@ h2 {
 /* ==============================
    GRID OPERACIONES
 ============================== */
-.operaciones-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 25px;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
+.operaciones-grid,
 .operaciones-grid.operaciones-grid-centro {
   display: grid;
-  grid-template-columns: repeat(2, 260px);
-  justify-content: center;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 25px;
-  margin: 30px auto 40px auto;
+  max-width: 100%;
+  margin: 0 auto;
+  overflow-x: auto; /* permite scroll horizontal si alguna tarjeta sobresale */
 }
 
-/* Posiciones tipo ajedrez */
-.operaciones-grid .operacion-card:nth-child(1) { grid-column: 1; }
-.operaciones-grid .operacion-card:nth-child(2) { grid-column: 2; }
-.operaciones-grid .operacion-card:nth-child(3) { grid-column: 3; }
-.operaciones-grid .operacion-card:nth-child(4) { grid-column: 2; }
+/* Posiciones tipo ajedrez (solo para escritorio) */
+@media(min-width: 769px){
+  .operaciones-grid .operacion-card:nth-child(1) { grid-column: 1; }
+  .operaciones-grid .operacion-card:nth-child(2) { grid-column: 2; }
+  .operaciones-grid .operacion-card:nth-child(3) { grid-column: 3; }
+  .operaciones-grid .operacion-card:nth-child(4) { grid-column: 2; }
+}
 
 /* ==============================
    EURIBOR BADGE
@@ -248,11 +248,6 @@ button:hover, .btn:hover { background: #09407a; }
   background-color: #09407a;
   transform: scale(1.1);
 }
-#btnCalculadoraFlotante svg {
-  width: 28px;
-  height: 28px;
-  fill: white;
-}
 
 /* BOTÓN FAQ */
 #faqButton {
@@ -287,18 +282,17 @@ button:hover, .btn:hover { background: #09407a; }
   background-color: rgba(0,0,0,0.6);
   padding-top: 50px;
 }
-
 .modal-content {
   background-color: #fff;
   margin: auto;
   padding: 25px;
   border-radius: 15px;
+  width: 90%;
   max-width: 550px;
+  box-sizing: border-box;
   box-shadow: 0 12px 25px rgba(0,0,0,0.2);
   position: relative;
-  font-family: 'Arial', sans-serif;
 }
-
 .close {
   position: absolute;
   top: 15px; right: 20px;
@@ -306,7 +300,6 @@ button:hover, .btn:hover { background: #09407a; }
   cursor: pointer;
   color: #333;
 }
-
 .modal-content h2 {
   text-align: center;
   margin-bottom: 20px;
@@ -322,12 +315,10 @@ button:hover, .btn:hover { background: #09407a; }
   gap: 15px;
   margin-bottom: 20px;
 }
-
 .inputs label {
   display: flex;
   flex-direction: column;
 }
-
 .inputs input {
   padding: 10px;
   border-radius: 8px;
@@ -345,7 +336,6 @@ button:hover, .btn:hover { background: #09407a; }
   justify-content: space-between;
   margin-bottom: 15px;
 }
-
 .resultado-card {
   flex: 1 1 30%;
   min-width: 120px;
@@ -362,8 +352,8 @@ button:hover, .btn:hover { background: #09407a; }
 ============================== */
 #tablaContainer {
   margin-top: 15px;
-  max-height: 250px;
-  overflow-y: auto;
+  overflow-x: auto; /* scroll horizontal si tabla es más ancha */
+  max-width: 100%;
 }
 #tabla {
   width: 100%;
@@ -391,18 +381,13 @@ footer {
   padding: 30px 20px;
   margin-top: 40px;
 }
-
 .footer-top {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 20px;
 }
-
-.footer-logo {
-  font-size: 18px;
-}
-
+.footer-logo { font-size: 18px; }
 .footer-links {
   display: flex;
   flex-direction: column;
@@ -410,9 +395,7 @@ footer {
 }
 .footer-links a { color: #cbd5f5; font-size: 14px; }
 .footer-links a:hover { color: #fff; }
-
 .footer-social a { font-size: 20px; margin-right: 10px; }
-
 .footer-bottom {
   margin-top: 20px;
   text-align: center;
@@ -426,8 +409,8 @@ footer {
 @media (max-width: 768px) {
   .titulares-grid { flex-direction: column; }
   .cards .card { flex: 1 1 100%; }
-  body > .container { margin: 20px; padding: 20px; }
-  .operaciones-grid, 
+  body > .container { margin: 20px; padding: 15px; }
+  .operaciones-grid,
   .operaciones-grid.operaciones-grid-centro {
     grid-template-columns: 1fr;
     justify-content: center;
@@ -435,41 +418,6 @@ footer {
 }
 
 @media (max-width: 600px) {
-  .resultados-container {
-    flex-direction: column;
-  }
+  .resultados-container { flex-direction: column; }
   .resultado-card { flex: 1 1 100%; }
-}
-
-/* Evitar overflow horizontal en móvil */
-html, body {
-  overflow-x: hidden;
-}
-
-/* Hacer que grids de tarjetas sean 100% max-width */
-.operaciones-grid,
-.operaciones-grid.operaciones-grid-centro {
-  max-width: 100%;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-}
-
-/* Ajustar tarjetas individuales */
-.operacion-card {
-  min-width: 0; /* importante para que no rompa el grid */
-}
-
-/* Ajuste para inputs y contenedores grandes */
-body > .container {
-  width: 100%;
-  overflow-x: hidden;
-  box-sizing: border-box;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-
-/* Modal centrado */
-.modal-content {
-  width: 90%;
-  max-width: 550px;
-  box-sizing: border-box;
 }
