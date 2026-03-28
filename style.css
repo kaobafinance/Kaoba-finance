@@ -50,9 +50,16 @@ BRAND
 }
 
 .euribor-badge {
+  display: inline-block;
   text-align: center;
   margin-bottom: 25px;
   font-size: 14px;
+  color: #0072CE;           /* texto azul */
+  border: 1px solid #0072CE; /* borde azul */
+  border-radius: 8px;        /* esquinas redondeadas */
+  padding: 6px 12px;         /* espacio interno */
+  background: #e6f0fc;       /* fondo muy suave azul */
+  font-weight: 500;
 }
 
 /* ==============================
