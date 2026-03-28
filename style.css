@@ -231,13 +231,42 @@ input, select, textarea {
 /* ==============================
    FOOTER
 ============================== */
-.footer {
+footer {
   text-align: center;
-  padding: 20px;
+  padding: 20px 15px;
   font-size: 13px;
   color: #555;
-  margin-top: auto;
+  background: #f9fafb;
   border-top: 1px solid #ddd;
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+footer p {
+  margin: 0;
+}
+
+footer a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* Footer responsive */
+@media (max-width: 768px) {
+  footer {
+    font-size: 14px;
+    padding: 15px;
+  }
+  footer a {
+    display: block;
+    margin: 4px 0;
+  }
 }
 
 /* ==============================
