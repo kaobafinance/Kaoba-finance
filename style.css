@@ -363,4 +363,21 @@ footer {
     grid-column: auto !important;
     transform: none;
   }
+
+/* Grid fila inferior centrada */
+.operaciones-grid.operaciones-grid-centro {
+  display: grid;
+  grid-template-columns: repeat(2, 260px);
+  justify-content: center; /* centra las dos tarjetas */
+  gap: 25px;
+  margin: 0 auto 40px auto;
+}
+
+/* Responsive: todas las tarjetas apilan en móvil */
+@media (max-width: 768px) {
+  .operaciones-grid,
+  .operaciones-grid.operaciones-grid-centro {
+    grid-template-columns: 1fr;
+    justify-content: center;
+  }
 }
