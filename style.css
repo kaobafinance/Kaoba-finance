@@ -12,14 +12,12 @@ html, body {
 }
 
 body > .container {
-  max-width: 1000px;
-  margin: 40px auto;
-  padding: 25px 30px;
-  background: #fff;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
-  flex: 1;
+  max-width: 1100px;
+  margin: 20px auto;
+  padding: 10px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 /* ==============================
@@ -61,18 +59,18 @@ h2 {
    TARJETAS DE OPERACIONES
 ============================== */
 .operacion-card {
-  background: #fff;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 20px;
   border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  margin-bottom: 20px;
-  padding: 18px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+  transition: all 0.25s ease;
   cursor: pointer;
 }
+
 .operacion-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.10);
 }
 .card-header {
   font-weight: 600;
@@ -222,7 +220,7 @@ footer {
 .operaciones-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 15px;
+  gap: 20px;
 }
 
 /* HEADER CARD MODERNO */
@@ -300,4 +298,38 @@ footer {
   text-align: center;
   font-size: 12px;
   color: #9ca3af;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.card-header span {
+  font-size: 22px;
+  background: #eef2ff;
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.card-header strong {
+  display: block;
+  font-size: 15px;
+}
+
+.card-sub {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.euribor-badge {
+  display: inline-block;
+  margin: 10px auto 25px auto;
+  padding: 8px 16px;
+  background: #eef2ff;
+  color: #1e40af;
+  border-radius: 999px;
+  font-size: 14px;
+  text-align: center;
 }
