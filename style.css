@@ -9,15 +9,16 @@ html, body {
   color: #1f2937;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 body > .container {
+  width: 100%;
   max-width: 1100px;
   margin: 30px auto;
   padding: 20px 15px;
-  width: 100%;
   box-sizing: border-box;
-  overflow-x: auto; /* permite scroll horizontal si algo sobresale */
 }
 
 /* ==============================
@@ -66,7 +67,7 @@ h2 {
   box-shadow: 0 8px 25px rgba(0,0,0,0.06);
   transition: all 0.25s ease;
   cursor: pointer;
-  min-width: 0; /* evita romper el grid */
+  min-width: 0;
 }
 
 .operacion-card:hover {
@@ -130,20 +131,21 @@ h2 {
 .operaciones-grid,
 .operaciones-grid.operaciones-grid-centro {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 25px;
   max-width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   margin: 0 auto;
-  overflow-x: auto; /* permite scroll horizontal si alguna tarjeta sobresale */
 }
 
-/* Posiciones tipo ajedrez (solo para escritorio) */
-@media(min-width: 769px){
-  .operaciones-grid .operacion-card:nth-child(1) { grid-column: 1; }
-  .operaciones-grid .operacion-card:nth-child(2) { grid-column: 2; }
-  .operaciones-grid .operacion-card:nth-child(3) { grid-column: 3; }
-  .operaciones-grid .operacion-card:nth-child(4) { grid-column: 2; }
+.operaciones-grid.operaciones-grid-centro {
+  justify-content: center;
 }
+
+/* Posiciones tipo ajedrez (opcional) */
+.operaciones-grid .operacion-card:nth-child(1) { grid-column: 1; }
+.operaciones-grid .operacion-card:nth-child(2) { grid-column: 2; }
+.operaciones-grid .operacion-card:nth-child(3) { grid-column: 3; }
+.operaciones-grid .operacion-card:nth-child(4) { grid-column: 2; }
 
 /* ==============================
    EURIBOR BADGE
@@ -225,12 +227,12 @@ button, .btn {
 button:hover, .btn:hover { background: #09407a; }
 
 /* ==============================
-   BOTÓN FLOTANTE CALCULADORA
+   BOTÓN FLOTANTE CALCULADORA Y FAQ
 ============================== */
 #btnCalculadoraFlotante {
   position: fixed;
-  bottom: 30px;
-  right: 20px;
+  bottom: 25px;
+  right: 15px;
   width: 60px;
   height: 60px;
   background-color: #0d4f8b;
@@ -244,24 +246,21 @@ button:hover, .btn:hover { background: #09407a; }
   cursor: pointer;
   transition: transform 0.2s, background 0.2s;
 }
-#btnCalculadoraFlotante:hover {
-  background-color: #09407a;
-  transform: scale(1.1);
-}
+#btnCalculadoraFlotante:hover { background-color: #09407a; transform: scale(1.1); }
+#btnCalculadoraFlotante svg { width: 28px; height: 28px; fill: white; }
 
-/* BOTÓN FAQ */
 #faqButton {
   position: fixed;
-  bottom: 80px;
-  right: 20px;
+  bottom: 95px; /* separado de la calculadora */
+  right: 15px;
   z-index: 1000;
   background-color: #0d4f8b;
   color: #fff;
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   text-align: center;
-  line-height: 40px;
+  line-height: 50px;
   font-weight: bold;
   font-size: 20px;
   text-decoration: none;
@@ -282,17 +281,20 @@ button:hover, .btn:hover { background: #09407a; }
   background-color: rgba(0,0,0,0.6);
   padding-top: 50px;
 }
+
 .modal-content {
   background-color: #fff;
   margin: auto;
   padding: 25px;
   border-radius: 15px;
-  width: 90%;
   max-width: 550px;
+  width: 90%;
   box-sizing: border-box;
   box-shadow: 0 12px 25px rgba(0,0,0,0.2);
   position: relative;
+  font-family: 'Arial', sans-serif;
 }
+
 .close {
   position: absolute;
   top: 15px; right: 20px;
@@ -300,6 +302,7 @@ button:hover, .btn:hover { background: #09407a; }
   cursor: pointer;
   color: #333;
 }
+
 .modal-content h2 {
   text-align: center;
   margin-bottom: 20px;
@@ -315,10 +318,7 @@ button:hover, .btn:hover { background: #09407a; }
   gap: 15px;
   margin-bottom: 20px;
 }
-.inputs label {
-  display: flex;
-  flex-direction: column;
-}
+.inputs label { display: flex; flex-direction: column; }
 .inputs input {
   padding: 10px;
   border-radius: 8px;
@@ -352,8 +352,8 @@ button:hover, .btn:hover { background: #09407a; }
 ============================== */
 #tablaContainer {
   margin-top: 15px;
-  overflow-x: auto; /* scroll horizontal si tabla es más ancha */
-  max-width: 100%;
+  max-height: 250px;
+  overflow-y: auto;
 }
 #tabla {
   width: 100%;
@@ -381,27 +381,13 @@ footer {
   padding: 30px 20px;
   margin-top: 40px;
 }
-.footer-top {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 20px;
-}
+.footer-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; }
 .footer-logo { font-size: 18px; }
-.footer-links {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.footer-links a { color: #cbd5f5; font-size: 14px; }
+.footer-links { display: flex; flex-direction: column; gap: 8px; }
+.footer-links a { color: #cbd5f5; font-size: 14px; text-decoration: none; }
 .footer-links a:hover { color: #fff; }
 .footer-social a { font-size: 20px; margin-right: 10px; }
-.footer-bottom {
-  margin-top: 20px;
-  text-align: center;
-  font-size: 12px;
-  color: #9ca3af;
-}
+.footer-bottom { margin-top: 20px; text-align: center; font-size: 12px; color: #9ca3af; }
 
 /* ==============================
    RESPONSIVE
@@ -409,15 +395,12 @@ footer {
 @media (max-width: 768px) {
   .titulares-grid { flex-direction: column; }
   .cards .card { flex: 1 1 100%; }
-  body > .container { margin: 20px; padding: 15px; }
-  .operaciones-grid,
-  .operaciones-grid.operaciones-grid-centro {
-    grid-template-columns: 1fr;
-    justify-content: center;
-  }
+  .operaciones-grid, .operaciones-grid.operaciones-grid-centro { grid-template-columns: 1fr; justify-content: center; }
 }
 
 @media (max-width: 600px) {
   .resultados-container { flex-direction: column; }
   .resultado-card { flex: 1 1 100%; }
+  #btnCalculadoraFlotante { bottom: 15px; right: 15px; }
+  #faqButton { bottom: 70px; right: 15px; }
 }
