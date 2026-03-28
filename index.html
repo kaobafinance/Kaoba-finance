@@ -303,49 +303,55 @@
 </style>
 
 <!-- Modal -->
-<div id="modalCalculadora" class="modal">
+<!-- Botón flotante -->
+<button id="btnCalculadoraFlotante">Abrir calculadora</button>
+
+<!-- Modal -->
+<div id="modalCalculadora" style="display:none;">
   <div class="modal-content">
-    <span id="cerrarModal" class="close">&times;</span>
-    <h2>Calculadora Hipotecaria</h2>
+    <span id="cerrarModal">&times;</span>
+    <h2>Simulador de Hipoteca</h2>
 
-    <div class="inputs-container">
-      <div class="input-group">
-        <span class="icon">💶</span>
-        <input id="prestamo" type="number" placeholder="Capital (€)">
+    <!-- Inputs con ejemplos -->
+    <div class="inputs">
+      <label>Importe del préstamo (€):
+        <input id="prestamo" type="number" placeholder="Ej: 150000" value="150000">
+      </label>
+      <label>Interés anual (%):
+        <input id="interes" type="number" placeholder="Ej: 3" value="3">
+      </label>
+      <label>Plazo (años):
+        <input id="anos" type="number" placeholder="Ej: 20" value="20">
+      </label>
+    </div>
+
+    <!-- Resultados en tarjetas -->
+    <div id="resultados" style="display:flex; justify-content:space-between; margin-top:20px;">
+      <div class="tarjeta">
+        <h3>Cuota mensual</h3>
+        <p id="cuota">0 €</p>
       </div>
-      <div class="input-group">
-        <span class="icon">📈</span>
-        <input id="interes" type="number" placeholder="Interés anual (%)">
+      <div class="tarjeta">
+        <h3>Intereses totales</h3>
+        <p id="interesesTotales">0 €</p>
       </div>
-      <div class="input-group">
-        <span class="icon">⏳</span>
-        <input id="anos" type="number" placeholder="Años">
+      <div class="tarjeta">
+        <h3>Total pagado</h3>
+        <p id="totalPagado">0 €</p>
       </div>
     </div>
 
-    <div class="resultados-container" id="resultados" style="display:none;">
-      <div class="resultado-card">
-        <p>Cuota mensual</p>
-        <span id="cuota"></span>
-      </div>
-      <div class="resultado-card">
-        <p>Intereses Totales</p>
-        <span id="interesesTotales"></span>
-      </div>
-      <div class="resultado-card">
-        <p>Total Pagado</p>
-        <span id="totalPagado"></span>
-      </div>
-      <button id="verTabla">Ver cuadro de amortización</button>
-    </div>
+    <!-- Botón para ver tabla de amortización -->
+    <button id="verTabla" style="margin-top:10px; display:none;">Ver cuadro de amortización</button>
 
-    <div id="tablaContainer" style="display:none;">
-      <table id="tabla">
+    <!-- Tabla de amortización -->
+    <div id="tablaContainer" style="display:none; margin-top:10px; max-height:300px; overflow:auto;">
+      <table id="tabla" border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse;">
         <thead>
           <tr>
             <th>Mes</th>
             <th>Cuota</th>
-            <th>Interés</th>
+            <th>Intereses</th>
             <th>Capital</th>
             <th>Saldo</th>
           </tr>
