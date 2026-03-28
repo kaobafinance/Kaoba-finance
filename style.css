@@ -430,4 +430,8 @@ RESPONSIVE
   #btnFAQ {
     bottom: 80px;
   }
+#btnCalculadoraFlotante,
+#modalCalculadora {
+  display: none !important;
+}
 }
