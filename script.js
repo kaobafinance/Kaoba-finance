@@ -123,86 +123,97 @@ document.addEventListener("DOMContentLoaded", () => {
   const avisoSegunda = document.getElementById("avisoSegunda");
   const operacionBadge = document.getElementById("operacionSeleccionada");
 
-  const calcularPerfil = () => {
-    if(!perfilTitulares || !perfilEdad1) return;
-    const nTitulares = parseInt(perfilTitulares.value)||1;
-    const edad1 = parseInt(perfilEdad1.value)||0;
-    const edad2 = nTitulares===2? parseInt(perfilEdad2.value)||0:0;
-    const maxEdad = Math.max(edad1,edad2);
-    const plazoMax = Math.min(30,75-maxEdad);
-    if(perfilPlazo) {
-      perfilPlazo.max = plazoMax>0?plazoMax:0;
-      if(!plazoEditadoPorUsuario) perfilPlazo.value = plazoMax>0?plazoMax:0;
+const calcularPerfil = () => {
+  if (!perfilTitulares || !perfilEdad1) return;
+
+  const nTitulares = parseInt(perfilTitulares.value) || 1;
+  const edad1 = parseInt(perfilEdad1.value) || 0;
+  const edad2 = nTitulares === 2 ? parseInt(perfilEdad2.value) || 0 : 0;
+  const maxEdad = Math.max(edad1, edad2);
+  const plazoMax = Math.min(30, 75 - maxEdad);
+
+  if (perfilPlazo) {
+    perfilPlazo.max = plazoMax > 0 ? plazoMax : 0;
+    if (!plazoEditadoPorUsuario) perfilPlazo.value = plazoMax > 0 ? plazoMax : 0;
+  }
+  if (plazoMax <= 0) return;
+
+  const ingresos =
+    (parseFloat(perfilSalario1?.value) || 0) +
+    (nTitulares === 2 ? parseFloat(perfilSalario2?.value) || 0 : 0) +
+    (parseFloat(perfilOtroIngreso?.value) || 0);
+  const pagas = parseInt(perfilPagas?.value) || 12;
+  const ingresosAnuales = ingresos * pagas;
+  const deudas = parseFloat(perfilDeuda?.value) || 0;
+  const tipoRef = 0.028 / 12;
+  const plazo = parseInt(perfilPlazo?.value) || plazoMax;
+  const n = plazo * 12;
+  const cuotaMax = ingresosAnuales * 0.35 / 12 - deudas;
+
+  let capitalPosible = cuotaMax * (Math.pow(1 + tipoRef, n) - 1) / (tipoRef * Math.pow(1 + tipoRef, n));
+
+  const precio = parseFloat(perfilPrecio?.value) || 0;
+  const impuestos = perfilTipoVivienda?.value === "obraNueva" ? precio * 0.10 : precio * parseFloat(perfilComunidad?.value || 0);
+  const gastos = impuestos + 2500;
+  const ahorros = parseFloat(perfilAhorros?.value) || 0;
+  const entrada = perfilPrimeraSegunda?.value === "segunda" ? precio * 0.30 : precio * 0.20;
+  const faltanteEntrada = Math.max(entrada - ahorros, 0);
+
+  if (yaTieneVivienda?.checked) capitalPosible = precio + gastos - ahorros;
+
+  const cuota = capitalPosible * (tipoRef * Math.pow(1 + tipoRef, n)) / (Math.pow(1 + tipoRef, n) - 1);
+  const ltv = precio > 0 ? (capitalPosible / precio) * 100 : 0;
+  const lti = ingresosAnuales > 0 ? ((cuota + deudas) * 12) / ingresosAnuales : 0;
+
+  // Aviso segunda residencia
+  if (perfilPrimeraSegunda?.value === "segunda" && ltv > 70 && avisoSegunda) {
+    avisoSegunda.style.display = "block";
+    avisoSegunda.innerHTML = `<strong>¡Atención! Segunda residencia con alta financiación:</strong>
+      <p>Necesario aportar ${formatMoney(faltanteEntrada)}, más gastos aproximados ${formatMoney(gastos)}</p>`;
+  } else if (avisoSegunda) {
+    avisoSegunda.style.display = "none";
+  }
+
+  // -----------------------------
+  // MOSTRAR RESULTADOS EN TARJETAS
+  // -----------------------------
+  if (perfilCapitalOut) perfilCapitalOut.innerText = formatMoney(capitalPosible);
+  if (perfilCuotaOut) perfilCuotaOut.innerText = formatMoney(cuota);
+  if (perfilLTVOut) perfilLTVOut.innerText = ltv > 0 ? ltv.toFixed(1) + "%" : "-";
+  if (perfilGastosOut) perfilGastosOut.innerText = formatMoney(gastos);
+  if (perfilLTIOut) perfilLTIOut.innerText = (lti * 100).toFixed(1) + "%";
+
+  // -----------------------------
+  // COLORES Y COMPATIBILIDAD
+  // -----------------------------
+  if (perfilCompatibleOut) {
+    perfilCompatibleOut.className = ""; // reset
+    if (lti <= 0.35) {
+      perfilCompatibleOut.innerText = "Compatible";
+      perfilCompatibleOut.classList.add("green");
+    } else if (lti <= 0.40) {
+      perfilCompatibleOut.innerText = "Aceptable";
+      perfilCompatibleOut.classList.add("orange");
+    } else {
+      perfilCompatibleOut.innerText = "No viable";
+      perfilCompatibleOut.classList.add("red");
     }
-    if(plazoMax<=0) return;
-    const ingresos = (parseFloat(perfilSalario1?.value)||0) + (nTitulares===2?(parseFloat(perfilSalario2?.value)||0):0) + (parseFloat(perfilOtroIngreso?.value)||0);
-    const pagas = parseInt(perfilPagas?.value)||12;
-    const ingresosAnuales = ingresos*pagas;
-    const deudas = parseFloat(perfilDeuda?.value)||0;
-    const tipoRef = 0.028/12;
-    const plazo = parseInt(perfilPlazo?.value)||plazoMax;
-    const n = plazo*12;
-    const cuotaMax = ingresosAnuales*0.35/12 - deudas;
-    let capitalPosible = cuotaMax*(Math.pow(1+tipoRef,n)-1)/(tipoRef*Math.pow(1+tipoRef,n));
-    const precio = parseFloat(perfilPrecio?.value)||0;
-    const impuestos = perfilTipoVivienda?.value==="obraNueva"? precio*0.10 : precio*parseFloat(perfilComunidad?.value||0);
-    const gastos = impuestos + 2500;
-    const ahorros = parseFloat(perfilAhorros?.value)||0;
-    const entrada = perfilPrimeraSegunda?.value==="segunda"? precio*0.30 : precio*0.20;
-    const faltanteEntrada = Math.max(entrada - ahorros,0);
-    if(yaTieneVivienda?.checked) capitalPosible = precio+gastos - ahorros;
-    const cuota = capitalPosible*(tipoRef*Math.pow(1+tipoRef,n))/(Math.pow(1+tipoRef,n)-1);
-    const ltv = precio>0? (capitalPosible/precio*100):0;
-    if(perfilPrimeraSegunda?.value==="segunda" && ltv>70 && avisoSegunda) {
-      avisoSegunda.style.display="block";
-      avisoSegunda.innerHTML=`<strong>¡Atención! Segunda residencia con alta financiación:</strong>
-        <p>Necesario aportar ${formatMoney(faltanteEntrada)}, más gastos aproximados ${formatMoney(gastos)}</p>`;
-    } else if(avisoSegunda) { avisoSegunda.style.display="none"; }
-    const lti = ingresosAnuales>0? (cuota+deudas)*12/ingresosAnuales :0;
-    if(perfilCapitalOut) perfilCapitalOut.innerText=formatMoney(capitalPosible);
-    if(perfilCuotaOut) perfilCuotaOut.innerText=formatMoney(cuota);
-    if(perfilLTVOut) perfilLTVOut.innerText=ltv>0? ltv.toFixed(1)+"%":"-";
-    if(perfilGastosOut) perfilGastosOut.innerText=formatMoney(gastos);
-    if(perfilLTIOut) perfilLTIOut.innerText=(lti*100).toFixed(1)+"%";
-    if(perfilCompatibleOut){
-      if(lti<=0.35){ perfilCompatibleOut.innerText="Compatible"; perfilCompatibleOut.style.color="green"; }
-      else if(lti<=0.40){ perfilCompatibleOut.innerText="Aceptable"; perfilCompatibleOut.style.color="orange"; }
-      else { perfilCompatibleOut.innerText="No viable"; perfilCompatibleOut.style.color="red"; }
-      // RESET DE CLASES
-perfilCompatibleOut.className = "";
-perfilLTVOut.className = "";
-perfilLTIOut.className = "";
+  }
 
-// COMPATIBILIDAD
-if(lti <= 0.35){
-  perfilCompatibleOut.innerText = "Compatible";
-  perfilCompatibleOut.classList.add("green");
-} else if(lti <= 0.40){
-  perfilCompatibleOut.innerText = "Aceptable";
-  perfilCompatibleOut.classList.add("orange");
-} else {
-  perfilCompatibleOut.innerText = "No viable";
-  perfilCompatibleOut.classList.add("red");
-}
+  if (perfilLTVOut) {
+    perfilLTVOut.className = "";
+    if (ltv > 80) perfilLTVOut.classList.add("high");
+    else if (ltv > 70) perfilLTVOut.classList.add("medium");
+    else perfilLTVOut.classList.add("low");
+  }
 
-// LTV
-if(ltv > 80){
-  perfilLTVOut.classList.add("high");
-} else if(ltv > 70){
-  perfilLTVOut.classList.add("medium");
-} else {
-  perfilLTVOut.classList.add("low");
-}
-
-// LTI
-if(lti*100 > 40){
-  perfilLTIOut.classList.add("high");
-} else if(lti*100 > 35){
-  perfilLTIOut.classList.add("medium");
-} else {
-  perfilLTIOut.classList.add("low");
-}
-    }
+  if (perfilLTIOut) {
+    perfilLTIOut.className = "";
+    if (lti * 100 > 40) perfilLTIOut.classList.add("high");
+    else if (lti * 100 > 35) perfilLTIOut.classList.add("medium");
+    else perfilLTIOut.classList.add("low");
+  }
+};}
   };
 
   if(perfilPlazo) perfilPlazo.addEventListener("input",()=>plazoEditadoPorUsuario=true);
