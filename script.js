@@ -269,9 +269,11 @@ window.abrirOperacion = function(id){
 window.irAnalisis = function(event, tipoOperacion){
   event.stopPropagation();
 
-  // Redirigir a consolidacion.html si es Consolidación o Cambio de Hipoteca
   if(tipoOperacion === 'consolidacion' || tipoOperacion === 'subrogacion') {
-    window.location.href = `consolidacion.html?tipo=${tipoOperacion}`;
+    // Guardamos la opción en sessionStorage
+    sessionStorage.setItem("tipoOperacionSeleccionada", tipoOperacion);
+    // Redirigimos
+    window.location.href = `consolidacion.html`;
     return;
 }
 
