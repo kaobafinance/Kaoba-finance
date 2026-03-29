@@ -267,30 +267,42 @@ window.abrirOperacion = function(id){
 // REDIRECCIÓN A SIMULADOR
 // -----------------------------
 window.irAnalisis = function(event, tipoOperacion){
-  event.stopPropagation(); // evita que se cierre el acordeón al hacer click
-  // Redirige a la página del simulador con el tipo de operación
-  window.location.href = `analisis.html?operacion=${encodeURIComponent(tipoOperacion)}`;
-};
-  window.irAnalisis = function(event, tipo){
-    event.stopPropagation();
-    if(!perfilFields.operacionBadge || !perfilDiv) return;
-    const mismoTipo = perfilFields.operacionBadge.innerText.includes(tipo);
-    if(perfilDiv.style.display==="block" && mismoTipo){ perfilDiv.style.display="none"; perfilFields.operacionBadge.style.display="none"; return; }
-    perfilDiv.style.display="block";
-    calculadoraDiv && (calculadoraDiv.style.display="none");
-    perfilFields.operacionBadge.style.display="block";
-    perfilFields.operacionBadge.innerText = `Operación seleccionada: ${tipo}`;
+  event.stopPropagation();
 
-    if(perfilFields.primeraSegunda && perfilFields.viviendaCheck && perfilFields.viviendaInfo){
-      switch(tipo){
-        case 'Compra Primera Vivienda': perfilFields.primeraSegunda.value='primera'; perfilFields.viviendaCheck.checked=false; break;
-        case 'Cambio de Hipoteca': perfilFields.primeraSegunda.value='segunda'; perfilFields.viviendaCheck.checked=true; break;
-        case 'Inversión': perfilFields.primeraSegunda.value='segunda'; perfilFields.viviendaCheck.checked=false; break;
-      }
-      perfilFields.viviendaInfo.style.display = perfilFields.viviendaCheck.checked?"block":"none";
+  if (!perfilFields.operacionBadge || !perfilDiv) return;
+
+  const mismoTipo = perfilFields.operacionBadge.innerText.includes(tipoOperacion);
+  if (perfilDiv.style.display === "block" && mismoTipo) {
+    perfilDiv.style.display = "none";
+    perfilFields.operacionBadge.style.display = "none";
+    return;
+  }
+
+  perfilDiv.style.display = "block";
+  calculadoraDiv && (calculadoraDiv.style.display = "none");
+  perfilFields.operacionBadge.style.display = "block";
+  perfilFields.operacionBadge.innerText = `Operación seleccionada: ${tipoOperacion}`;
+
+  if (perfilFields.primeraSegunda && perfilFields.viviendaCheck && perfilFields.viviendaInfo) {
+    switch(tipoOperacion){
+      case 'Compra Primera Vivienda':
+        perfilFields.primeraSegunda.value = 'primera';
+        perfilFields.viviendaCheck.checked = false;
+        break;
+      case 'Cambio de Hipoteca':
+        perfilFields.primeraSegunda.value = 'segunda';
+        perfilFields.viviendaCheck.checked = true;
+        break;
+      case 'Inversión':
+        perfilFields.primeraSegunda.value = 'segunda';
+        perfilFields.viviendaCheck.checked = false;
+        break;
     }
-    calcularPerfil();
-    perfilDiv.scrollIntoView({behavior:'smooth'});
+    perfilFields.viviendaInfo.style.display = perfilFields.viviendaCheck.checked ? "block" : "none";
+  }
+
+  calcularPerfil();
+  perfilDiv.scrollIntoView({behavior:'smooth'});
   };
 
   // -----------------------------
