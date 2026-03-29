@@ -54,19 +54,19 @@
     </div>
 
     <!-- Cambio -->
-    <div class="operacion-card" onclick="abrirOperacion('cambio')">
-      <div class="card-header">
-        <span>🔄</span>
-        <div>
-          <strong>Cambiar mi hipoteca</strong>
-          <p class="card-sub">Mejora condiciones actuales</p>
-        </div>
-      </div>
-      <div id="cambio" class="card-content">
-        <p>Subroga tu hipoteca a otro banco con mejores condiciones.</p>
-        <button onclick="irAnalisis(event,'Cambio de Hipoteca')">Analizar mi perfil</button>
-      </div>
+   <div class="operacion-card" onclick="abrirOperacion('cambio')">
+  <div class="card-header">
+    <span>🔄</span>
+    <div>
+      <strong>Cambiar mi hipoteca</strong>
+      <p class="card-sub">Mejora condiciones actuales</p>
     </div>
+  </div>
+  <div id="cambio" class="card-content">
+    <p>Subroga tu hipoteca a otro banco con mejores condiciones.</p>
+    <button onclick="irAnalisis(event,'subrogacion')">Analizar mi perfil</button>
+  </div>
+</div>
 
     <!-- Inversión -->
     <div class="operacion-card" onclick="abrirOperacion('inversion')">
@@ -90,19 +90,19 @@
   <!-- Fila inferior centrada -->
 <div class="operaciones-grid operaciones-grid-centro">
     <!-- Consolidación -->
-   <div class="operacion-card" onclick="abrirOperacion('consolidacion')">
-      <div class="card-header">
-        <span>💳</span>
-        <div>
-          <strong>Consolidación de deudas</strong>
-          <p class="card-sub">Reduce tu cuota mensual</p>
-        </div>
-      </div>
-      <div id="consolidacion" class="card-content">
-        <p>Unifica préstamos y tarjetas en una sola cuota.</p>
-        <button onclick="window.location.href='consolidacion.html'">Ir a simulador</button>
-      </div>
+ <div class="operacion-card" onclick="abrirOperacion('consolidacion')">
+  <div class="card-header">
+    <span>💳</span>
+    <div>
+      <strong>Consolidar deudas</strong>
+      <p class="card-sub">Reduce pagos mensuales</p>
     </div>
+  </div>
+  <div id="consolidacion" class="card-content">
+    <p>Unifica tus deudas en un solo préstamo más cómodo.</p>
+    <button onclick="irAnalisis(event,'consolidacion')">Analizar mi perfil</button>
+  </div>
+</div>
 
     <!-- Comparador -->
   <div class="operacion-card" onclick="abrirOperacion('comparador')">
