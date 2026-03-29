@@ -414,7 +414,35 @@ footer a {
   color: #fff;
   text-decoration: underline;
 }
+footer {
+  background-color: #1a1a1a;
+  color: #fff;
+  padding: 40px 20px;
+}
 
+/* CONTENEDOR INTERNO */
+.footer-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  flex-wrap: wrap;
+  text-align: left;
+}
+
+/* COLUMNAS */
+.footer-col {
+  flex: 1 1 250px;
+}
+
+/* CENTRO SOLO EL COPYRIGHT */
+.footer-bottom {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 13px;
+  color: #aaa;
+}
 /* ==============================
 FAQ FLOTANTE
 ============================== */
