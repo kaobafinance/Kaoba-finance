@@ -405,10 +405,9 @@ footer {
   padding: 20px 0;
   text-align: center;
   font-size: 14px;
-  clear: both;
-  position: relative;
-  bottom: 0;
   width: 100%;
+  position: relative;
+  z-index: 1; /* debajo de flotantes */
 }
 
 footer a {
@@ -421,21 +420,22 @@ FAQ FLOTANTE
 ============================== */
 #faqButton {
   position: fixed;
-  bottom: 80px;
-  right: 20px;
-  z-index: 9998;
-background: #0072CE;
-  color: #fff;
+  bottom: 100px;  /* separa del footer y calculadora */
+  right: 20px;    /* siempre a la derecha */
+  z-index: 10000; /* encima de todo */
   width: 50px;
   height: 50px;
+  background: #0072CE;
+  color: #fff;
   border-radius: 50%;
-  font-size: 20px;
+  font-size: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.2);
   text-decoration: none;
-  transition: 0.3s;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: transform 0.3s ease;
 }
 
 #faqButton:hover {
