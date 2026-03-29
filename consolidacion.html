@@ -291,10 +291,6 @@ function calcular() {
   document.getElementById("resultados").style.display = "block";
 }
 
-  if (ahorroMensual > 0) mostrarMensaje(`¡Buen resultado! Ahorrarás ${ahorroMensual} € al mes ✅`, "success");
-  else if (ahorroMensual == 0) mostrarMensaje("No hay ahorro significativo ⚠️", "warning");
-  else mostrarMensaje(`Cuidado, podrías pagar más que ahora ❌`, "error");
-}
 
 // Generar y enviar PDF
 function enviarPDF() {
