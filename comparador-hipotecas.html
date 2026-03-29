@@ -24,7 +24,7 @@ header p{font-size:1rem;margin-top:6px;}
   align-items: center;
   gap: 6px;
   padding: 8px 14px;
-  border: 2px solid #0d4f8b; /* borde azul */
+  border: 2px solid #0d4f8b;
   border-radius: 6px;
   background: transparent;
   color: #0d4f8b;
@@ -65,18 +65,16 @@ th{background:#f1f3f6;}
 </head>
 
 <body>
-
-
 <a href="index.html" class="volver">← Volver al inicio</a>
 
 <main>
   <h2>Datos generales</h2>
-<label>Capital (€)<input type="number" id="capital" placeholder="150000"></label>
-<label>Plazo total (años)<input type="number" id="plazo" placeholder="20"></label>
-<label>Euríbor actual (%)<input type="number" id="euribor" placeholder="2.82" step="0.01"></label>
-<p style="font-size:12px; color:#b45309; margin-top:6px;" id="aviso-tecnico">
-  * Para hipotecas mixtas o variables, los cálculos usan el Euríbor actual como referencia. Valores orientativos; pueden variar con el mercado.
-</p>
+  <label>Capital (€)<input type="number" id="capital" placeholder="150000"></label>
+  <label>Plazo total (años)<input type="number" id="plazo" placeholder="20"></label>
+  <label>Euríbor actual (%)<input type="number" id="euribor" placeholder="2.82" step="0.01"></label>
+  <p style="font-size:12px; color:#b45309; margin-top:6px;" id="aviso-tecnico">
+    * Para hipotecas mixtas o variables, los cálculos usan el Euríbor actual como referencia. Valores orientativos; pueden variar con el mercado.
+  </p>
   
   <hr style="margin:18px 0;">
   <h2>Ofertas bancarias</h2>
@@ -88,9 +86,6 @@ th{background:#f1f3f6;}
   <label>Nombre<input type="text" id="nombreUsuario" placeholder="Tu nombre"></label>
   <label>Email<input type="email" id="emailUsuario" placeholder="tu@email.com"></label>
   <label><input type="checkbox" id="acepta"> Acepto política de privacidad</label>
-  <p id="aviso-mixta-${contador}" style="display:none; font-size:12px; color:#b45309; margin-top:6px;">
-  * En la fase variable se utiliza el Euríbor actual como estimación. Este valor puede variar en el futuro.
-</p>
 
   <button onclick="calcular()">Calcular</button>
   <button onclick="descargarPDF()">Descargar PDF</button>
@@ -108,6 +103,7 @@ th{background:#f1f3f6;}
 <script>
 let contador = 0;
 
+// Función para añadir un banco
 function addBanco(){
   contador++;
   const div=document.createElement("div");
@@ -131,24 +127,26 @@ function addBanco(){
     <div id="bloque-variable-${contador}" style="display:none;">
       <label>Diferencial (%)<input type="number" id="difVar-${contador}" step="0.01" onchange="calcular()"></label>
     </div>
+    <p id="aviso-mixta-${contador}" style="display:none; font-size:12px; color:#b45309; margin-top:6px;">
+      * En la fase variable se utiliza el Euríbor actual como estimación. Este valor puede variar en el futuro.
+    </p>
     <label><input type="checkbox" id="amortSi-${contador}"> Se cobra comisión por amortización</label>
   `;
   document.getElementById("bancos").appendChild(div);
 }
 
+// Quitar un banco
 function removeBanco(id){document.getElementById("banco-"+id)?.remove();}
+
+// Mostrar bloques según tipo
 function toggleTipo(id){
   const tipo = document.getElementById("tipo-"+id).value;
-
   document.getElementById("bloque-fija-"+id).style.display = tipo==="fija"?"block":"none";
   document.getElementById("bloque-mixta-"+id).style.display = tipo==="mixta"?"block":"none";
   document.getElementById("bloque-variable-"+id).style.display = tipo==="variable"?"block":"none";
 
-  // Mostrar aviso mixta
   const aviso = document.getElementById("aviso-mixta-"+id);
-  if(aviso){
-    aviso.style.display = tipo==="mixta" ? "block" : "none";
-  }
+  if(aviso){ aviso.style.display = tipo==="mixta" ? "block" : "none"; }
 }
 
 // ====== AMORTIZACIÓN ======
@@ -158,8 +156,7 @@ function generarAmortizacion(capital, tin, plazoMeses, tipo, amortSi){
   const i=tin/100/12;
   for(let m=1;m<=plazoMeses;m++){
     let cuotaBase=(capPend*i)/(1-Math.pow(1+i,-(plazoMeses-m+1))); 
-    let amortizacion=0;
-    if(amortSi){amortizacion=capPend*0.002;}
+    let amortizacion=amortSi?capPend*0.002:0;
     const intereses=capPend*i;
     const pagoCapital=cuotaBase-intereses+amortizacion;
     capPend-=pagoCapital; 
@@ -171,12 +168,11 @@ function generarAmortizacion(capital, tin, plazoMeses, tipo, amortSi){
 
 // ===== CALCULAR =====
 function calcular(){
-  const capital = parseFloat(document.getElementById("capital").value) || 150000; // si no ingresa nada, 150.000 €
-const plazoAños = parseFloat(document.getElementById("plazo").value) || 20;    // si no ingresa nada, 20 años
-const plazoMeses = Math.round(plazoAños * 12);
+  const capital = parseFloat(document.getElementById("capital").value) || 150000;
+  const plazoAños = parseFloat(document.getElementById("plazo").value) || 20;
+  const plazoMeses = Math.round(plazoAños*12);
+  const euribor = parseFloat(document.getElementById("euribor").value) || 2.82;
 
-const euriborInput = document.getElementById("euribor").value;
-const euribor = euriborInput === "" ? 2.82 : parseFloat(euriborInput); // usa 3.5% si deja vacío
   const tbody=document.querySelector("#tabla tbody");
   tbody.innerHTML="";
   const resultados=[];
@@ -188,61 +184,27 @@ const euribor = euriborInput === "" ? 2.82 : parseFloat(euriborInput); // usa 3.
     const amortSi=document.getElementById("amortSi-"+i).checked;
     let amortRows=[];
 
-    if(tipo==="fija"){ 
+    if(tipo==="fija"){
       const tin=parseFloat(document.getElementById("tinFijo-"+i).value)||0;
       amortRows=generarAmortizacion(capital,tin,plazoMeses,tipo,amortSi);
     } else if(tipo==="variable"){
       const dif=parseFloat(document.getElementById("difVar-"+i).value)||0;
       amortRows=generarAmortizacion(capital,euribor+dif,plazoMeses,tipo,amortSi);
-  } else {
-  // ===== HIPOTECA MIXTA CORRECTA =====
-  const mesesFijo = parseInt(document.getElementById("mesesFijo-"+i).value) || 0;
-  const tinFijo = parseFloat(document.getElementById("tinMixtoFijo-"+i).value) || 0;
-  const dif = parseFloat(document.getElementById("diferencial-"+i).value) || 0;
+    } else {
+      const mesesFijo = parseInt(document.getElementById("mesesFijo-"+i).value)||0;
+      const tinFijo = parseFloat(document.getElementById("tinMixtoFijo-"+i).value)||0;
+      const dif = parseFloat(document.getElementById("diferencial-"+i).value)||0;
 
-  // 1️⃣ Simular TODA la hipoteca como fija (plazo total)
-  const amortCompletaFija = generarAmortizacion(
-    capital,
-    tinFijo,
-    plazoMeses,
-    "fija",
-    amortSi
-  );
-
-  // 2️⃣ Cortar solo los meses del tramo fijo real
-  const amortFija = amortCompletaFija.slice(0, mesesFijo);
-
-  // 3️⃣ Obtener capital pendiente REAL tras el tramo fijo
-  const restante = mesesFijo > 0
-    ? parseFloat(amortCompletaFija[mesesFijo - 1].pendiente)
-    : capital;
-
-  // 4️⃣ Calcular tramo variable
-  const mesesVariable = plazoMeses - mesesFijo;
-
-  const amortVariable = generarAmortizacion(
-    restante,
-    euribor + dif,
-    mesesVariable,
-    "variable",
-    amortSi
-  );
-
-  // 5️⃣ Unir ambas fases
-  amortRows = [...amortFija, ...amortVariable];
-}
+      const amortCompletaFija = generarAmortizacion(capital,tinFijo,plazoMeses,"fija",amortSi);
+      const amortFija = amortCompletaFija.slice(0, mesesFijo);
+      const restante = mesesFijo>0?parseFloat(amortCompletaFija[mesesFijo-1].pendiente):capital;
+      const amortVariable = generarAmortizacion(restante,euribor+dif,plazoMeses-mesesFijo,"variable",amortSi);
+      amortRows=[...amortFija,...amortVariable];
+    }
 
     const cuotaMedia=amortRows.reduce((a,b)=>a+parseFloat(b.cuota),0)/plazoMeses;
     const intereses=amortRows.reduce((a,b)=>a+parseFloat(b.cuota),0)-capital;
-    resultados.push({
-  nombre,
-  tipo,
-  cuotaMedia,
-  intereses,
-  total: capital + intereses,
-  amortRows,
-  mesesFijo // 👈 necesario para mostrar la cuota variable
-});
+    resultados.push({nombre,tipo,cuotaMedia,intereses,total:capital+intereses,amortRows,mesesFijo:parseInt(document.getElementById("mesesFijo-"+i)?.value)||0});
   }
 
   resultados.sort((a,b)=>a.total-b.total);
@@ -251,24 +213,15 @@ const euribor = euriborInput === "" ? 2.82 : parseFloat(euriborInput); // usa 3.
   resultados.forEach((r,index)=>{
     const row=document.createElement("tr");
     const ahorro=(r.total-mejorTotal).toFixed(2);
-    const mejorIndicador = index===0 ? '<span style="color:#198754;font-weight:600;">★ Mejor</span>' : '';
+    const mejorIndicador=index===0?'<span style="color:#198754;font-weight:600;">★ Mejor</span>':'';
     row.innerHTML=`
       <td>${r.nombre} ${mejorIndicador}</td>
       <td>${r.tipo}</td>
-     <td>
-  ${
-    r.tipo === "mixta"
-      ? `
-        ${parseFloat(r.amortRows[0].cuota).toFixed(2)} €<br>
-        <span style="font-size:12px;color:#666;">
-          luego ~${parseFloat(
-            r.amortRows[r.mesesFijo]?.cuota || r.amortRows[r.mesesFijo - 1]?.cuota
-          ).toFixed(2)} €
-        </span>
-      `
-      : `${r.cuotaMedia.toFixed(2)} €`
-  }
-</td>
+      <td>${
+        r.tipo==="mixta"?
+        `${parseFloat(r.amortRows[0].cuota).toFixed(2)} €<br><span style="font-size:12px;color:#666;">luego ~${parseFloat(r.amortRows[r.mesesFijo]?.cuota||r.amortRows[r.mesesFijo-1]?.cuota).toFixed(2)} €</span>`
+        :`${r.cuotaMedia.toFixed(2)} €`
+      }</td>
       <td>${r.intereses.toFixed(2)} €</td>
       <td>${r.total.toFixed(2)} €</td>
       <td class="ahorro">${ahorro>0?ahorro+' €':''}</td>
@@ -286,6 +239,13 @@ const euribor = euriborInput === "" ? 2.82 : parseFloat(euriborInput); // usa 3.
 function toggleAmort(index){
   const div=document.getElementById("amort-"+index);
   div.style.display = div.style.display==="none"?"block":"none";
+}
+
+// Inicializamos con un banco por defecto para que se pueda calcular desde el inicio
+addBanco();
+</script>
+</body>
+</html>
 }
 
 function descargarPDF(){
