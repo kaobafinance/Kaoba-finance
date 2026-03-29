@@ -150,7 +150,7 @@ function addDeuda() {
   div.className = "deuda";
   div.id = "d" + count;
   div.innerHTML = `
-    <button class="remove" onclick="removeDeuda(${count})">×</button>
+<button class="remove" onclick="removeDeuda(${count})" style="background:none;border:none;color:#dc3545;font-weight:bold;font-size:1.2rem;cursor:pointer;">×</button>
     <label>Capital (€)<input type="number" id="capital${count}" placeholder="Ej: 20000" min="0"></label>
     <label>TIN (%)<input type="number" id="interes${count}" placeholder="Ej: 5" step="0.01" min="0"></label>
     <label>Plazo (años)<input type="number" id="plazo${count}" placeholder="Ej: 3" min="1"></label>
