@@ -298,7 +298,7 @@ MODAL CALCULADORA
   position: fixed;
   bottom: 90px; /* separa del botón */
   right: 20px;
-  z-index: 9998;
+  z-index: 9999;
   background: #fff;
   padding: 25px;
   border-radius: 12px;
@@ -317,7 +317,25 @@ MODAL CALCULADORA
 #modalCalculadora::backdrop {
   display: none;
 }
+#modalCalculadora table {
+  width: 100%;
+  max-height: 250px; /* limita altura */
+  overflow-y: auto;  /* scroll vertical */
+  display: block;
+  border-collapse: collapse;
+}
 
+#modalCalculadora th, 
+#modalCalculadora td {
+  padding: 8px;
+  text-align: right;
+  border-bottom: 1px solid #eee;
+}
+
+#modalCalculadora th {
+  background: #f3f4f6;
+  text-align: center;
+}
 /* ==============================
 RESPONSIVE MÓVIL
 ============================== */
