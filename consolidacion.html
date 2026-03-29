@@ -121,18 +121,17 @@ Esta página es una herramienta secundaria de nuestra web principal. Aquí puede
 </div>
 
 </div> <!-- .container -->
-  <script>
+
+<script>
 let count = 0;
 const { jsPDF } = window.jspdf;
 
-// Función para calcular la cuota mensual
 function cuota(c, i, p) {
   let r = i / 100 / 12;
   let m = p * 12;
   return (c * r * Math.pow(1 + r, m)) / (Math.pow(1 + r, m) - 1);
 }
 
-// Mostrar/ocultar campos según operación y tipo de hipoteca
 function actualizarCampos() {
   const op = document.getElementById("tipoOperacion").value;
   const hip = document.getElementById("tipoHipoteca")?.value || "fija";
@@ -143,7 +142,6 @@ function actualizarCampos() {
   calcular();
 }
 
-// Agregar nueva deuda
 function addDeuda() {
   count++;
   const div = document.createElement("div");
@@ -151,23 +149,21 @@ function addDeuda() {
   div.id = "d" + count;
   div.innerHTML = `
 <button class="remove" onclick="removeDeuda(${count})" style="background:none;border:none;color:#dc3545;font-weight:bold;font-size:1.2rem;cursor:pointer;">×</button>
-    <label>Capital (€)<input type="number" id="capital${count}" placeholder="Ej: 20000" min="0"></label>
-    <label>TIN (%)<input type="number" id="interes${count}" placeholder="Ej: 5" step="0.01" min="0"></label>
-    <label>Plazo (años)<input type="number" id="plazo${count}" placeholder="Ej: 3" min="1"></label>
-    <small class="tip">Completa esta deuda para calcular la nueva cuota.</small>
-  `;
+<label>Capital (€)<input type="number" id="capital${count}" placeholder="Ej: 20000" min="0"></label>
+<label>TIN (%)<input type="number" id="interes${count}" placeholder="Ej: 5" step="0.01" min="0"></label>
+<label>Plazo (años)<input type="number" id="plazo${count}" placeholder="Ej: 3" min="1"></label>
+<small class="tip">Completa esta deuda para calcular la nueva cuota.</small>
+`;
   document.getElementById("deudas").appendChild(div);
   div.querySelectorAll("input").forEach(inp => inp.addEventListener("input", calcular));
   mostrarMensaje("Nueva deuda añadida. Completa los campos para calcular tu ahorro.", "info");
 }
 
-// Eliminar deuda
 function removeDeuda(id) {
   document.getElementById("d" + id)?.remove();
   calcular();
 }
 
-// Mostrar mensajes interactivos
 function mostrarMensaje(texto, tipo) {
   const div = document.getElementById("mensajeResultado");
   div.innerText = texto;
@@ -177,7 +173,6 @@ function mostrarMensaje(texto, tipo) {
   else if (tipo === "error") { div.style.backgroundColor = "#fee2e2"; div.style.color = "#b91c1c"; }
 }
 
-// Validación de campos
 function validarCampos() {
   let valid = true;
   ["capitalPendiente", "tinActual", "plazoRestante", "plazoNuevo", "tinNuevo", "email"].forEach(id => {
@@ -200,7 +195,6 @@ function validarCampos() {
   return valid;
 }
 
-// Calcular cuotas y ahorro
 function calcular() {
   const op = document.getElementById("tipoOperacion").value;
   const hip = document.getElementById("tipoHipoteca")?.value || "fija";
@@ -237,7 +231,7 @@ function calcular() {
       cuotaDespues = (cuotaFijaInicial * plazoFijo * 12 + cuotaVariable * plazoVar * 12) / (plazoNuevo * 12);
       interesesDespues = (cuotaFijaInicial * plazoFijo * 12 + cuotaVariable * plazoVar * 12) - (totalCapital + comisiones);
     }
-  } else { // subrogación
+  } else {
     const capitalPend = parseFloat(document.getElementById("capitalPendiente")?.value) || 0;
     const tinActual = parseFloat(document.getElementById("tinActual")?.value) || 0;
     const plazoRest = parseInt(document.getElementById("plazoRestante")?.value) || 1;
@@ -262,28 +256,24 @@ function calcular() {
     }
   }
 
-// Calcular ahorro
-const ahorroMensualNum = cuotaAntes - cuotaDespues;
-const ahorroTotalNum = interesesAntes - interesesDespues;
+  // Calcular ahorro
+  const ahorroMensualNum = cuotaAntes - cuotaDespues;
+  const ahorroTotalNum = interesesAntes - interesesDespues;
 
-document.getElementById("cuotaFijaInicial").innerText = cuotaFijaInicial ? cuotaFijaInicial.toFixed(2) + " €" : "-";
-document.getElementById("cuotaVariable").innerText = cuotaVariable ? cuotaVariable.toFixed(2) + " €" : "-";
-document.getElementById("cuotaDespues").innerText = cuotaDespues.toFixed(2) + " €";
+  document.getElementById("cuotaFijaInicial").innerText = cuotaFijaInicial ? cuotaFijaInicial.toFixed(2) + " €" : "-";
+  document.getElementById("cuotaVariable").innerText = cuotaVariable ? cuotaVariable.toFixed(2) + " €" : "-";
+  document.getElementById("cuotaDespues").innerText = cuotaDespues.toFixed(2) + " €";
 
-// AHORRO MENSUAL
-const ahorroMensualElem = document.getElementById("ahorroMensual");
-if (ahorroMensualNum > 0) {
-  ahorroMensualElem.innerText = `Ahorrarás ${ahorroMensualNum.toFixed(2)} €/mes`;
-  ahorroMensualElem.style.color = "#065f46"; // verde
-  mostrarMensaje(`¡Buen resultado! Ahorrarás ${ahorroMensualNum.toFixed(2)} €/mes ✅`, "success");
-} else if (ahorroMensualNum < 0) {
-  ahorroMensualElem.innerText = `Pagarás ${Math.abs(ahorroMensualNum).toFixed(2)} €/mes más`;
-  ahorroMensualElem.style.color = "#b91c1c"; // rojo
-  mostrarMensaje(`Cuidado, podrías pagar ${Math.abs(ahorroMensualNum).toFixed(2)} €/mes más ❌`, "error");
-} else {
-  ahorroMensualElem.innerText = "No hay ahorro significativo";
-  ahorroMensualElem.style.color = "#92400e"; // naranja
-  mostrarMensaje("No hay ahorro significativo ⚠️", "warning");
+  // AHORRO MENSUAL
+  const ahorroMensualElem = document.getElementById("ahorroMensual");
+  if (ahorroMensualNum > 0) {
+    ahorroMensualElem.innerText = `Ahorrarás ${ahorroMensualNum.toFixed(2)} €/mes`;
+    ahorroMensualElem.style.color = "#065f46";
+    mostrarMensaje(`¡Buen resultado! Ahorrarás ${ahorroMensualNum.toFixed(2)} €/mes ✅`, "success");
+  } else if (ahorroMensualNum < 0) {
+    ahorroMensualElem.innerText = `Pagarás ${Math.abs(ahorroMensualNum).toFixed(2)} €/mes más`;
+    ahorroMensualElem.style.color = "#b91c1c";
+    mostrarMensaje(`Cuidado, podrías pagar ${Math.abs(ahorro
 }
 
 // AHORRO TOTAL
