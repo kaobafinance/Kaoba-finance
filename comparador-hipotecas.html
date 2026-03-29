@@ -13,51 +13,23 @@
 body{background:#f5f5f5;color:#333;padding:20px;}
 h1,h2{color:#0d4f8b;}
 a{text-decoration:none;color:#0d4f8b;}
-
-/* ===== HEADER ===== */
 header{background:#0d4f8b;color:#fff;padding:16px;text-align:center;border-radius:8px;margin-bottom:16px;}
-header p{font-size:1rem;margin-top:6px;}
-
-/* ===== BOTÓN VOLVER ===== */
-.volver {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  border: 2px solid #0d4f8b;
-  border-radius: 6px;
-  background: transparent;
-  color: #0d4f8b;
-  font-weight: 600;
-  transition: all 0.2s;
-}
-.volver:hover {
-  background: #0d4f8b;
-  color: #fff;
-  transform: translateY(-2px);
-}
-
-/* ===== MAIN ===== */
+.volver { display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border:2px solid #0d4f8b; border-radius:6px; background:transparent; color:#0d4f8b; font-weight:600; transition:all 0.2s;}
+.volver:hover {background:#0d4f8b; color:#fff; transform:translateY(-2px);}
 main{background:#fff;padding:25px;border-radius:12px;max-width:1100px;margin:auto;box-shadow:0 6px 18px rgba(0,0,0,0.1);}
 label{display:block;margin-top:14px;font-weight:600;}
 input, select{width:100%;padding:10px;margin-top:6px;border:1px solid #d1d5db;border-radius:6px;}
 button{background:#0d4f8b;color:#fff;border:none;padding:10px 18px;border-radius:8px;cursor:pointer;margin-top:16px;}
 button:hover{background:#09407a;}
-
-/* ===== TARJETAS BANCOS ===== */
 .banco-card{background:#fafbff;border:1px solid #e3e8ef;padding:18px;border-radius:10px;margin-top:20px;position:relative;}
 .banco-card:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(0,0,0,0.07);}
 .remove-btn{position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:50%;background:#fff;color:#dc3545;font-size:18px;border:none;cursor:pointer;}
 .remove-btn:hover{background:#dc3545;color:#fff;}
-
-/* ===== TABLA ===== */
 .table-container{overflow-x:auto;margin-top:22px;}
 table{width:100%;border-collapse:collapse;margin-top:10px;}
 th,td{padding:10px;border-bottom:1px solid #e5e7eb;text-align:center;}
 th{background:#f1f3f6;}
 .ahorro{color:#198754;font-weight:600;}
-
-/* ===== AMORTIZACIÓN ===== */
 .amort-table{margin-top:12px;width:100%;border-collapse:collapse;}
 .amort-table th,.amort-table td{border:1px solid #ddd;padding:6px;font-size:13px;text-align:center;}
 .amort-toggle{color:#0d4f8b;cursor:pointer;font-weight:600;text-decoration:underline;}
@@ -101,9 +73,9 @@ th{background:#f1f3f6;}
 </main>
 
 <script>
-let contador = 0;
+let contador=0;
 
-// Función para añadir un banco
+// Añadir banco
 function addBanco(){
   contador++;
   const div=document.createElement("div");
@@ -113,11 +85,10 @@ function addBanco(){
     <button class="remove-btn" onclick="removeBanco(${contador})">×</button>
     <label>Nombre<input type="text" id="nombre-${contador}" placeholder="Banco ${contador}"></label>
     <label>Tipo<select id="tipo-${contador}" onchange="toggleTipo(${contador}); calcular()">
-        <option value="fija">Fija</option>
-        <option value="mixta">Mixta</option>
-        <option value="variable">Variable</option>
+      <option value="fija">Fija</option>
+      <option value="mixta">Mixta</option>
+      <option value="variable">Variable</option>
     </select></label>
-
     <div id="bloque-fija-${contador}"><label>TIN fijo (%)<input type="number" id="tinFijo-${contador}" step="0.01" onchange="calcular()"></label></div>
     <div id="bloque-mixta-${contador}" style="display:none;">
       <label>Meses fijo<input type="number" id="mesesFijo-${contador}" value="60" onchange="calcular()"></label>
@@ -135,46 +106,42 @@ function addBanco(){
   document.getElementById("bancos").appendChild(div);
 }
 
-// Quitar un banco
+// Quitar banco
 function removeBanco(id){document.getElementById("banco-"+id)?.remove();}
 
 // Mostrar bloques según tipo
 function toggleTipo(id){
-  const tipo = document.getElementById("tipo-"+id).value;
-  document.getElementById("bloque-fija-"+id).style.display = tipo==="fija"?"block":"none";
-  document.getElementById("bloque-mixta-"+id).style.display = tipo==="mixta"?"block":"none";
-  document.getElementById("bloque-variable-"+id).style.display = tipo==="variable"?"block":"none";
-
-  const aviso = document.getElementById("aviso-mixta-"+id);
-  if(aviso){ aviso.style.display = tipo==="mixta" ? "block" : "none"; }
+  const tipo=document.getElementById("tipo-"+id).value;
+  document.getElementById("bloque-fija-"+id).style.display=tipo==="fija"?"block":"none";
+  document.getElementById("bloque-mixta-"+id).style.display=tipo==="mixta"?"block":"none";
+  document.getElementById("bloque-variable-"+id).style.display=tipo==="variable"?"block":"none";
+  const aviso=document.getElementById("aviso-mixta-"+id);
+  if(aviso) aviso.style.display=tipo==="mixta"?"block":"none";
 }
 
-// ====== AMORTIZACIÓN ======
+// Generar amortización
 function generarAmortizacion(capital, tin, plazoMeses, tipo, amortSi){
-  const amortRows=[]; 
-  let capPend=capital; 
+  const amortRows=[];
+  let capPend=capital;
   const i=tin/100/12;
   for(let m=1;m<=plazoMeses;m++){
-    let cuotaBase=(capPend*i)/(1-Math.pow(1+i,-(plazoMeses-m+1))); 
+    let cuotaBase=(capPend*i)/(1-Math.pow(1+i,-(plazoMeses-m+1)));
     let amortizacion=amortSi?capPend*0.002:0;
     const intereses=capPend*i;
     const pagoCapital=cuotaBase-intereses+amortizacion;
-    capPend-=pagoCapital; 
-    if(capPend<0) capPend=0;
+    capPend-=pagoCapital; if(capPend<0) capPend=0;
     amortRows.push({mes:m,cuota:(cuotaBase+amortizacion).toFixed(2),amort:pagoCapital.toFixed(2),pendiente:capPend.toFixed(2)});
   }
   return amortRows;
 }
 
-// ===== CALCULAR =====
+// Calcular
 function calcular(){
-  const capital = parseFloat(document.getElementById("capital").value) || 150000;
-  const plazoAños = parseFloat(document.getElementById("plazo").value) || 20;
-  const plazoMeses = Math.round(plazoAños*12);
-  const euribor = parseFloat(document.getElementById("euribor").value) || 2.82;
-
-  const tbody=document.querySelector("#tabla tbody");
-  tbody.innerHTML="";
+  const capital=parseFloat(document.getElementById("capital").value)||150000;
+  const plazoAños=parseFloat(document.getElementById("plazo").value)||20;
+  const plazoMeses=Math.round(plazoAños*12);
+  const euribor=parseFloat(document.getElementById("euribor").value)||2.82;
+  const tbody=document.querySelector("#tabla tbody"); tbody.innerHTML="";
   const resultados=[];
 
   for(let i=1;i<=contador;i++){
@@ -186,19 +153,18 @@ function calcular(){
 
     if(tipo==="fija"){
       const tin=parseFloat(document.getElementById("tinFijo-"+i).value)||0;
-      amortRows=generarAmortizacion(capital,tin,plazoMeses,tipo,amortSi);
+      amortRows=generarAmortizacion(capital,tin,plazoMeses,"fija",amortSi);
     } else if(tipo==="variable"){
       const dif=parseFloat(document.getElementById("difVar-"+i).value)||0;
-      amortRows=generarAmortizacion(capital,euribor+dif,plazoMeses,tipo,amortSi);
+      amortRows=generarAmortizacion(capital,euribor+dif,plazoMeses,"variable",amortSi);
     } else {
-      const mesesFijo = parseInt(document.getElementById("mesesFijo-"+i).value)||0;
-      const tinFijo = parseFloat(document.getElementById("tinMixtoFijo-"+i).value)||0;
-      const dif = parseFloat(document.getElementById("diferencial-"+i).value)||0;
-
-      const amortCompletaFija = generarAmortizacion(capital,tinFijo,plazoMeses,"fija",amortSi);
-      const amortFija = amortCompletaFija.slice(0, mesesFijo);
-      const restante = mesesFijo>0?parseFloat(amortCompletaFija[mesesFijo-1].pendiente):capital;
-      const amortVariable = generarAmortizacion(restante,euribor+dif,plazoMeses-mesesFijo,"variable",amortSi);
+      const mesesFijo=parseInt(document.getElementById("mesesFijo-"+i).value)||0;
+      const tinFijo=parseFloat(document.getElementById("tinMixtoFijo-"+i).value)||0;
+      const dif=parseFloat(document.getElementById("diferencial-"+i).value)||0;
+      const amortCompletaFija=generarAmortizacion(capital,tinFijo,plazoMeses,"fija",amortSi);
+      const amortFija=amortCompletaFija.slice(0,mesesFijo);
+      const restante=mesesFijo>0?parseFloat(amortCompletaFija[mesesFijo-1].pendiente):capital;
+      const amortVariable=generarAmortizacion(restante,euribor+dif,plazoMeses-mesesFijo,"variable",amortSi);
       amortRows=[...amortFija,...amortVariable];
     }
 
@@ -228,7 +194,6 @@ function calcular(){
       <td><span class="amort-toggle" onclick="toggleAmort(${index})">Ver</span><div id="amort-${index}" style="display:none;"></div></td>
     `;
     tbody.appendChild(row);
-
     const amortDiv=document.getElementById("amort-"+index);
     let html="<table class='amort-table'><tr><th>Mes</th><th>Cuota</th><th>Amort</th><th>Pendiente</th></tr>";
     r.amortRows.forEach(m=>html+=`<tr><td>${m.mes}</td><td>${m.cuota} €</td><td>${m.amort} €</td><td>${m.pendiente} €</td></tr>`);
@@ -238,184 +203,87 @@ function calcular(){
 
 function toggleAmort(index){
   const div=document.getElementById("amort-"+index);
-  div.style.display = div.style.display==="none"?"block":"none";
+  div.style.display=div.style.display==="none"?"block":"none";
 }
 
-// Inicializamos con un banco por defecto para que se pueda calcular desde el inicio
-addBanco();
-</script>
-</body>
-</html>
-}
+addBanco(); // Banco inicial
 
+// Descargar PDF completo
 function descargarPDF(){
+  const nombreUsuario=document.getElementById("nombreUsuario").value.trim();
+  const emailUsuario=document.getElementById("emailUsuario").value.trim();
+  if(!nombreUsuario||!emailUsuario){ alert("Completa nombre y correo"); return; }
 
-  const nombreUsuario = document.getElementById("nombreUsuario").value.trim();
-  const emailUsuario = document.getElementById("emailUsuario").value.trim();
+  const { jsPDF }=window.jspdf;
+  const doc=new jsPDF();
 
-  if(!nombreUsuario || !emailUsuario){ 
-    alert("Completa nombre y correo"); 
-    return; 
-  }
-
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-
-  // =========================
   // CABECERA
-  // =========================
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(18);
-  doc.text("KAOBA FINANCE", 20, 20);
+  doc.setFont("helvetica","bold").setFontSize(18).text("KAOBA FINANCE",20,20);
+  doc.setFontSize(12).text("Informe comparativo de hipotecas",20,28);
+  doc.setLineWidth(0.5); doc.line(20,32,190,32);
+  doc.setFont("helvetica","normal").setFontSize(9).text(`Fecha: ${new Date().toLocaleDateString()}`,150,20);
 
-  doc.setFontSize(12);
-  doc.text("Informe comparativo de hipotecas", 20, 28);
-
-  doc.setLineWidth(0.5);
-  doc.line(20, 32, 190, 32);
-
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "normal");
-  doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 150, 20);
-
-  // =========================
   // CLIENTE
-  // =========================
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(12);
-  doc.text("Datos del cliente", 20, 45);
+  doc.setFont("helvetica","bold").setFontSize(12).text("Datos del cliente",20,45);
+  doc.setFont("helvetica","normal").setFontSize(10);
+  doc.text(`Nombre: ${nombreUsuario}`,20,53);
+  doc.text(`Email: ${emailUsuario}`,20,59);
 
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(10);
-  doc.text(`Nombre: ${nombreUsuario}`, 20, 53);
-  doc.text(`Email: ${emailUsuario}`, 20, 59);
-
-  // =========================
   // TABLA COMPARATIVA
-  // =========================
-  const tbody = document.querySelector("#tabla tbody");
-  const data = [];
-  let mejorBanco = "";
-  let mejorTotal = Infinity;
+  const tbody=document.querySelector("#tabla tbody");
+  const data=[];
+  let mejorBanco=""; let mejorTotal=Infinity;
 
-  for (let row of tbody.rows){
-    const banco = row.cells[0].innerText;
-    const tipo = row.cells[1].innerText;
-    let cuota = row.cells[2].innerText;
-
-// Mejorar legibilidad de mixtas en PDF
-if(cuota.includes("luego")){
-  const partes = cuota.split("luego");
-  cuota = `Inicial: ${partes[0].trim()} / Variable: ${partes[1].replace("~","").trim()}`;
-}
-    const intereses = row.cells[3].innerText;
-    const total = row.cells[4].innerText;
-    const ahorro = row.cells[5].innerText || "-";
-
-    const totalNum = parseFloat(total.replace("€","").replace(",","."));
-
-    if(totalNum < mejorTotal){
-      mejorTotal = totalNum;
-      mejorBanco = banco;
+  for(let row of tbody.rows){
+    let banco=row.cells[0].innerText;
+    const tipo=row.cells[1].innerText;
+    let cuota=row.cells[2].innerText;
+    if(cuota.includes("luego")){
+      const partes=cuota.split("luego");
+      cuota=`Inicial: ${partes[0].trim()} / Variable: ${partes[1].replace("~","").trim()}`;
     }
-
-    data.push([banco, tipo, cuota, intereses, total, ahorro]);
+    const intereses=row.cells[3].innerText;
+    const total=row.cells[4].innerText;
+    const ahorro=row.cells[5].innerText||"-";
+    const totalNum=parseFloat(total.replace("€","").replace(",","."));    
+    if(totalNum<mejorTotal){mejorTotal=totalNum; mejorBanco=banco;}
+    data.push([banco,tipo,cuota,intereses,total,ahorro]);
   }
 
   doc.autoTable({
-    head: [["Banco", "Tipo", "Cuota", "Intereses", "Total", "Ahorro"]],
-    body: data,
-    startY: 70,
-    headStyles: { fillColor: [13,79,139], textColor: 255 },
-    alternateRowStyles: { fillColor: [245,245,245] },
-    styles: { fontSize:10 }
+    head:[["Banco","Tipo","Cuota","Intereses","Total","Ahorro"]],
+    body:data,
+    startY:70,
+    headStyles:{fillColor:[13,79,139], textColor:255},
+    alternateRowStyles:{fillColor:[245,245,245]},
+    styles:{fontSize:10}
   });
 
-  let finalY = doc.lastAutoTable.finalY + 10;
+  let finalY=doc.lastAutoTable.finalY+10;
 
-  // =========================
   // MEJOR OPCIÓN
-  // =========================
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(12);
-  doc.text("Mejor opción recomendada", 20, finalY);
+  doc.setFont("helvetica","bold").setFontSize(12).text("Mejor opción recomendada",20,finalY);
+  doc.setFont("helvetica","normal").setFontSize(10);
+  doc.text(`Según el análisis, la opción más favorable es: ${mejorBanco}, al presentar el menor coste total.`,20,finalY+8,{maxWidth:170});
 
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(10);
-
-  doc.text(
-    `Según el análisis, la opción más favorable es: ${mejorBanco}, al presentar el menor coste total.`,
-    20,
-    finalY + 8,
-    { maxWidth: 170 }
-  );
-
-  // =========================
   // ANÁLISIS
-  // =========================
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(12);
-  doc.text("Análisis financiero", 20, finalY + 25);
+  doc.setFont("helvetica","bold").setFontSize(12).text("Análisis financiero",20,finalY+25);
+  doc.setFont("helvetica","normal").setFontSize(10);
+  doc.text("Las diferencias entre ofertas se deben principalmente al tipo de interés aplicado y la estructura (fija, variable o mixta). Es importante valorar no solo la cuota mensual sino el coste total del préstamo.",20,finalY+33,{maxWidth:170});
 
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(10);
-
-  doc.text(
-    "Las diferencias entre ofertas se deben principalmente al tipo de interés aplicado y la estructura (fija, variable o mixta). Es importante valorar no solo la cuota mensual sino el coste total del préstamo.",
-    20,
-    finalY + 33,
-    { maxWidth: 170 }
-  );
-
-  // =========================
   // RECOMENDACIONES
-  // =========================
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(12);
-  doc.text("Recomendaciones", 20, finalY + 55);
+  doc.setFont("helvetica","bold").setFontSize(12).text("Recomendaciones",20,finalY+55);
+  doc.setFont("helvetica","normal").setFontSize(10);
+  ["- Comparar TIN y TAE antes de decidir","- Revisar comisiones de amortización anticipada","- Analizar estabilidad del Euríbor en hipotecas variables","- Negociar condiciones con varias entidades"].forEach((rec,i)=>doc.text(rec,20,finalY+63+(i*6)));
 
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(10);
+  // AVISO HIPOTECAS MIXTAS
+  doc.setFont("helvetica","italic").setFontSize(9);
+  doc.text("* Las hipotecas mixtas incluyen una fase variable calculada utilizando el Euríbor actual como referencia. Este valor es orientativo y puede variar durante la vida del préstamo.",20,265,{maxWidth:170});
 
-  const recomendaciones = [
-    "- Comparar TIN y TAE antes de decidir",
-    "- Revisar comisiones de amortización anticipada",
-    "- Analizar estabilidad del Euríbor en hipotecas variables",
-    "- Negociar condiciones con varias entidades"
-  ];
-
-  recomendaciones.forEach((rec, i) => {
-    doc.text(rec, 20, finalY + 63 + (i * 6));
-  });
-
-  // Aviso específico mixta
-doc.setFont("helvetica", "italic");
-doc.setFontSize(9);
-
-doc.text(
-  "* Las hipotecas mixtas incluyen una fase variable calculada utilizando el Euríbor actual como referencia. Este valor es orientativo y puede variar durante la vida del préstamo.",
-  20,
-  265,
-  { maxWidth: 170 }
-);
-  // =========================
   // DISCLAIMER
-  // =========================
-  doc.setFontSize(8);
-  doc.setTextColor(120);
+  doc.setFontSize(8).setTextColor(120);
+  doc.text("Este documento es una simulación orientativa basada en condiciones introducidas por el usuario. No constituye una oferta vinculante ni garantiza la concesión de la hipoteca. La aprobación final depende de cada entidad bancaria.",20,280,{maxWidth:170});
 
-  doc.text(
-    "Este documento es una simulación orientativa basada en condiciones introducidas por el usuario. No constituye una oferta vinculante ni garantiza la concesión de la hipoteca. La aprobación final depende de cada entidad bancaria.",
-    20,
-    280,
-    { maxWidth: 170 }
-  );
-
-  // =========================
-  // EXPORTAR
-  // =========================
   doc.save("Informe_Comparativa_Kaoba.pdf");
 }
 </script>
-</body>
-</html>
