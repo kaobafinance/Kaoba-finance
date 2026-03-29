@@ -37,8 +37,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const anos = parseFloat(anosInput?.value) || 0;
     const n = anos * 12;
 
-    if (capital <= 0 || interes <= 0 || anos <= 0) {
-      if (resultadosDiv) resultadosDiv.style.display = "flex";
+  if (capital <= 0 || interes <= 0 || anos <= 0) {
+  if (resultadosDiv) resultadosDiv.style.display = "none";
       if (verTablaBtn) verTablaBtn.style.display = "none";
       if (tablaContainer) tablaContainer.style.display = "none";
       return;
@@ -55,6 +55,10 @@ document.addEventListener("DOMContentLoaded", () => {
    resultadosDiv && (resultadosDiv.style.display = "block");
     verTablaBtn && (verTablaBtn.style.display = "block");
     tablaContainer && (tablaContainer.style.display = "none");
+    resultadosDiv?.scrollIntoView({
+  behavior: "smooth",
+  block: "start"
+});
   };
 
   const generarTabla = () => {
