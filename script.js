@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
     interesesTotalesOut && (interesesTotalesOut.innerText = formatMoney(interesesTotales));
     totalPagadoOut && (totalPagadoOut.innerText = formatMoney(totalPagado));
 
-    resultadosDiv && (resultadosDiv.style.display = "flex");
+   resultadosDiv && (resultadosDiv.style.display = "block");
     verTablaBtn && (verTablaBtn.style.display = "block");
     tablaContainer && (tablaContainer.style.display = "none");
   };
