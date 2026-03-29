@@ -254,15 +254,23 @@ if (mensajePerfil) {
     btnRechazar.addEventListener("click", () => { localStorage.setItem("cookiesAceptadas", "false"); banner.style.display = "none"; });
   }
 
-  // -----------------------------
-  // ACORDEONES / OPERACIONES
-  // -----------------------------
-  window.abrirOperacion = function(id){
-    document.querySelectorAll('.card-content').forEach(cc => {
-      cc.classList.toggle('open', cc.id === id ? !cc.classList.contains('open') : false);
-    });
-  };
+ // -----------------------------
+// ACORDEONES / OPERACIONES
+// -----------------------------
+window.abrirOperacion = function(id){
+  document.querySelectorAll('.card-content').forEach(cc => {
+    cc.classList.toggle('open', cc.id === id ? !cc.classList.contains('open') : false);
+  });
+};
 
+// -----------------------------
+// REDIRECCIÓN A SIMULADOR
+// -----------------------------
+window.irAnalisis = function(event, tipoOperacion){
+  event.stopPropagation(); // evita que se cierre el acordeón al hacer click
+  // Redirige a la página del simulador con el tipo de operación
+  window.location.href = `analisis.html?operacion=${encodeURIComponent(tipoOperacion)}`;
+};
   window.irAnalisis = function(event, tipo){
     event.stopPropagation();
     if(!perfilFields.operacionBadge || !perfilDiv) return;
