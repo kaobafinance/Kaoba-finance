@@ -44,7 +44,27 @@ th{background:#f1f3f6;}
 <div class="container">
 <h1>Simulador de Hipotecas - Kaoba Finance</h1>
 
-<h2>1️⃣ Tipo de operación</h2>
+<h2>Tipo de operación</h2>  let formData=new FormData();
+  formData.append("pdf",blob,"Simulacion_Hipoteca.pdf");
+  formData.append("email",email);
+
+  fetch("/enviar-pdf-correo",{method:"POST",body:formData})
+  .then(r=>r.json())
+  .then(d=>mostrarMensaje(d.message || "PDF enviado correctamente ✅", "success"))
+  .catch(()=>mostrarMensaje("Error enviando PDF ❌", "error"));
+}
+
+// Eventos
+document.querySelectorAll("input, select").forEach(el=>el.addEventListener("input", calcular));
+document.getElementById("tipoOperacion").addEventListener("change", actualizarCampos);
+document.getElementById("tipoHipoteca")?.addEventListener("change", actualizarCampos);
+
+// Inicializa con un campo de deuda
+addDeuda();
+actualizarCampos();
+</script>
+</body>
+</html>
 <label>Selecciona la operación:</label>
 <select id="tipoOperacion">
   <option value="consolidacion">Consolidación de deudas</option>
@@ -61,14 +81,14 @@ th{background:#f1f3f6;}
 </div>
 
 <div id="camposDeudas" style="display:block">
-<h2>2️⃣ Tus deudas actuales</h2>
+<h2>Tus deudas actuales</h2>
 <div id="deudas"></div>
 <button type="button" onclick="addDeuda()">+ Añadir deuda</button>
 <small class="tip">Añade todas tus deudas para calcular la cuota única tras consolidación.</small>
 </div>
 
 <div id="camposSubrogacion" style="display:none">
-<h2>2️⃣ Hipoteca actual</h2>
+<h2>Hipoteca actual</h2>
 <label>Capital pendiente (€)<input type="number" id="capitalPendiente" placeholder="Ej: 150000" min="0"></label>
 <div id="errorCapitalPendiente" class="error-msg"></div>
 <small class="tip">Introduce solo el capital que te queda por pagar.</small>
@@ -89,7 +109,7 @@ th{background:#f1f3f6;}
 <small class="tip">Introduce la duración y el TIN del periodo fijo.</small>
 </div>
 
-<h2>3️⃣ Nuevo préstamo</h2>
+<h2>Nuevo préstamo</h2>
 <label>Plazo total (años)<input type="number" id="plazoNuevo" placeholder="Ej: 20" min="1"></label>
 <div id="errorPlazoNuevo" class="error-msg"></div>
 <label>Tipo de interés deseado (%)<input type="number" id="tinNuevo" placeholder="Ej: 3" step="0.01" min="0"></label>
