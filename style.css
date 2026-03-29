@@ -343,7 +343,7 @@ footer a {
 /* ==============================
 FAQ FLOTANTE
 ============================== */
-#btnFAQ {
+##faqButton {
   position: fixed;
   bottom: 80px;  /* distancia desde el borde inferior */
   right: 20px;   /* distancia desde el borde derecho */
@@ -528,11 +528,11 @@ RESPONSIVE
     padding: 8px;
   }
 
-  #btnFAQ {
+  ##faqButton {
     bottom: 80px;
   }
-#btnCalculadoraFlotante,
-#modalCalculadora {
-  display: none !important;
-}
+  #btnCalculadoraFlotante,
+  #modalCalculadora {
+    display: none !important;
+  }
 }
