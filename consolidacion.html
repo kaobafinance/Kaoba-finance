@@ -202,11 +202,23 @@ th{
 </div> <!-- container -->
 
 <script>
+  function getQueryParam(param) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
+}
 let count=0;
 const { jsPDF }=window.jspdf;
 
 function cuota(c,i,p){let r=i/100/12;let m=p*12;return (c*r*Math.pow(1+r,m))/(Math.pow(1+r,m)-1);}
 
+window.addEventListener("DOMContentLoaded", () => {
+  const tipo = getQueryParam("tipo"); // puede ser "consolidacion" o "subrogacion"
+  if (tipo) {
+    document.getElementById("tipoOperacion").value = tipo;
+    actualizarCampos();
+  }
+});
+  
 function actualizarCampos(){
   const op=document.getElementById("tipoOperacion").value;
   document.getElementById("camposDeudas").style.display = op==="consolidacion"?"block":"none";
