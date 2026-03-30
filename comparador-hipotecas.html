@@ -92,21 +92,19 @@ function addBanco(){
   div.innerHTML=`
     <button class="remove-btn" onclick="removeBanco(${contador})">×</button>
     <label>Nombre<input type="text" id="nombre-${contador}" placeholder="Banco ${contador}"></label>
-    <label>Tipo<select id="tipo-${contador}" onchange="toggleTipo(${contador}); validarCamposBanco(${contador});">
+    <label>Tipo<select id="tipo-${contador}" onchange="toggleTipo(${contador});">
       <option value="fija">Fija</option>
       <option value="mixta">Mixta</option>
       <option value="variable">Variable</option>
     </select></label>
-    <div id="bloque-fija-${contador}"><label>TIN fijo (%)<input type="number" id="tinFijo-${contador}" step="0.01" onchange="validarCamposBanco(${contador});"></label><div id="errorFija-${contador}" class="error-msg"></div></div>
+    <div id="bloque-fija-${contador}"><label>TIN fijo (%)<input type="number" id="tinFijo-${contador}" step="0.01" onchange="calcular();"></label></div>
     <div id="bloque-mixta-${contador}" style="display:none;">
-      <label>Meses fijo<input type="number" id="mesesFijo-${contador}" value="60" onchange="validarCamposBanco(${contador});"></label>
-      <label>TIN fijo (%)<input type="number" id="tinMixtoFijo-${contador}" step="0.01" onchange="validarCamposBanco(${contador});"></label>
-      <label>Diferencial (%)<input type="number" id="diferencial-${contador}" step="0.01" onchange="validarCamposBanco(${contador});"></label>
-      <div id="errorMixta-${contador}" class="error-msg"></div>
+      <label>Meses fijo<input type="number" id="mesesFijo-${contador}" value="60" onchange="calcular();"></label>
+      <label>TIN fijo (%)<input type="number" id="tinMixtoFijo-${contador}" step="0.01" onchange="calcular();"></label>
+      <label>Diferencial (%)<input type="number" id="diferencial-${contador}" step="0.01" onchange="calcular();"></label>
     </div>
     <div id="bloque-variable-${contador}" style="display:none;">
-      <label>Diferencial (%)<input type="number" id="difVar-${contador}" step="0.01" onchange="validarCamposBanco(${contador});"></label>
-      <div id="errorVariable-${contador}" class="error-msg"></div>
+      <label>Diferencial (%)<input type="number" id="difVar-${contador}" step="0.01" onchange="calcular();"></label>
     </div>
     <p id="aviso-mixta-${contador}" style="display:none; font-size:12px; color:#b45309; margin-top:6px;">
       * En la fase variable se utiliza el Euríbor actual como estimación. Este valor puede variar en el futuro.
@@ -129,55 +127,11 @@ function toggleTipo(id){
   if(aviso) aviso.style.display=tipo==="mixta"?"block":"none";
 }
 
-// ===== Validación =====
-function validarCamposBanco(id){
-  const tipo=document.getElementById("tipo-"+id).value;
-  let valid=true;
-  if(tipo==="fija"){
-    const tin=document.getElementById("tinFijo-"+id).value;
-    if(tin==="" || parseFloat(tin)<0){document.getElementById("errorFija-"+id).innerText="Campo obligatorio"; valid=false;}
-    else document.getElementById("errorFija-"+id).innerText="";
-  } else if(tipo==="mixta"){
-    const tinF=parseFloat(document.getElementById("tinMixtoFijo-"+id).value)||-1;
-    const meses=parseInt(document.getElementById("mesesFijo-"+id).value)||-1;
-    const dif=parseFloat(document.getElementById("diferencial-"+id).value)||-1;
-    if(tinF<0 || meses<0 || dif<0){document.getElementById("errorMixta-"+id).innerText="Campos inválidos"; valid=false;}
-    else document.getElementById("errorMixta-"+id).innerText="";
-  } else if(tipo==="variable"){
-    const dif=parseFloat(document.getElementById("difVar-"+id).value)||-1;
-    if(dif<0){document.getElementById("errorVariable-"+id).innerText="Campo inválido"; valid=false;}
-    else document.getElementById("errorVariable-"+id).innerText="";
-  }
-  return valid;
-}
-
-function validarYCalcular(){
-  let valid=true;
-  // Campos generales
-  [["capital","Capital"],["plazo","Plazo"],["euribor","Euribor"],["nombreUsuario","Nombre"],["emailUsuario","Email"]].forEach(([id,label])=>{
-    const el=document.getElementById(id);
-    const error=document.getElementById("error"+label);
-    if(!el.value || parseFloat(el.value)<0){el.classList.add("error"); error.innerText="Campo obligatorio o inválido"; valid=false;}
-    else {el.classList.remove("error"); error.innerText="";}
-  });
-  // Checkbox
-  const acepta=document.getElementById("acepta");
-  if(!acepta.checked){document.getElementById("errorAcepta").innerText="Debes aceptar la política"; valid=false;}
-  else document.getElementById("errorAcepta").innerText="";
-  
-  // Bancos
-  for(let i=1;i<=contador;i++){
-    const div=document.getElementById("banco-"+i); if(!div) continue;
-    if(!validarCamposBanco(i)) valid=false;
-  }
-
-  if(valid) calcular();
-  else alert("Corrige los errores antes de calcular");
-}
-
-// ===== Cálculo =====
+// ===== Generar amortización =====
 function generarAmortizacion(capital, tin, plazoMeses, amortSi){
-  const amortRows=[]; let capPend=capital; const i=tin/100/12;
+  const amortRows=[];
+  let capPend=capital;
+  const i=tin/100/12;
   for(let m=1;m<=plazoMeses;m++){
     let cuotaBase=(capPend*i)/(1-Math.pow(1+i,-(plazoMeses-m+1)));
     let amortizacion=amortSi?capPend*0.002:0;
@@ -189,6 +143,7 @@ function generarAmortizacion(capital, tin, plazoMeses, amortSi){
   return amortRows;
 }
 
+// ===== Calcular resultados =====
 function calcular(){
   const capital=parseFloat(document.getElementById("capital").value)||150000;
   const plazoAños=parseFloat(document.getElementById("plazo").value)||20;
@@ -203,8 +158,15 @@ function calcular(){
     const tipo=document.getElementById("tipo-"+i).value;
     const amortSi=document.getElementById("amortSi-"+i).checked;
     let amortRows=[];
-    if(tipo==="fija"){ const tin=parseFloat(document.getElementById("tinFijo-"+i).value)||0; amortRows=generarAmortizacion(capital,tin,plazoMeses,amortSi); }
-    else if(tipo==="variable"){ const dif=parseFloat(document.getElementById("difVar-"+i).value)||0; amortRows=generarAmortizacion(capital,euribor+dif,plazoMeses,amortSi);}
+
+    if(tipo==="fija"){ 
+      const tin=parseFloat(document.getElementById("tinFijo-"+i).value)||0;
+      amortRows=generarAmortizacion(capital,tin,plazoMeses,amortSi); 
+    }
+    else if(tipo==="variable"){ 
+      const dif=parseFloat(document.getElementById("difVar-"+i).value)||0; 
+      amortRows=generarAmortizacion(capital,euribor+dif,plazoMeses,amortSi);
+    }
     else{ // mixta
       const mesesFijo=parseInt(document.getElementById("mesesFijo-"+i).value)||0;
       const tinFijo=parseFloat(document.getElementById("tinMixtoFijo-"+i).value)||0;
@@ -214,6 +176,7 @@ function calcular(){
       const amortVar=generarAmortizacion(restante,euribor+dif,plazoMeses-mesesFijo,amortSi);
       amortRows=[...amortFija,...amortVar];
     }
+
     const cuotaMedia=amortRows.reduce((a,b)=>a+parseFloat(b.cuota),0)/plazoMeses;
     const intereses=amortRows.reduce((a,b)=>a+parseFloat(b.cuota),0)-capital;
     resultados.push({nombre,tipo,cuotaMedia,intereses,total:capital+intereses,amortRows,mesesFijo:parseInt(document.getElementById("mesesFijo-"+i)?.value)||0});
@@ -255,7 +218,7 @@ function toggleAmort(index){
 // Inicial banco
 addBanco();
 
-// ===== PDF =====
+// ===== Descargar PDF =====
 function descargarPDF(){
   const nombreUsuario=document.getElementById("nombreUsuario").value.trim();
   const emailUsuario=document.getElementById("emailUsuario").value.trim();
@@ -267,7 +230,7 @@ function descargarPDF(){
   doc.setFont("helvetica","bold").setFontSize(18).text("KAOBA FINANCE",20,20);
   doc.setFontSize(12).text("Informe comparativo de hipotecas",20,28);
   doc.setLineWidth(0.5);
-    doc.line(20,32,190,32);
+  doc.line(20,32,190,32);
   doc.setFont("helvetica","normal").setFontSize(9).text(`Fecha: ${new Date().toLocaleDateString()}`,150,20);
 
   // Datos del cliente
@@ -309,9 +272,10 @@ function descargarPDF(){
   let finalY=doc.lastAutoTable.finalY+10;
 
   // Mejor opción
-  doc.setFont("helvetica","bold").setFontSize(12).text("Mejor opción recomendada",20,finalY);
+  doc.setFont("helvetica","bold").setFontSize(12);
+  doc.text("Mejor opción recomendada",20,finalY);
   doc.setFont("helvetica","normal").setFontSize(10);
-  doc.text(`Según el análisis, la opción más favorable es: ${mejorBanco}, al presentar el menor coste total.`,20,finalY+8,{maxWidth:170});
+  doc.text(`Según el análisis, la opción más favorable es: ${mejorBanco}, al presentar el menor coste total.`,20,finalY+8,{maxWidth:170, align:"left"});
 
   // Análisis financiero
   doc.setFont("helvetica","bold").setFontSize(12).text("Análisis financiero",20,finalY+25);
@@ -338,4 +302,4 @@ function descargarPDF(){
 
   doc.save("Informe_Comparativa_Kaoba.pdf");
 }
-</script>                 
+</script>              
