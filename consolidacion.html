@@ -114,6 +114,28 @@ th, td{
 th{
   background:#f1f3f6;
 }
+.deuda{
+  border:1px solid #e3e8ef;
+  padding:10px;
+  margin-bottom:10px;
+  border-radius:6px;
+  position:relative;
+}
+.remove-deuda{
+  position:absolute;
+  top:8px;
+  right:8px;
+  background:#dc2626;
+  color:#fff;
+  border:none;
+  border-radius:50%;
+  width:22px;
+  height:22px;
+  cursor:pointer;
+}
+@media(max-width:600px){
+  .container{padding:20px;margin:20px;}
+}
 </style>
 </head>
 
@@ -131,6 +153,15 @@ th{
   </select>
 </div>
 
+<!-- Selector tipo hipoteca (solo subrogación) -->
+<div id="camposTipoHipoteca" class="section" style="display:none">
+  <label>Tipo de hipoteca:</label>
+  <select id="tipoHipoteca">
+    <option value="fija">Fija</option>
+    <option value="mixta">Mixta</option>
+  </select>
+</div>
+
 <!-- Campos consolidación -->
 <div id="camposDeudas" class="section">
 <h2 class="section-title">Tus deudas actuales</h2>
@@ -144,15 +175,12 @@ th{
 <h2 class="section-title">Hipoteca actual</h2>
 <label>Capital pendiente (€)<input type="number" id="capitalPendiente" placeholder="Ej: 150000" min="0"></label>
 <div id="errorCapitalPendiente" class="error-msg"></div>
-<small class="small-tip">Introduce solo el capital que te queda por pagar.</small>
 
 <label>TIN actual (%)<input type="number" id="tinActual" placeholder="Ej: 3.5" step="0.01" min="0"></label>
 <div id="errorTinActual" class="error-msg"></div>
-<small class="small-tip">Tipo de interés anual de tu hipoteca actual.</small>
 
 <label>Plazo restante (años)<input type="number" id="plazoRestante" placeholder="Ej: 20" min="1"></label>
 <div id="errorPlazoRestante" class="error-msg"></div>
-<small class="small-tip">Años que te quedan para terminar de pagar.</small>
 </div>
 
 <!-- Campos hipoteca mixta -->
@@ -202,29 +230,32 @@ th{
 </div> <!-- container -->
 
 <script>
-  function getQueryParam(param) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
-}
 let count=0;
 const { jsPDF }=window.jspdf;
 
+function getQueryParam(param){
+  const urlParams=new URLSearchParams(window.location.search);
+  return urlParams.get(param);
+}
+
+window.addEventListener("DOMContentLoaded", ()=>{
+  const tipo=getQueryParam("tipo");
+  if(tipo){
+    document.getElementById("tipoOperacion").value=tipo;
+  }
+  addDeuda();
+  actualizarCampos();
+});
+
 function cuota(c,i,p){let r=i/100/12;let m=p*12;return (c*r*Math.pow(1+r,m))/(Math.pow(1+r,m)-1);}
 
-window.addEventListener("DOMContentLoaded", () => {
-  const tipo = getQueryParam("tipo"); // puede ser "consolidacion" o "subrogacion"
-  if (tipo) {
-    document.getElementById("tipoOperacion").value = tipo;
-    actualizarCampos();
-  }
-});
-  
 function actualizarCampos(){
   const op=document.getElementById("tipoOperacion").value;
-  document.getElementById("camposDeudas").style.display = op==="consolidacion"?"block":"none";
-  document.getElementById("camposSubrogacion").style.display = op==="subrogacion"?"block":"none";
+  document.getElementById("camposDeudas").style.display=op==="consolidacion"?"block":"none";
+  document.getElementById("camposSubrogacion").style.display=op==="subrogacion"?"block":"none";
+  document.getElementById("camposTipoHipoteca").style.display=op==="subrogacion"?"block":"none";
   const hip=document.getElementById("tipoHipoteca")?.value||"fija";
-  document.getElementById("camposMixta").style.display = hip==="mixta" && op==="subrogacion"?"block":"none";
+  document.getElementById("camposMixta").style.display=(hip==="mixta" && op==="subrogacion")?"block":"none";
   calcular();
 }
 
@@ -237,7 +268,7 @@ function addDeuda(){
 <label>Capital (€)<input type="number" id="capital${count}" placeholder="Ej:20000" min="0"></label>
 <label>TIN (%)<input type="number" id="interes${count}" placeholder="Ej:5" step="0.01" min="0"></label>
 <label>Plazo (años)<input type="number" id="plazo${count}" placeholder="Ej:3" min="1"></label>
-<button onclick="removeDeuda(${count})" style="margin-top:5px;">Eliminar</button>`;
+<button class="remove-deuda" onclick="removeDeuda(${count})">×</button>`;
   document.getElementById("deudas").appendChild(div);
   div.querySelectorAll("input").forEach(inp=>inp.addEventListener("input",calcular));
 }
@@ -250,13 +281,27 @@ function validarCampos(){
     const el=document.getElementById(id);
     const error=document.getElementById("error"+id.charAt(0).toUpperCase()+id.slice(1));
     if(!el) return;
-    if(el.value==="" || parseFloat(el.value)<0){el.classList.add("error");error.innerText="Campo obligatorio o inválido";valid=false;}
+    if(el.value==="" || parseFloat(el.value)<0){el.classList.add("error");error.innerText="Campo obligatorio o inválido"; valid=false;}
     else{el.classList.remove("error");error.innerText="";}
   });
   const rgpd=document.getElementById("rgpd");
   const errorRgpd=document.getElementById("errorRgpd");
   if(!rgpd.checked){errorRgpd.innerText="Debes aceptar la política"; valid=false;}
   else{errorRgpd.innerText="";}
+  // Validar deudas si está consolidación
+  if(document.getElementById("tipoOperacion").value==="consolidacion"){
+    for(let i=1;i<=count;i++){
+      const cap=document.getElementById("capital"+i);
+      const tin=document.getElementById("interes"+i);
+      const plazo=document.getElementById("plazo"+i);
+      if(!cap) continue;
+      if(cap.value==="" || tin.value==="" || plazo.value===""){
+        alert("Completa todas las deudas correctamente");
+        valid=false;
+        break;
+      }
+    }
+  }
   return valid;
 }
 
@@ -275,11 +320,9 @@ function calcular(){
       const c=parseFloat(cap.value)||0;
       const tin=parseFloat(document.getElementById("interes"+i)?.value)||0;
       const p=parseInt(document.getElementById("plazo"+i)?.value)||1;
-      if(c>0 && p>0){
-        cuotaAntes+=cuota(c,tin,p);
-        interesesAntes+=cuota(c,tin,p)*p*12-c;
-        totalCapital+=c;
-      }
+      cuotaAntes+=cuota(c,tin,p);
+      interesesAntes+=cuota(c,tin,p)*p*12-c;
+      totalCapital+=c;
     }
     cuotaDespues=cuota(totalCapital+comisiones,tinNuevo,plazoNuevo);
     interesesDespues=cuotaDespues*plazoNuevo*12-totalCapital-comisiones;
@@ -293,7 +336,6 @@ function calcular(){
     cuotaAntes=cuota(capitalPend,tinActual,plazoRest);
     interesesAntes=cuotaAntes*plazoRest*12-capitalPend;
 
-    // Hipoteca mixta
     const hip=document.getElementById("tipoHipoteca")?.value||"fija";
     if(hip==="mixta"){
       const plazoFijo=parseInt(document.getElementById("plazoFijo")?.value)||0;
@@ -310,17 +352,14 @@ function calcular(){
     }
   }
 
-  // Ahorro
   const ahorroMensual=cuotaAntes-cuotaDespues;
   const ahorroTotal=interesesAntes-interesesDespues;
 
-  // Mensaje interpretativo
   const box=document.getElementById("mensajeResultado");
   if(ahorroMensual>0 && ahorroTotal>0) box.innerHTML=`<div class="resultado-box ok">✔️ Podrías ahorrar ${ahorroMensual.toFixed(0)} €/mes<br>Ahorro total estimado: ${ahorroTotal.toFixed(0)} €</div>`;
   else if(ahorroMensual>0) box.innerHTML=`<div class="resultado-box warn">⚠️ Bajarías la cuota mensual<br>Pero pagarías más a largo plazo</div>`;
   else box.innerHTML=`<div class="resultado-box bad">❌ No parece una operación recomendable</div>`;
 
-  // Tabla resultados
   const tbody=document.querySelector("#tablaResultados tbody");
   tbody.innerHTML="";
   tbody.innerHTML+=`<tr><td>Cuota mensual</td><td>${cuotaAntes.toFixed(2)} €</td><td>${cuotaDespues.toFixed(2)} €</td></tr>`;
@@ -336,9 +375,12 @@ function enviarPDF(){
   let doc=new jsPDF();
   doc.setFontSize(16);
   doc.text("Simulación Hipoteca - Kaoba Finance",20,20);
-
   doc.autoTable({startY:30, html:"#tablaResultados"});
 
+  // Descarga local
+  doc.save("Simulacion_Hipoteca.pdf");
+
+  // Enviar al servidor
   let blob=doc.output("blob");
   let formData=new FormData();
   formData.append("pdf",blob,"Simulacion_Hipoteca.pdf");
@@ -353,10 +395,8 @@ function enviarPDF(){
 // Eventos
 document.querySelectorAll("input,select").forEach(el=>el.addEventListener("input",calcular));
 document.getElementById("tipoOperacion").addEventListener("change",actualizarCampos);
+document.getElementById("tipoHipoteca")?.addEventListener("change",actualizarCampos);
 
-// Inicializar
-addDeuda();
-actualizarCampos();
 </script>
 </body>
 </html>
