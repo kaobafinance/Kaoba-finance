@@ -176,7 +176,7 @@ if (perfilFields.viviendaCheck && perfilFields.viviendaInfo) {
     // -----------------------------
     // 2. DATOS VIVIENDA
     // -----------------------------
-    const agregarVivienda = perfilFields.viviendaCheck.checked;
+    const agregarVivienda = perfilFields.viviendaCheck?.checked || false;
     const precio = agregarVivienda ? parseFloat(perfilFields.precio.value) || 0 : 0;
     const ahorros = parseFloat(perfilFields.ahorros.value) || 0;
     const impuestos = agregarVivienda ? 
@@ -489,16 +489,17 @@ window.irAnalisis = function(event, tipoOperacion){
   async function actualizarEuribor() {
     try {
       const res = await fetch("https://api.api-ninjas.com/v1/interest_rate?name=euribor", {
-        headers: { 'X-Api-Key': 'TU_API_KEY' } // necesitarás clave gratuita
+        headers: {'X-Api-Key': 'TU_API_KEY_REAL' } // necesitarás clave gratuita
       });
       const data = await res.json();
       if (data && data.length > 0) {
         const valor = data[0].rate.toFixed(2);
-        document.getElementById("euribor-value").innerText = valor + "%";
+       const euriborEl = document.getElementById("euribor-value");
+if (euriborEl) euriborEl.innerText = valor + "%";
       }
     } catch (error) {
-      console.error("Error Euríbor:", error);
-      document.getElementById("euribor-value").innerText = "2,86%"; // fallback
+     const euriborEl = document.getElementById("euribor-value");
+if (euriborEl) euriborEl.innerText = "2,86%"; // fallback
     }
   }
   actualizarEuribor();
