@@ -143,7 +143,7 @@ if (perfilFields.viviendaCheck && perfilFields.viviendaInfo) {
   actualizarViviendaInfo();
 }
 
-  const calcularPerfil = () => {
+  function calcularPerfil() {
     const nTitulares = parseInt(perfilFields.titulares.value) || 1;
     const edad1 = parseInt(perfilFields.edad1.value) || 0;
     const edad2 = nTitulares === 2 ? parseInt(perfilFields.edad2.value) || 0 : 0;
