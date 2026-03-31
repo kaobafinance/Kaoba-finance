@@ -290,11 +290,15 @@ if (perfilFields.viviendaCheck && perfilFields.viviendaInfo) {
   // -----------------------------
   // ACORDEONES / OPERACIONES
   // -----------------------------
-  window.abrirOperacion = function(id){
-    document.querySelectorAll('.card-content').forEach(cc => {
-      cc.classList.toggle('open', cc.id === id ? !cc.classList.contains('open') : false);
-    });
-  };
+window.abrirOperacion = function(id){
+  document.querySelectorAll('.card-content').forEach(cc => {
+    if(cc.id === id){
+      cc.classList.toggle('open'); // abrir o cerrar la seleccionada
+    } else {
+      cc.classList.remove('open'); // cerrar las demás
+    }
+  });
+};
 
   // -----------------------------
   // IR A ANALISIS
