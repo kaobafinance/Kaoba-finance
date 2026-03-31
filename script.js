@@ -294,7 +294,7 @@ if (perfilFields.viviendaCheck && perfilFields.viviendaInfo) {
   // -----------------------------
   // IR A ANALISIS
   // -----------------------------
-  window.irAnalisis = function(event, tipoOperacion){
+window.irAnalisis = function(event, tipoOperacion){
     event.stopPropagation();
     if(!perfilFields.operacionBadge || !perfilDiv) return;
 
@@ -302,7 +302,6 @@ if (perfilFields.viviendaCheck && perfilFields.viviendaInfo) {
     perfilFields.operacionBadge.style.display = "block";
     perfilFields.operacionBadge.innerText = `Operación seleccionada: ${tipoOperacion}`;
 
-    // Solo pre-seleccionar tipo de vivienda
     if (perfilFields.primeraSegunda) {
       switch(tipoOperacion){
         case 'Compra Primera Vivienda':
@@ -314,13 +313,10 @@ if (perfilFields.viviendaCheck && perfilFields.viviendaInfo) {
       }
     }
 
-    // Actualizar visibilidad vivienda según checkbox
-    // Reemplaza la línea anterior dentro de irAnalisis por:
-actualizarViviendaInfo();
-
+    actualizarViviendaInfo();
     calcularPerfil();
     perfilDiv.scrollIntoView({behavior:'smooth'});
-  };
+};
 
 
   // -----------------------------
