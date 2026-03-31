@@ -36,72 +36,96 @@
   <h2>¿Qué tipo de operación quieres realizar?</h2>
   <p class="operaciones-sub">Selecciona una opción antes de analizar tu perfil.</p>
 
-  <!-- Fila superior -->
-  <div class="operaciones-grid">
-    <!-- Comprar -->
-    <div class="operacion-card" onclick="abrirOperacion('compra')">
-      <div class="card-header">
-        <span>🏡</span>
-        <div>
-          <strong>Comprar primera vivienda</strong>
-          <p class="card-sub">Hasta el 80% financiación</p>
-        </div>
-      </div>
-      <div id="compra" class="card-content">
-        <p>Financiación estándar para vivienda habitual con condiciones bancarias habituales.</p>
-        <button onclick="irAnalisis(event,'Compra Primera Vivienda')">Analizar mi perfil</button>
-      </div>
-    </div>
+<!-- Fila superior -->
+<div class="operaciones-grid">
 
-    <!-- Cambio -->
-   <div class="operacion-card" onclick="abrirOperacion('cambio')">
-  <div class="card-header">
-    <span>🔄</span>
-    <div>
-      <strong>Cambiar mi hipoteca</strong>
-      <p class="card-sub">Mejora condiciones actuales</p>
+  <!-- Comprar -->
+  <div class="operacion-card">
+    <div class="card-header" onclick="abrirOperacion('compra')">
+      <span>🏡</span>
+      <div>
+        <strong>Comprar primera vivienda</strong>
+        <p class="card-sub">Hasta el 80% financiación</p>
+      </div>
+    </div>
+    <div id="compra" class="card-content">
+      <p>Financiación estándar para vivienda habitual con condiciones bancarias habituales.</p>
+      <button onclick="irAnalisis(event,'Compra Primera Vivienda')">Analizar mi perfil</button>
     </div>
   </div>
-  <div id="cambio" class="card-content">
-    <p>Subroga tu hipoteca a otro banco con mejores condiciones.</p>
-    <button onclick="irAnalisis(event,'subrogacion')">Analizar mi perfil</button>
+
+  <!-- Cambio -->
+  <div class="operacion-card">
+    <div class="card-header" onclick="abrirOperacion('cambio')">
+      <span>🔄</span>
+      <div>
+        <strong>Cambiar mi hipoteca</strong>
+        <p class="card-sub">Mejora condiciones actuales</p>
+      </div>
+    </div>
+    <div id="cambio" class="card-content">
+      <p>Subroga tu hipoteca a otro banco con mejores condiciones.</p>
+      <button onclick="irAnalisis(event,'Cambio de Hipoteca')">Analizar mi perfil</button>
+    </div>
   </div>
+
+  <!-- Inversión -->
+  <div class="operacion-card">
+    <div class="card-header" onclick="abrirOperacion('inversion')">
+      <span>💼</span>
+      <div>
+        <strong>Invertir en vivienda</strong>
+        <p class="card-sub">Financiación 60-70%</p>
+      </div>
+    </div>
+    <div id="inversion" class="card-content">
+      <p>Financiación más restrictiva para inversión inmobiliaria.</p>
+      <button onclick="irAnalisis(event,'Inversión')">Analizar mi perfil</button>
+    </div>
+  </div>
+
 </div>
 
-    <!-- Inversión -->
-    <div class="operacion-card" onclick="abrirOperacion('inversion')">
-      <div class="card-header">
-        <span>💼</span>
-        <div>
-          <strong>Invertir en vivienda</strong>
-          <p class="card-sub">Financiación 60-70%</p>
-        </div>
-      </div>
-      <div id="inversion" class="card-content">
-        <p>Financiación más restrictiva para inversión inmobiliaria.</p>
-        <button onclick="irAnalisis(event,'Inversión')">Analizar mi perfil</button>
-      </div>
-    </div>
-  </div>
+<!-- Encabezado central -->
+<h2 class="operaciones-sub" style="text-align:center; margin:30px 0 15px 0;">
+  Herramientas financieras avanzadas
+</h2>
 
-  <!-- Encabezado central -->
-  <h2 class="operaciones-sub" style="text-align:center; margin:30px 0 15px 0;">Herramientas financieras avanzadas</h2>
-
-  <!-- Fila inferior centrada -->
+<!-- Fila inferior -->
 <div class="operaciones-grid operaciones-grid-centro">
-    <!-- Consolidación -->
- <div class="operacion-card" onclick="abrirOperacion('consolidacion')">
-  <div class="card-header">
-    <span>💳</span>
-    <div>
-      <strong>Consolidar deudas</strong>
-      <p class="card-sub">Reduce pagos mensuales</p>
+
+  <!-- Consolidación -->
+  <div class="operacion-card">
+    <div class="card-header" onclick="abrirOperacion('consolidacion')">
+      <span>💳</span>
+      <div>
+        <strong>Consolidar deudas</strong>
+        <p class="card-sub">Reduce pagos mensuales</p>
+      </div>
+    </div>
+    <div id="consolidacion" class="card-content">
+      <p>Unifica tus deudas en un solo préstamo más cómodo.</p>
+      <button onclick="irAnalisis(event,'Consolidación')">Analizar mi perfil</button>
     </div>
   </div>
-  <div id="consolidacion" class="card-content">
-    <p>Unifica tus deudas en un solo préstamo más cómodo.</p>
-    <button onclick="irAnalisis(event,'consolidacion')">Analizar mi perfil</button>
+
+  <!-- Comparador -->
+  <div class="operacion-card">
+    <div class="card-header" onclick="abrirOperacion('comparador')">
+      <span>🏦</span>
+      <div>
+        <strong>Comparador de hipotecas</strong>
+        <p class="card-sub">Compara ofertas bancarias</p>
+      </div>
+    </div>
+    <div id="comparador" class="card-content">
+      <p>Analiza tipos fijos, variables y bonificaciones.</p>
+      <button onclick="window.location.href='comparador-hipotecas.html'">
+        Comparar ahora
+      </button>
+    </div>
   </div>
+
 </div>
 
     <!-- Comparador -->
