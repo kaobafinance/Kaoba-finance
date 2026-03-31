@@ -98,8 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // PERFIL FINANCIERO
   // -----------------------------
  // -----------------------------
-// PERFIL FINANCIERO
-// -----------------------------
+
 let plazoEditadoPorUsuario = false;
 
 const perfilDiv = document.getElementById("perfil");
@@ -511,4 +510,4 @@ if (enviarBtn && statusSpan) {
       statusSpan.innerText = "Error al enviar la simulación al servidor.";
     }
   });
-}
+
