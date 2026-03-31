@@ -1,10 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-
   // -----------------------------
   // AUXILIARES
   // -----------------------------
   const formatMoney = n => new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(n);
+
   // -----------------------------
   // MODAL CALCULADORA
   // -----------------------------
@@ -97,7 +97,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // -----------------------------
   // PERFIL FINANCIERO
   // -----------------------------
-
+ // -----------------------------
+// PERFIL FINANCIERO
+// -----------------------------
 let plazoEditadoPorUsuario = false;
 
 const perfilDiv = document.getElementById("perfil");
@@ -174,69 +176,31 @@ function calcularPerfil() {
     : 0;
   const gastos = impuestos + (agregarVivienda ? 2500 : 0);
 
-// -----------------------------
-// 3. LÓGICA BANCARIA (DINÁMICA)
-// -----------------------------
+  // -----------------------------
+  // 3. LÓGICA BANCARIA (DINÁMICA)
+  // -----------------------------
+  const esSegunda = perfilFields.primeraSegunda.value === "segunda";
+  const ltiEstimado = ingresosAnuales > 0 ? (cuotaMax * 12) / ingresosAnuales : 0;
 
-const esSegunda = perfilFields.primeraSegunda.value === "segunda";
-
-// LTI estimado previo (para evitar bucle)
-const cuotaMax = ingresosAnuales * 0.35 / 12 - deudas;
-const ltiEstimado = ingresosAnuales > 0 ? (cuotaMax * 12) / ingresosAnuales : 0;
-
-// Función de financiación dinámica
-function calcularMaxFinanciacion({ 
-  esSegunda, 
-  edad1, 
-  edad2, 
-  ingresosAnuales, 
-  lti 
-}) {
-
-  // Segunda vivienda → regla fija
-  if (esSegunda) {
-    return { porcentaje: 0.7, motivo: "Segunda residencia" };
+  function calcularMaxFinanciacion({ esSegunda, edad1, edad2, ingresosAnuales, lti }) {
+    if (esSegunda) return { porcentaje: 0.7, motivo: "Segunda residencia / Aval requerido" };
+    const edadMin = Math.min(edad1 || 99, edad2 || 99);
+    if (edadMin > 0 && edadMin < 35) return { porcentaje: 1.0, motivo: "Menor de 35 años" };
+    if (ingresosAnuales > 0 && ingresosAnuales < 50000) return { porcentaje: 0.9, motivo: "Ingresos < 50.000€" };
+    if (ingresosAnuales >= 50000 || lti <= 0.30) return { porcentaje: 1.0, motivo: "Perfil solvente" };
+    return { porcentaje: 0.8, motivo: "Financiación estándar" };
   }
 
-  const edadMin = Math.min(edad1 || 99, edad2 || 99);
+  const resultadoFinanciacion = calcularMaxFinanciacion({ esSegunda, edad1, edad2, ingresosAnuales, lti: ltiEstimado });
+  const maxFinanciacion = resultadoFinanciacion.porcentaje;
 
-  // 🟢 Menores de 35 años → hasta 100%
-  if (edadMin > 0 && edadMin < 35) {
-    return { porcentaje: 1.0, motivo: "Menor de 35 años" };
+  const maxPrestamoBanco = agregarVivienda ? precio * maxFinanciacion : 0;
+  const prestamoNecesario = agregarVivienda ? precio - ahorros : 0;
+
+  if (perfilFields.operacionBadge && resultadoFinanciacion.motivo) {
+    perfilFields.operacionBadge.innerText += ` | ${resultadoFinanciacion.motivo}`;
   }
 
-  // 🟡 Ingresos < 50k → hasta 90%
-  if (ingresosAnuales > 0 && ingresosAnuales < 50000) {
-    return { porcentaje: 0.9, motivo: "Ingresos < 50.000€" };
-  }
-
-  // 🔵 Ingresos ≥ 50k o ratio bajo → hasta 100%
-  if (ingresosAnuales >= 50000 || lti <= 0.30) {
-    return { porcentaje: 1.0, motivo: "Perfil solvente" };
-  }
-
-  // ⚪ Caso estándar
-  return { porcentaje: 0.8, motivo: "Financiación estándar" };
-}
-
-// Obtener resultado
-const resultadoFinanciacion = calcularMaxFinanciacion({
-  esSegunda,
-  edad1,
-  edad2,
-  ingresosAnuales,
-  lti: ltiEstimado
-});
-
-const maxFinanciacion = resultadoFinanciacion.porcentaje;
-
-// Cálculos finales
-const maxPrestamoBanco = agregarVivienda ? precio * maxFinanciacion : 0;
-const prestamoNecesario = agregarVivienda ? precio - ahorros : 0;
-if (perfilFields.operacionBadge && resultadoFinanciacion.motivo) {
-  perfilFields.operacionBadge.innerText += ` | ${resultadoFinanciacion.motivo}`;
-}
-  
   // -----------------------------
   // 4. PRÉSTAMO FINAL
   // -----------------------------
@@ -288,7 +252,7 @@ if (perfilFields.operacionBadge && resultadoFinanciacion.motivo) {
   }
 
   // -----------------------------
-  // AVISOS SEGUNDA RESIDENCIA
+  // AVISOS SEGUNDA RESIDENCIA / AVAL
   // -----------------------------
   if (perfilFields.avisoSegunda) {
     const dineroNecesario = gastos + (precio - maxPrestamoBanco);
@@ -299,6 +263,7 @@ if (perfilFields.operacionBadge && resultadoFinanciacion.motivo) {
       perfilFields.avisoSegunda.innerHTML = `
         <strong>¡Atención! Segunda residencia con alta financiación:</strong>
         <p>Necesario aportar ${formatMoney(faltanteEntrada)}, más gastos aproximados ${formatMoney(gastos)}</p>
+        <p>Se requiere aval o doble garantía.</p>
       `;
     } else if (agregarVivienda && ahorros < dineroNecesario) {
       perfilFields.avisoSegunda.style.display = "block";
@@ -318,10 +283,7 @@ if (perfilFields.operacionBadge && resultadoFinanciacion.motivo) {
 // -----------------------------
 const actualizarViviendaInfo = () => {
   if (!perfilFields.viviendaCheck || !perfilFields.viviendaInfo) return;
-
-  perfilFields.viviendaInfo.style.display =
-    perfilFields.viviendaCheck.checked ? "block" : "none";
-
+  perfilFields.viviendaInfo.style.display = perfilFields.viviendaCheck.checked ? "block" : "none";
   calcularPerfil();
 };
 
@@ -361,9 +323,9 @@ calcularPerfil();
 window.abrirOperacion = function(id){
   document.querySelectorAll('.card-content').forEach(cc => {
     if(cc.id === id){
-      cc.classList.toggle('open'); // abrir o cerrar la seleccionada
+      cc.classList.toggle('open'); 
     } else {
-      cc.classList.remove('open'); // cerrar las demás
+      cc.classList.remove('open'); 
     }
   });
 };
@@ -373,22 +335,10 @@ window.abrirOperacion = function(id){
 // -----------------------------
 window.irAnalisis = function(event, tipoOperacion){
   event.stopPropagation();
+  if(tipoOperacion === 'Cambio de Hipoteca'){ window.location.href = 'cambio.html'; return; }
+  if(tipoOperacion === 'Consolidación'){ window.location.href = 'consolidacion.html'; return; }
 
-  // Redirección para operaciones que tienen página propia
-  if(tipoOperacion === 'Cambio de Hipoteca'){
-    window.location.href = 'cambio.html';
-    return;
-  }
-  if(tipoOperacion === 'Consolidación'){
-    window.location.href = 'consolidacion.html';
-    return;
-  }
-
-  // Para Primera Vivienda o Inversión, abrir la tarjeta y mostrar perfil
-  const idMap = {
-    'Compra Primera Vivienda': 'compra',
-    'Inversión': 'inversion'
-  };
+  const idMap = { 'Compra Primera Vivienda': 'compra', 'Inversión': 'inversion' };
   const id = idMap[tipoOperacion];
   if(id) abrirOperacion(id);
 
@@ -400,12 +350,8 @@ window.irAnalisis = function(event, tipoOperacion){
 
   if (perfilFields.primeraSegunda) {
     switch(tipoOperacion){
-      case 'Compra Primera Vivienda':
-        perfilFields.primeraSegunda.value = 'primera';
-        break;
-      case 'Inversión':
-        perfilFields.primeraSegunda.value = 'segunda';
-        break;
+      case 'Compra Primera Vivienda': perfilFields.primeraSegunda.value = 'primera'; break;
+      case 'Inversión': perfilFields.primeraSegunda.value = 'segunda'; break;
     }
   }
 
@@ -413,184 +359,156 @@ window.irAnalisis = function(event, tipoOperacion){
   calcularPerfil();
   perfilDiv.scrollIntoView({behavior:'smooth'});
 };
-  // -----------------------------
-  // ENVÍO DE LEADS Y PDF
-  // -----------------------------
-  const statusSpan = document.getElementById("leadMensaje");
-  const enviarBtn = document.getElementById("enviarLead");
-  const SERVER_URL = ""; // URL servidor
 
-  if (enviarBtn && statusSpan) {
-    enviarBtn.addEventListener("click", async () => {
-      const nombre = document.getElementById("leadNombre")?.value.trim() || "";
-      const email = document.getElementById("leadEmail")?.value.trim() || "";
-      const consentimiento = document.getElementById("leadConsentimiento")?.checked || false;
+// -----------------------------
+// ENVÍO DE LEADS Y PDF
+// -----------------------------
+const statusSpan = document.getElementById("leadMensaje");
+const enviarBtn = document.getElementById("enviarLead");
+const SERVER_URL = ""; // URL servidor
 
-      if (!nombre || !email || !consentimiento) {
-        statusSpan.style.color = "red";
-        statusSpan.innerText = "Por favor completa todos los campos y acepta la política.";
-        return;
-      }
+if (enviarBtn && statusSpan) {
+  enviarBtn.addEventListener("click", async () => {
+    const nombre = document.getElementById("leadNombre")?.value.trim() || "";
+    const email = document.getElementById("leadEmail")?.value.trim() || "";
+    const consentimiento = document.getElementById("leadConsentimiento")?.checked || false;
 
-            const capital = perfilFields.capitalOut?.innerText || "0";
-      const cuota = perfilFields.cuotaOut?.innerText || "0";
-      const ltv = perfilFields.ltvOut?.innerText || "0";
-      const gastos = perfilFields.gastosOut?.innerText || "0";
-      const lti = perfilFields.ltiOut?.innerText || "0";
-      const compatibilidad = perfilFields.compatibleOut?.innerText || "-";
-
-      // -----------------------------
-      // PDF
-      // -----------------------------
-      let doc = null;
-      try {
-        if(window.jspdf){
-          const { jsPDF } = window.jspdf.jsPDF ? window.jspdf : window.jspdf;
-          doc = new jsPDF();
-
-          // CABECERA
-          doc.setFont("helvetica", "bold");
-          doc.setFontSize(18);
-          doc.text("KAOBA FINANCE", 20, 20);
-          doc.setFontSize(12);
-          doc.text("Informe de Simulación Hipotecaria", 20, 28);
-          doc.setLineWidth(0.5);
-          doc.line(20, 32, 190, 32);
-          doc.setFont("helvetica", "normal");
-          doc.setFontSize(9);
-          doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 150, 20);
-
-          // CLIENTE
-          doc.setFont("helvetica", "bold");
-          doc.setFontSize(12);
-          doc.text("Datos del cliente", 20, 45);
-          doc.setFont("helvetica", "normal");
-          doc.setFontSize(10);
-          doc.text(`Nombre: ${nombre}`, 20, 53);
-          doc.text(`Email: ${email}`, 20, 59);
-
-          // RESUMEN FINANCIERO
-          doc.setDrawColor(200);
-          doc.rect(20, 70, 170, 50);
-          doc.setFont("helvetica", "bold");
-          doc.text("Resumen de la simulación", 25, 78);
-          doc.setFont("helvetica", "normal");
-          const resumen = [
-            ["Importe préstamo", capital],
-            ["Cuota mensual", cuota],
-            ["Financiación (LTV)", ltv],
-            ["Gastos aproximados", gastos],
-            ["Ratio endeudamiento", lti],
-            ["Compatibilidad", compatibilidad]
-          ];
-          let y = 86;
-          resumen.forEach(row => {
-            doc.setFont("helvetica", "bold");
-            doc.text(row[0], 25, y);
-            doc.setFont("helvetica", "normal");
-            doc.text(row[1], 120, y);
-            y += 6;
-          });
-
-          // ANÁLISIS
-          doc.setFont("helvetica", "bold");
-          doc.setFontSize(12);
-          doc.text("Análisis del perfil financiero", 20, 135);
-          doc.setFont("helvetica", "normal");
-          doc.setFontSize(10);
-          let analisis = "";
-          if (compatibilidad === "Compatible") {
-            analisis = "Tu perfil presenta una alta probabilidad de aprobación según criterios bancarios actuales.";
-          } else if (compatibilidad === "Aceptable") {
-            analisis = "Tu perfil es viable, aunque algunas entidades podrían requerir condiciones adicionales o garantías.";
-          } else {
-            analisis = "Actualmente tu perfil no cumple con los criterios habituales de riesgo bancario.";
-          }
-          doc.text(analisis, 20, 143, { maxWidth: 170 });
-
-          // RECOMENDACIONES
-          doc.setFont("helvetica", "bold");
-          doc.setFontSize(12);
-          doc.text("Recomendaciones personalizadas", 20, 165);
-          doc.setFont("helvetica", "normal");
-          doc.setFontSize(10);
-          let recomendaciones = [];
-          if (parseFloat(lti) > 35) recomendaciones.push("- Reducir deudas para mejorar ratio de endeudamiento");
-          if (ltv.includes("%") && parseFloat(ltv) > 80) recomendaciones.push("- Aportar mayor entrada para reducir financiación");
-          recomendaciones.push("- Mantener estabilidad laboral");
-          recomendaciones.push("- Comparar ofertas entre entidades bancarias");
-          recomendaciones.forEach((rec, i) => {
-            doc.text(rec, 20, 173 + (i * 6));
-          });
-
-          // DISCLAIMER
-          doc.setFontSize(8);
-          doc.setTextColor(120);
-          doc.text(
-            "Este documento es una simulación orientativa basada en criterios financieros estándar. No constituye una oferta vinculante ni garantiza la concesión del préstamo. La aprobación final dependerá de cada entidad bancaria tras el estudio de riesgo correspondiente.",
-            20,
-            250,
-            { maxWidth: 170 }
-          );
-
-          // FOOTER
-          doc.setTextColor(0);
-          doc.setFontSize(9);
-          doc.text("Kaoba Finance © 2026", 20, 285);
-
-          // EXPORTAR PDF
-          doc.save("Informe_Hipotecario_Kaoba.pdf");
-        }
-      } catch (e) {
-        console.error("Error generando PDF:", e);
-      }
-
-      statusSpan.style.color = "green";
-      statusSpan.innerText = doc ? "Simulación generada y PDF descargado (modo demo)" : "Simulación generada (PDF no disponible)";
-
-      // ENVÍO AL SERVIDOR
-      if (!SERVER_URL) return;
-      try {
-        const response = await fetch(SERVER_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ nombre, email, capital, cuota, ltv, gastos, lti, compatibilidad })
-        });
-        const result = await response.json();
-        if (result.ok) {
-          statusSpan.style.color = "green";
-          statusSpan.innerText = `Simulación enviada a ${email}`;
-        } else {
-          statusSpan.style.color = "orange";
-          statusSpan.innerText = `Simulación enviada, pero hubo un detalle en el servidor.`;
-        }
-      } catch (err) {
-        console.error(err);
-        statusSpan.style.color = "red";
-        statusSpan.innerText = "Error al enviar la simulación al servidor.";
-      }
-    });
-  }
-
-  // -----------------------------
-  // EURIBOR AUTOMÁTICO
-  // -----------------------------
-  async function actualizarEuribor() {
-    try {
-      const res = await fetch("https://api.api-ninjas.com/v1/interest_rate?name=euribor", {
-        headers: {'X-Api-Key': 'TU_API_KEY_REAL' } // necesitarás clave gratuita
-      });
-      const data = await res.json();
-      if (data && data.length > 0) {
-        const valor = data?.[0]?.rate ? data[0].rate.toFixed(2) : "2,86";
-       const euriborEl = document.getElementById("euribor-value");
-if (euriborEl) euriborEl.innerText = valor + "%";
-      }
-    } catch (error) {
-     const euriborEl = document.getElementById("euribor-value");
-if (euriborEl) euriborEl.innerText = "2,86%"; // fallback
+    if (!nombre || !email || !consentimiento) {
+      statusSpan.style.color = "red";
+      statusSpan.innerText = "Por favor completa todos los campos y acepta la política.";
+      return;
     }
-  }
-  actualizarEuribor();
 
-});
+    const capital = perfilFields.capitalOut?.innerText || "0";
+    const cuota = perfilFields.cuotaOut?.innerText || "0";
+    const ltv = perfilFields.ltvOut?.innerText || "0";
+    const gastos = perfilFields.gastosOut?.innerText || "0";
+    const lti = perfilFields.ltiOut?.innerText || "0";
+    const compatibilidad = perfilFields.compatibleOut?.innerText || "-";
+
+    // -----------------------------
+    // PDF
+    // -----------------------------
+    let doc = null;
+    try {
+      if(window.jspdf){
+        const { jsPDF } = window.jspdf.jsPDF ? window.jspdf : window.jspdf;
+        doc = new jsPDF();
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(18);
+        doc.text("KAOBA FINANCE", 20, 20);
+        doc.setFontSize(12);
+        doc.text("Informe de Simulación Hipotecaria", 20, 28);
+        doc.setLineWidth(0.5);
+        doc.line(20, 32, 190, 32);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 150, 20);
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.text("Datos del cliente", 20, 45);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.text(`Nombre: ${nombre}`, 20, 53);
+        doc.text(`Email: ${email}`, 20, 59);
+
+        doc.setDrawColor(200);
+        doc.rect(20, 70, 170, 50);
+        doc.setFont("helvetica", "bold");
+        doc.text("Resumen de la simulación", 25, 78);
+        doc.setFont("helvetica", "normal");
+        const resumen = [
+          ["Importe préstamo", capital],
+          ["Cuota mensual", cuota],
+          ["Financiación (LTV)", ltv],
+          ["Gastos aproximados", gastos],
+          ["Ratio endeudamiento", lti],
+          ["Compatibilidad", compatibilidad]
+        ];
+        let y = 86;
+        resumen.forEach(row => {
+          doc.setFont("helvetica", "bold");
+          doc.text(row[0], 25, y);
+          doc.setFont("helvetica", "normal");
+          doc.text(row[1], 120, y);
+          y += 6;
+        });
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.text("Análisis del perfil financiero", 20, 135);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        let analisis = "";
+        if (compatibilidad === "Compatible") analisis = "Tu perfil presenta alta probabilidad de aprobación.";
+        else if (compatibilidad === "Aceptable") analisis = "Perfil viable, algunas condiciones adicionales podrían aplicarse.";
+        else analisis = "Perfil no cumple criterios habituales de riesgo bancario.";
+        doc.text(analisis, 20, 143, { maxWidth: 170 });
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.text("Recomendaciones personalizadas", 20, 165);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        let recomendaciones = [];
+        if (parseFloat(lti) > 35) recomendaciones.push("- Reducir deudas para mejorar ratio de endeudamiento");
+        if (ltv.includes("%") && parseFloat(ltv) > 80) recomendaciones.push("- Aportar mayor entrada para reducir financiación");
+        recomendaciones.push("- Mantener estabilidad laboral");
+        recomendaciones.push("- Comparar ofertas entre entidades bancarias");
+
+        recomendaciones.forEach((rec, i) => {
+          doc.text(rec, 20, 173 + (i * 6));
+        });
+
+        // DISCLAIMER
+        doc.setFontSize(8);
+        doc.setTextColor(120);
+        doc.text(
+          "Este documento es una simulación orientativa basada en criterios financieros estándar. " +
+          "No constituye una oferta vinculante ni garantiza la concesión del préstamo. " +
+          "La aprobación final dependerá de cada entidad bancaria tras el estudio de riesgo correspondiente.",
+          20,
+          250,
+          { maxWidth: 170 }
+        );
+
+        // FOOTER
+        doc.setTextColor(0);
+        doc.setFontSize(9);
+        doc.text("Kaoba Finance © 2026", 20, 285);
+
+        // EXPORTAR PDF
+        doc.save("Informe_Hipotecario_Kaoba.pdf");
+      }
+    } catch (e) {
+      console.error("Error generando PDF:", e);
+    }
+
+    statusSpan.style.color = "green";
+    statusSpan.innerText = doc ? "Simulación generada y PDF descargado (modo demo)" : "Simulación generada (PDF no disponible)";
+
+    // ENVÍO AL SERVIDOR
+    if (!SERVER_URL) return;
+    try {
+      const response = await fetch(SERVER_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nombre, email, capital, cuota, ltv, gastos, lti, compatibilidad })
+      });
+      const result = await response.json();
+      if (result.ok) {
+        statusSpan.style.color = "green";
+        statusSpan.innerText = `Simulación enviada a ${email}`;
+      } else {
+        statusSpan.style.color = "orange";
+        statusSpan.innerText = `Simulación enviada, pero hubo un detalle en el servidor.`;
+      }
+    } catch (err) {
+      console.error(err);
+      statusSpan.style.color = "red";
+      statusSpan.innerText = "Error al enviar la simulación al servidor.";
+    }
+  });
+}
