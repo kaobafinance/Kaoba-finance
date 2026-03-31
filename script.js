@@ -507,7 +507,7 @@ window.irAnalisis = function(event, tipoOperacion){
       });
       const data = await res.json();
       if (data && data.length > 0) {
-        const valor = data[0].rate.toFixed(2);
+        const valor = data?.[0]?.rate ? data[0].rate.toFixed(2) : "2,86";
        const euriborEl = document.getElementById("euribor-value");
 if (euriborEl) euriborEl.innerText = valor + "%";
       }
