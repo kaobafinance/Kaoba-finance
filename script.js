@@ -239,18 +239,23 @@ if (mensajePerfil) {
 }
 
     // Aviso segunda residencia
-    if (perfilFields.primeraSegunda.value === "segunda" && ltv > 70 && perfilFields.avisoSegunda) {
-      perfilFields.avisoSegunda.style.display = "block";
-      perfilFields.avisoSegunda.innerHTML = `<strong>¡Atención! Segunda residencia con alta financiación:</strong>
-        <p>Necesario aportar ${formatMoney(faltanteEntrada)}, más gastos aproximados ${formatMoney(gastos)}</p>`;
-    } else if (perfilFields.avisoSegunda) perfilFields.avisoSegunda.style.display = "none";
-    if (ahorros < dineroNecesario && precio > 0) {
-  perfilFields.avisoSegunda.style.display = "block";
-  perfilFields.avisoSegunda.innerHTML = `
-    <strong>Ahorro insuficiente:</strong>
-    <p>Necesitarías aproximadamente ${formatMoney(dineroNecesario)}</p>
-    <p>Te faltan ${formatMoney(faltanteEntrada)}</p>
-  `;
+    if (perfilFields.avisoSegunda) {
+  if (ahorros < dineroNecesario && precio > 0) {
+    perfilFields.avisoSegunda.style.display = "block";
+    perfilFields.avisoSegunda.innerHTML = `
+      <strong>Ahorro insuficiente:</strong>
+      <p>Necesitarías aproximadamente ${formatMoney(dineroNecesario)}</p>
+      <p>Te faltan ${formatMoney(faltanteEntrada)}</p>
+    `;
+  } else if (perfilFields.primeraSegunda.value === "segunda" && ltv > 70) {
+    perfilFields.avisoSegunda.style.display = "block";
+    perfilFields.avisoSegunda.innerHTML = `
+      <strong>¡Atención! Segunda residencia con alta financiación:</strong>
+      <p>Necesario aportar ${formatMoney(faltanteEntrada)}, más gastos aproximados ${formatMoney(gastos)}</p>
+    `;
+  } else {
+    perfilFields.avisoSegunda.style.display = "none";
+  }
 }
 
     // Resultados en tarjetas
