@@ -37,8 +37,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const anos = parseFloat(anosInput?.value) || 0;
     const n = anos * 12;
 
-  if (capital <= 0 || interes <= 0 || anos <= 0) {
-  if (resultadosDiv) resultadosDiv.style.display = "none";
+    if (capital <= 0 || interes <= 0 || anos <= 0) {
+      if (resultadosDiv) resultadosDiv.style.display = "none";
       if (verTablaBtn) verTablaBtn.style.display = "none";
       if (tablaContainer) tablaContainer.style.display = "none";
       return;
@@ -52,13 +52,10 @@ document.addEventListener("DOMContentLoaded", () => {
     interesesTotalesOut && (interesesTotalesOut.innerText = formatMoney(interesesTotales));
     totalPagadoOut && (totalPagadoOut.innerText = formatMoney(totalPagado));
 
-   resultadosDiv && (resultadosDiv.style.display = "block");
+    resultadosDiv && (resultadosDiv.style.display = "block");
     verTablaBtn && (verTablaBtn.style.display = "block");
     tablaContainer && (tablaContainer.style.display = "none");
-    resultadosDiv?.scrollIntoView({
-  behavior: "smooth",
-  block: "start"
-});
+    resultadosDiv?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   const generarTabla = () => {
@@ -101,9 +98,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // PERFIL FINANCIERO
   // -----------------------------
   let plazoEditadoPorUsuario = false;
-  const perfilDiv = document.getElementById("perfil");
-  const calculadoraDiv = document.getElementById("calculadora");
-
   const perfilFields = {
     titulares: document.getElementById("perfilTitulares"),
     edad1: document.getElementById("perfilEdad1"),
@@ -152,135 +146,120 @@ document.addEventListener("DOMContentLoaded", () => {
     const pagas = parseInt(perfilFields.pagas.value) || 12;
     const ingresosAnuales = ingresos * pagas;
     const deudas = parseFloat(perfilFields.deuda.value) || 0;
-    const tipoRef = 0.028 / 12;
+    const tipoRef = 0.028 / 12; // tipo de referencia mensual
     const plazo = parseInt(perfilFields.plazo.value) || plazoMax;
     const n = plazo * 12;
-const cuotaMax = ingresosAnuales * 0.35 / 12 - deudas;
 
-// -----------------------------
-// 1. CAPACIDAD POR INGRESOS
-// -----------------------------
-let capacidadPorIngresos = cuotaMax * (Math.pow(1 + tipoRef, n) - 1) / (tipoRef * Math.pow(1 + tipoRef, n));
+    // -----------------------------
+    // 1. CAPACIDAD POR INGRESOS
+    // -----------------------------
+    const cuotaMax = ingresosAnuales * 0.35 / 12 - deudas;
+    let capacidadPorIngresos = cuotaMax * (Math.pow(1 + tipoRef, n) - 1) / (tipoRef * Math.pow(1 + tipoRef, n));
 
-// -----------------------------
-// 2. DATOS VIVIENDA
-// -----------------------------
-const precio = parseFloat(perfilFields.precio.value) || 0;
-const ahorros = parseFloat(perfilFields.ahorros.value) || 0;
+    // -----------------------------
+    // 2. DATOS VIVIENDA (solo si checkbox activado)
+    // -----------------------------
+    const agregarVivienda = perfilFields.viviendaCheck.checked;
+    const precio = agregarVivienda ? parseFloat(perfilFields.precio.value) || 0 : 0;
+    const ahorros = parseFloat(perfilFields.ahorros.value) || 0;
+    const impuestos = agregarVivienda ? 
+      (perfilFields.tipoVivienda.value === "obraNueva" ? precio * 0.10 : precio * parseFloat(perfilFields.comunidad.value || 0))
+      : 0;
+    const gastos = impuestos + (agregarVivienda ? 2500 : 0);
 
-const impuestos = perfilFields.tipoVivienda.value === "obraNueva"
-  ? precio * 0.10
-  : precio * parseFloat(perfilFields.comunidad.value || 0);
+    // -----------------------------
+    // 3. LÓGICA BANCARIA REAL
+    // -----------------------------
+    const esSegunda = perfilFields.primeraSegunda.value === "segunda";
+    const maxFinanciacion = esSegunda ? 0.7 : 0.8;
+    const maxPrestamoBanco = agregarVivienda ? precio * maxFinanciacion : 0;
+    const prestamoNecesario = agregarVivienda ? precio - ahorros : 0;
 
-const gastos = impuestos + 2500;
+    // -----------------------------
+    // 4. PRÉSTAMO FINAL REAL
+    // -----------------------------
+    let capitalPosible = agregarVivienda ? Math.min(capacidadPorIngresos, maxPrestamoBanco, prestamoNecesario) : capacidadPorIngresos;
+    if (capitalPosible < 0) capitalPosible = 0;
 
-// -----------------------------
-// 3. LÓGICA BANCARIA REAL
-// -----------------------------
-const esSegunda = perfilFields.primeraSegunda.value === "segunda";
-const maxFinanciacion = esSegunda ? 0.7 : 0.8;
-
-const maxPrestamoBanco = precio * maxFinanciacion;
-
-// Lo que realmente necesita el cliente
-const prestamoNecesario = precio - ahorros;
-
-// -----------------------------
-// 4. PRÉSTAMO FINAL REAL
-// -----------------------------
-let capitalPosible = Math.min(
-  capacidadPorIngresos,
-  maxPrestamoBanco,
-  prestamoNecesario
-);
-
-// Evitar negativos
-if (capitalPosible < 0) capitalPosible = 0;
-
-// -----------------------------
-// 5. BONUS → VALIDACIÓN DE AHORRO REAL
-// -----------------------------
-const dineroNecesario = gastos + (precio - maxPrestamoBanco);
-const faltanteEntrada = Math.max(dineroNecesario - ahorros, 0);
-    const cuota = capitalPosible * (tipoRef * Math.pow(1 + tipoRef, n)) / (Math.pow(1 + tipoRef, n) - 1);
-    const ltv = precio > 0 ? (capitalPosible / precio) * 100 : 0;
+    const cuota = capitalPosible > 0 ? capitalPosible * (tipoRef * Math.pow(1 + tipoRef, n)) / (Math.pow(1 + tipoRef, n) - 1) : 0;
+    const ltv = agregarVivienda && precio > 0 ? (capitalPosible / precio) * 100 : 0;
     const lti = ingresosAnuales > 0 ? ((cuota + deudas) * 12) / ingresosAnuales : 0;
 
-    // Mensaje perfil
-  // Mensaje perfil actualizado
-const mensajePerfil = document.getElementById("mensajePerfil");
-if (mensajePerfil) {
-  mensajePerfil.className = "mensaje-perfil";
+    // -----------------------------
+    // MENSAJE PERFIL
+    // -----------------------------
+    const mensajePerfil = document.getElementById("mensajePerfil");
+    if (mensajePerfil) {
+      mensajePerfil.className = "mensaje-perfil";
+      if (ingresos <= 0 || plazo <= 0 || cuota <= 0) {
+        mensajePerfil.style.display = "none";
+      } else {
+        let viable = false;
+        if (lti <= 0.35) viable = true;
+        else if (lti <= 0.40 && ltv <= 90) viable = true;
+        else if (lti <= 0.45 && ltv <= 95) viable = true;
 
-  // Esconde mensaje si los datos no están completos o el plazo es 0
-  if (ingresos <= 0 || plazo <= 0 || cuota <= 0) {
-    mensajePerfil.style.display = "none";
-    return;
-  }
+        mensajePerfil.style.display = "block";
+        if (viable) {
+          mensajePerfil.innerText = "¡Buen perfil financiero! Puedes optar a condiciones favorables.";
+          mensajePerfil.classList.add("mensaje-ok");
+        } else if (lti <= 0.40) {
+          mensajePerfil.innerText = "Perfil aceptable. Podrías obtener financiación con algunas condiciones.";
+          mensajePerfil.classList.add("mensaje-warning");
+        } else {
+          mensajePerfil.innerText = "Perfil con limitaciones financieras.";
+          mensajePerfil.classList.add("mensaje-warning");
+        }
+      }
+    }
 
-  let viable = false;
-
-  // Reglas de viabilidad considerando LTI y LTV
-  if (lti <= 0.35) viable = true;           // perfil muy bueno
-  else if (lti <= 0.40 && ltv <= 90) viable = true; // perfil bueno, bancos flexibles
-  else if (lti <= 0.45 && ltv <= 95) viable = true; // perfil excelente, bancos muy flexibles
-
-  if (viable) {
-    mensajePerfil.style.display = "block";
-    mensajePerfil.innerText = "¡Buen perfil financiero! Puedes optar a condiciones favorables.";
-    mensajePerfil.classList.add("mensaje-ok");
-  } else if (lti <= 0.40) {
-    mensajePerfil.style.display = "block";
-    mensajePerfil.innerText = "Perfil aceptable. Podrías obtener financiación con algunas condiciones.";
-    mensajePerfil.classList.add("mensaje-warning");
-  } else {
-    mensajePerfil.style.display = "none"; // No mostrar si el perfil es débil
-  }
-}
-
-    // Aviso segunda residencia
-    if (perfilFields.avisoSegunda) {
-  if (ahorros < dineroNecesario && precio > 0) {
-    perfilFields.avisoSegunda.style.display = "block";
-    perfilFields.avisoSegunda.innerHTML = `
-      <strong>Ahorro insuficiente:</strong>
-      <p>Necesitarías aproximadamente ${formatMoney(dineroNecesario)}</p>
-      <p>Te faltan ${formatMoney(faltanteEntrada)}</p>
-    `;
-  } else if (perfilFields.primeraSegunda.value === "segunda" && ltv > 70) {
-    perfilFields.avisoSegunda.style.display = "block";
-    perfilFields.avisoSegunda.innerHTML = `
-      <strong>¡Atención! Segunda residencia con alta financiación:</strong>
-      <p>Necesario aportar ${formatMoney(faltanteEntrada)}, más gastos aproximados ${formatMoney(gastos)}</p>
-    `;
-  } else {
-    perfilFields.avisoSegunda.style.display = "none";
-  }
-}
-
-    // Resultados en tarjetas
+    // -----------------------------
+    // RESULTADOS EN TARJETAS
+    // -----------------------------
     perfilFields.capitalOut && (perfilFields.capitalOut.innerText = formatMoney(capitalPosible));
     perfilFields.cuotaOut && (perfilFields.cuotaOut.innerText = formatMoney(cuota));
     perfilFields.ltvOut && (perfilFields.ltvOut.innerText = ltv > 0 ? ltv.toFixed(1) + "%" : "-");
     perfilFields.gastosOut && (perfilFields.gastosOut.innerText = formatMoney(gastos));
     perfilFields.ltiOut && (perfilFields.ltiOut.innerText = (lti * 100).toFixed(1) + "%");
 
-    // Colores y compatibilidad
     if (perfilFields.compatibleOut) {
       perfilFields.compatibleOut.className = "";
       if (lti <= 0.35) { perfilFields.compatibleOut.innerText = "Compatible"; perfilFields.compatibleOut.classList.add("green"); }
       else if (lti <= 0.40) { perfilFields.compatibleOut.innerText = "Aceptable"; perfilFields.compatibleOut.classList.add("orange"); }
       else { perfilFields.compatibleOut.innerText = "No viable"; perfilFields.compatibleOut.classList.add("red"); }
     }
-    if (perfilFields.ltvOut) { perfilFields.ltvOut.className = ""; if (ltv > 80) perfilFields.ltvOut.classList.add("high"); else if (ltv > 70) perfilFields.ltvOut.classList.add("medium"); else perfilFields.ltvOut.classList.add("low"); }
-    if (perfilFields.ltiOut) { perfilFields.ltiOut.className = ""; if (lti * 100 > 40) perfilFields.ltiOut.classList.add("high"); else if (lti * 100 > 35) perfilFields.ltiOut.classList.add("medium"); else perfilFields.ltiOut.classList.add("low"); }
+
+    // -----------------------------
+    // AVISOS SEGUNDA RESIDENCIA
+    // -----------------------------
+    if (perfilFields.avisoSegunda) {
+      const dineroNecesario = gastos + (precio - maxPrestamoBanco);
+      const faltanteEntrada = Math.max(dineroNecesario - ahorros, 0);
+
+      if (agregarVivienda && esSegunda && ltv > 70) {
+        perfilFields.avisoSegunda.style.display = "block";
+        perfilFields.avisoSegunda.innerHTML = `
+          <strong>¡Atención! Segunda residencia con alta financiación:</strong>
+          <p>Necesario aportar ${formatMoney(faltanteEntrada)}, más gastos aproximados ${formatMoney(gastos)}</p>
+        `;
+      } else if (agregarVivienda && ahorros < dineroNecesario) {
+        perfilFields.avisoSegunda.style.display = "block";
+        perfilFields.avisoSegunda.innerHTML = `
+          <strong>Ahorro insuficiente:</strong>
+          <p>Necesitarías aproximadamente ${formatMoney(dineroNecesario)}</p>
+          <p>Te faltan ${formatMoney(faltanteEntrada)}</p>
+        `;
+      } else {
+        perfilFields.avisoSegunda.style.display = "none";
+      }
+    }
   };
 
   // Eventos perfil
   perfilFields.plazo && perfilFields.plazo.addEventListener("input", () => plazoEditadoPorUsuario = true);
   [perfilFields.edad1, perfilFields.edad2, perfilFields.salario1, perfilFields.salario2, perfilFields.pagas, perfilFields.ahorros, perfilFields.deuda, perfilFields.otroIngreso, perfilFields.precio]
     .forEach(el => el && (el.addEventListener("input", calcularPerfil), el.addEventListener("change", calcularPerfil)));
-  [perfilFields.titulares, perfilFields.tipoVivienda, perfilFields.comunidad, perfilFields.primeraSegunda]
+  [perfilFields.titulares, perfilFields.tipoVivienda, perfilFields.comunidad, perfilFields.primeraSegunda, perfilFields.viviendaCheck]
     .forEach(el => el && el.addEventListener("change", calcularPerfil));
 
   perfilFields.titulares && perfilFields.titular2Div && perfilFields.titulares.addEventListener("change", () => {
@@ -288,6 +267,10 @@ if (mensajePerfil) {
     calcularPerfil();
   });
 
+  // -----------------------------
+  // LLAMAR PERFIL AL INICIO
+  // -----------------------------
+  calcularPerfil();
 
   // -----------------------------
   // COOKIES
