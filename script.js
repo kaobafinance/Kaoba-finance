@@ -288,10 +288,6 @@ if (mensajePerfil) {
     calcularPerfil();
   });
 
-  perfilFields.viviendaCheck && perfilFields.viviendaInfo && perfilFields.viviendaCheck.addEventListener("change", () => {
-    perfilFields.viviendaInfo.style.display = perfilFields.viviendaCheck.checked ? "block" : "none";
-    calcularPerfil();
-  });
 
   // -----------------------------
   // COOKIES
