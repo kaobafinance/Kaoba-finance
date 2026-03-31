@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
 
 
-  const perfilDiv = document.getElementById("perfil");
   // -----------------------------
   // AUXILIARES
   // -----------------------------
