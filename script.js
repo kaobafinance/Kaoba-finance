@@ -126,6 +126,14 @@ document.addEventListener("DOMContentLoaded", () => {
     operacionBadge: document.getElementById("operacionSeleccionada")
   };
 
+  // Mostrar / ocultar info de vivienda al marcar checkbox
+  if (perfilFields.viviendaCheck && perfilFields.viviendaInfo) {
+    perfilFields.viviendaCheck.addEventListener("change", () => {
+      perfilFields.viviendaInfo.style.display = perfilFields.viviendaCheck.checked ? "block" : "none";
+      calcularPerfil();
+    });
+  }
+
   const calcularPerfil = () => {
     const nTitulares = parseInt(perfilFields.titulares.value) || 1;
     const edad1 = parseInt(perfilFields.edad1.value) || 0;
@@ -150,11 +158,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const plazo = parseInt(perfilFields.plazo.value) || plazoMax;
     const n = plazo * 12;
 
+    // -----------------------------
     // 1. CAPACIDAD POR INGRESOS
+    // -----------------------------
     const cuotaMax = ingresosAnuales * 0.35 / 12 - deudas;
     let capacidadPorIngresos = cuotaMax * (Math.pow(1 + tipoRef, n) - 1) / (tipoRef * Math.pow(1 + tipoRef, n));
 
+    // -----------------------------
     // 2. DATOS VIVIENDA
+    // -----------------------------
     const agregarVivienda = perfilFields.viviendaCheck.checked;
     const precio = agregarVivienda ? parseFloat(perfilFields.precio.value) || 0 : 0;
     const ahorros = parseFloat(perfilFields.ahorros.value) || 0;
@@ -163,21 +175,26 @@ document.addEventListener("DOMContentLoaded", () => {
       : 0;
     const gastos = impuestos + (agregarVivienda ? 2500 : 0);
 
+    // -----------------------------
     // 3. LÓGICA BANCARIA
+    // -----------------------------
     const esSegunda = perfilFields.primeraSegunda.value === "segunda";
     const maxFinanciacion = esSegunda ? 0.7 : 0.8;
     const maxPrestamoBanco = agregarVivienda ? precio * maxFinanciacion : 0;
     const prestamoNecesario = agregarVivienda ? precio - ahorros : 0;
 
+    // -----------------------------
     // 4. PRÉSTAMO FINAL
+    // -----------------------------
     let capitalPosible = agregarVivienda ? Math.min(capacidadPorIngresos, maxPrestamoBanco, prestamoNecesario) : capacidadPorIngresos;
     if (capitalPosible < 0) capitalPosible = 0;
-
     const cuota = capitalPosible > 0 ? capitalPosible * (tipoRef * Math.pow(1 + tipoRef, n)) / (Math.pow(1 + tipoRef, n) - 1) : 0;
     const ltv = agregarVivienda && precio > 0 ? (capitalPosible / precio) * 100 : 0;
     const lti = ingresosAnuales > 0 ? ((cuota + deudas) * 12) / ingresosAnuales : 0;
 
-    // MENSAJE PERFIL
+    // -----------------------------
+    // MENSAJE Y RESULTADOS
+    // -----------------------------
     const mensajePerfil = document.getElementById("mensajePerfil");
     if (mensajePerfil) {
       mensajePerfil.className = "mensaje-perfil";
@@ -203,7 +220,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    // RESULTADOS EN TARJETAS
     perfilFields.capitalOut && (perfilFields.capitalOut.innerText = formatMoney(capitalPosible));
     perfilFields.cuotaOut && (perfilFields.cuotaOut.innerText = formatMoney(cuota));
     perfilFields.ltvOut && (perfilFields.ltvOut.innerText = ltv > 0 ? ltv.toFixed(1) + "%" : "-");
@@ -217,7 +233,9 @@ document.addEventListener("DOMContentLoaded", () => {
       else { perfilFields.compatibleOut.innerText = "No viable"; perfilFields.compatibleOut.classList.add("red"); }
     }
 
+    // -----------------------------
     // AVISOS SEGUNDA RESIDENCIA
+    // -----------------------------
     if (perfilFields.avisoSegunda) {
       const dineroNecesario = gastos + (precio - maxPrestamoBanco);
       const faltanteEntrada = Math.max(dineroNecesario - ahorros, 0);
@@ -241,11 +259,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // Eventos perfil
+  // -----------------------------
+  // EVENTOS PERFIL
+  // -----------------------------
   perfilFields.plazo && perfilFields.plazo.addEventListener("input", () => plazoEditadoPorUsuario = true);
   [perfilFields.edad1, perfilFields.edad2, perfilFields.salario1, perfilFields.salario2, perfilFields.pagas, perfilFields.ahorros, perfilFields.deuda, perfilFields.otroIngreso, perfilFields.precio]
     .forEach(el => el && (el.addEventListener("input", calcularPerfil), el.addEventListener("change", calcularPerfil)));
-  [perfilFields.titulares, perfilFields.tipoVivienda, perfilFields.comunidad, perfilFields.primeraSegunda, perfilFields.viviendaCheck]
+  [perfilFields.titulares, perfilFields.tipoVivienda, perfilFields.comunidad, perfilFields.primeraSegunda]
     .forEach(el => el && el.addEventListener("change", calcularPerfil));
 
   perfilFields.titulares && perfilFields.titular2Div && perfilFields.titulares.addEventListener("change", () => {
@@ -253,20 +273,10 @@ document.addEventListener("DOMContentLoaded", () => {
     calcularPerfil();
   });
 
-  calcularPerfil(); // calcular al inicio
-
   // -----------------------------
-  // COOKIES
+  // LLAMAR PERFIL AL INICIO
   // -----------------------------
-  const banner = document.getElementById("cookie-banner");
-  const btnAceptar = document.getElementById("btnAceptarCookies");
-  const btnRechazar = document.getElementById("btnRechazarCookies");
-  if (banner && btnAceptar && btnRechazar) {
-    const cookiesAceptadas = localStorage.getItem("cookiesAceptadas");
-    banner.style.display = (cookiesAceptadas === "true" || cookiesAceptadas === "false") ? "none" : "flex";
-    btnAceptar.addEventListener("click", () => { localStorage.setItem("cookiesAceptadas", "true"); banner.style.display = "none"; });
-    btnRechazar.addEventListener("click", () => { localStorage.setItem("cookiesAceptadas", "false"); banner.style.display = "none"; });
-  }
+  calcularPerfil();
 
   // -----------------------------
   // ACORDEONES / OPERACIONES
@@ -278,43 +288,35 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // -----------------------------
-  // REDIRECCIÓN A SIMULADOR
+  // IR A ANALISIS
   // -----------------------------
-  const perfilDiv = document.getElementById("perfil");
-  const calculadoraDiv = document.getElementById("calculadora");
-
   window.irAnalisis = function(event, tipoOperacion){
     event.stopPropagation();
-
-    if(tipoOperacion === 'consolidacion' || tipoOperacion === 'subrogacion') {
-      sessionStorage.setItem("tipoOperacionSeleccionada", tipoOperacion);
-      window.location.href = `consolidacion.html`;
-      return;
-    }
-
-    if (!perfilFields.operacionBadge || !perfilDiv) return;
+    if(!perfilFields.operacionBadge || !perfilDiv) return;
 
     perfilDiv.style.display = "block";
     perfilFields.operacionBadge.style.display = "block";
     perfilFields.operacionBadge.innerText = `Operación seleccionada: ${tipoOperacion}`;
 
-    if (perfilFields.primeraSegunda && perfilFields.viviendaCheck && perfilFields.viviendaInfo) {
+    // Solo pre-seleccionar tipo de vivienda
+    if (perfilFields.primeraSegunda) {
       switch(tipoOperacion){
         case 'Compra Primera Vivienda':
           perfilFields.primeraSegunda.value = 'primera';
-          perfilFields.viviendaCheck.checked = false;
           break;
         case 'Inversión':
           perfilFields.primeraSegunda.value = 'segunda';
-          perfilFields.viviendaCheck.checked = false;
           break;
       }
-      perfilFields.viviendaInfo.style.display = perfilFields.viviendaCheck.checked ? "block" : "none";
     }
+
+    // Actualizar visibilidad vivienda según checkbox
+    perfilFields.viviendaInfo.style.display = perfilFields.viviendaCheck.checked ? "block" : "none";
 
     calcularPerfil();
     perfilDiv.scrollIntoView({behavior:'smooth'});
   };
+
 
   // -----------------------------
   // ENVÍO DE LEADS Y PDF
