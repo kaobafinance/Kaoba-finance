@@ -304,29 +304,39 @@ window.abrirOperacion = function(id){
   // IR A ANALISIS
   // -----------------------------
 window.irAnalisis = function(event, tipoOperacion){
-    event.stopPropagation();
-    if(!perfilFields.operacionBadge || !perfilDiv) return;
+  event.stopPropagation();
+  
+  // Abrir la tarjeta correspondiente
+  let idMap = {
+    'Compra Primera Vivienda': 'compra',
+    'Cambio de Hipoteca': 'cambio',
+    'Inversión': 'inversion',
+    'Consolidación': 'consolidacion'
+  };
+  const id = idMap[tipoOperacion];
+  if(id) abrirOperacion(id);
 
-    perfilDiv.style.display = "block";
-    perfilFields.operacionBadge.style.display = "block";
-    perfilFields.operacionBadge.innerText = `Operación seleccionada: ${tipoOperacion}`;
+  if(!perfilFields.operacionBadge || !perfilDiv) return;
 
-    if (perfilFields.primeraSegunda) {
-      switch(tipoOperacion){
-        case 'Compra Primera Vivienda':
-          perfilFields.primeraSegunda.value = 'primera';
-          break;
-        case 'Inversión':
-          perfilFields.primeraSegunda.value = 'segunda';
-          break;
-      }
+  perfilDiv.style.display = "block";
+  perfilFields.operacionBadge.style.display = "block";
+  perfilFields.operacionBadge.innerText = `Operación seleccionada: ${tipoOperacion}`;
+
+  if (perfilFields.primeraSegunda) {
+    switch(tipoOperacion){
+      case 'Compra Primera Vivienda':
+        perfilFields.primeraSegunda.value = 'primera';
+        break;
+      case 'Inversión':
+        perfilFields.primeraSegunda.value = 'segunda';
+        break;
     }
+  }
 
-    actualizarViviendaInfo();
-    calcularPerfil();
-    perfilDiv.scrollIntoView({behavior:'smooth'});
+  actualizarViviendaInfo();
+  calcularPerfil();
+  perfilDiv.scrollIntoView({behavior:'smooth'});
 };
-
 
   // -----------------------------
   // ENVÍO DE LEADS Y PDF
