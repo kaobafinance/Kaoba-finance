@@ -490,18 +490,21 @@ function enviarPDF() {
   const tbody = document.querySelector("#tablaResultados tbody");
   const data = [];
   tbody.querySelectorAll("tr").forEach(tr => {
-    const concepto = tr.cells[0].innerText;
-    const antes = tr.cells[1].innerText;
-    const despues = tr.cells[2].innerText;
+    const concepto = tr.cells[0]?.innerText || "";
+    const antes = tr.cells[1]?.innerText || "0 €";
+    const despues = tr.cells[2]?.innerText || "0 €";
 
-    // Color según ahorro
-   const ahorro = parseFloat(antes.replace(/[^\d.-]/g,'')) 
-              - parseFloat(despues.replace(/[^\d.-]/g,''));
-const color = ahorro > 0 ? [198, 239, 206] 
-            : (ahorro < 0 ? [255, 199, 206] : [255, 255, 255]);
-data.push({ concepto, antes, despues, fillColor: color });
-    });
-  
+    // Manejar valores vacíos o "-"
+    const valAntes = parseFloat(antes.replace(/[^\d.-]/g,'')) || 0;
+    const valDespues = parseFloat(despues.replace(/[^\d.-]/g,'')) || 0;
+    const ahorro = valAntes - valDespues;
+
+    const color = ahorro > 0 ? [198, 239, 206] 
+                : (ahorro < 0 ? [255, 199, 206] : [255, 255, 255]);
+
+    data.push({ concepto, antes, despues, fillColor: color });
+  });
+
   doc.autoTable({
     startY: y,
     head: [["Concepto", "Antes", "Después"]],
