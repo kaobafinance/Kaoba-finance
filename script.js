@@ -234,7 +234,7 @@ const prestamoNecesario = agregarVivienda
   if (perfilFields.operacionBadge && resultadoFinanciacion.motivo) {
     perfilFields.operacionBadge.innerText = 
   `Operación seleccionada: ${perfilFields.primeraSegunda.value === 'primera' ? 'Compra Primera Vivienda' : 'Inversión'} | ${resultadoFinanciacion.motivo}`;
-
+  }
   // -----------------------------
   // 4. PRÉSTAMO FINAL
   // -----------------------------
