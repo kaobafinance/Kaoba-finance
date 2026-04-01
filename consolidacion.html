@@ -329,14 +329,14 @@ if(op === "consolidacion"){
    // 🚫 BLOQUEAR SI FALTAN DATOS DE HIPOTECA ACTUAL
  else if(op === "subrogacion"){
 
-  const capitalPend = parseFloat(document.getElementById("capitalPendiente")?.value);
-  const tinActual = parseFloat(document.getElementById("tinActual")?.value);
-  const plazoRest = parseInt(document.getElementById("plazoRestante")?.value);
+ const capitalPend = parseFloat(document.getElementById("capitalPendiente")?.value) || 0;
+    const tinActual = parseFloat(document.getElementById("tinActual")?.value) || 0;
+    const plazoRest = parseInt(document.getElementById("plazoRestante")?.value) || 0;
 
-  if(!capitalPend || !tinActual || !plazoRest){
-    document.getElementById("resultados").style.display = "none";
-    return;
-  }
+    if (capitalPend <= 0 || tinActual <= 0 || plazoRest <= 0) {
+      document.getElementById("resultados").style.display = "none";
+      return;
+    }
 
   cuotaAntes = cuota(capitalPend, tinActual, plazoRest);
   interesesAntes = cuotaAntes * plazoRest * 12 - capitalPend;
