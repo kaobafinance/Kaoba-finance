@@ -160,29 +160,31 @@ window.addEventListener("DOMContentLoaded",()=>{
   const tipo=getQueryParam("tipo");
   if(tipo) document.getElementById("tipoOperacion").value=tipo;
 
-  addDeuda();
+  addDeuda(); // añade una deuda inicial
   actualizarCampos();
 
-  document.getElementById("tipoOperacion").addEventListener("change",actualizarCampos);
+ document.getElementById("tipoOperacion").addEventListener("change", actualizarCampos);
   const tipoHipotecaSelect=document.getElementById("tipoHipoteca");
-  if(tipoHipotecaSelect) tipoHipotecaSelect.addEventListener("change",actualizarCampos);
+  if(tipoHipotecaSelect) tipoHipotecaSelect.addEventListener("change", actualizarCampos);
 
-  // Hipoteca mixta variable
   const tramoVarCheck=document.getElementById("tramoVariableCheck");
   const camposVar=document.getElementById("camposVariable");
   if(tramoVarCheck){
-    tramoVarCheck.addEventListener("change",()=>{
-      camposVar.style.display=tramoVarCheck.checked?"block":"none";
+    tramoVarCheck.addEventListener("change", ()=>{
+      camposVar.style.display = tramoVarCheck.checked ? "block" : "none";
       calcular();
     });
   }
-  document.getElementById("euribor")?.addEventListener("input",calcular);
-  document.getElementById("diferencial")?.addEventListener("input",calcular);
 
-  // 🔥 Escuchar cambios del nuevo préstamo
+  document.getElementById("euribor")?.addEventListener("input", calcular);
+  document.getElementById("diferencial")?.addEventListener("input", calcular);
+
+  // Nuevo préstamo
   document.getElementById("tinNuevo")?.addEventListener("input", calcular);
   document.getElementById("plazoNuevo")?.addEventListener("input", calcular);
   document.getElementById("comisionesNuevo")?.addEventListener("input", calcular);
+
+  // BOTÓN AÑADIR DEUDA
   document.getElementById("btnAddDeuda")?.addEventListener("click", addDeuda);
 });
 
@@ -200,18 +202,18 @@ function actualizarCampos(){
 }
 
 // Añadir deuda
-function addDeuda(){
+function addDeuda() {
   count++;
-  const div=document.createElement("div");
-  div.className="deuda"; div.id="d"+count;
-  div.innerHTML=`
+  const div = document.createElement("div");
+  div.className = "deuda"; div.id = "d"+count;
+  div.innerHTML = `
     <label>Capital (€)<input type="number" id="capital${count}" placeholder="Ej:20000" min="0"></label>
     <label>TIN (%)<input type="number" id="interes${count}" placeholder="Ej:5" step="0.01" min="0"></label>
     <label>Plazo (años)<input type="number" id="plazo${count}" placeholder="Ej:3" min="1"></label>
     <button class="remove-deuda" onclick="removeDeuda(${count})">×</button>
   `;
   document.getElementById("deudas").appendChild(div);
-  div.querySelectorAll("input").forEach(inp=>inp.addEventListener("input",calcular));
+  div.querySelectorAll("input").forEach(inp => inp.addEventListener("input", calcular));
 }
 
 // Eliminar deuda
