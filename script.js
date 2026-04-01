@@ -542,4 +542,64 @@ if (enviarBtn && statusSpan) {
   });
 } // cierra el if (enviarBtn && statusSpan)
 
+        //cookies//
+  const banner = document.getElementById('cookie-banner');
+  const btnAceptar = document.getElementById('btnAceptarCookies');
+  const btnRechazar = document.getElementById('btnRechazarCookies');
+
+  // Revisa consentimiento previo
+  const cookieConsent = localStorage.getItem('cookiesAceptadas');
+  if (cookieConsent === 'true') {
+    banner.style.display = 'none';
+    activarScripts();
+  } else if (cookieConsent === 'false') {
+    banner.style.display = 'none';
+    // No se activan scripts de terceros
+  } else {
+    banner.style.display = 'block';
+  }
+
+  // Función para activar scripts de terceros solo si se aceptan cookies
+  function activarScripts() {
+    // Ejemplo: Analytics
+    if (!window.gtag) {
+      const script = document.createElement('script');
+      script.src = 'https://www.googletagmanager.com/gtag/js?id=TU-ID-ANALYTICS';
+      script.async = true;
+      document.head.appendChild(script);
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      window.gtag = gtag;
+      gtag('js', new Date());
+      gtag('config', 'TU-ID-ANALYTICS');
+    }
+
+    // Aquí puedes añadir otros scripts de terceros como Pixel de Facebook
+  }
+
+  // Función para eliminar cookies innecesarias si se rechazan
+  function borrarCookiesInnecesarias() {
+    document.cookie.split(";").forEach(cookie => {
+      const nombre = cookie.split("=")[0].trim();
+      if (!['cookiesAceptadas'].includes(nombre)) {
+        document.cookie = nombre + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+      }
+    });
+  }
+
+  // Botón Aceptar
+  btnAceptar.addEventListener('click', () => {
+    localStorage.setItem('cookiesAceptadas', 'true');
+    banner.style.display = 'none';
+    activarScripts();
+  });
+
+  // Botón Rechazar
+  btnRechazar.addEventListener('click', () => {
+    localStorage.setItem('cookiesAceptadas', 'false');
+    banner.style.display = 'none';
+    borrarCookiesInnecesarias();
+  });
+});
 }); // cierra document.addEventListener("DOMContentLoaded")
