@@ -145,9 +145,10 @@ let count = 0;
 const { jsPDF } = window.jspdf;
 
 // Función para cuota mensual
-function cuota(c,i,p){
-  let r=i/100/12;
-  let m=p*12;
+function cuota(c, i, p){
+  if(!c || !p) return 0; // protege contra 0 o vacíos
+  let r = i/100/12;
+  let m = p*12;
   if(r === 0) return c / m;
   return (c*r*Math.pow(1+r,m))/(Math.pow(1+r,m)-1);
 }
@@ -217,28 +218,56 @@ function removeDeuda(id){ document.getElementById("d"+id)?.remove(); calcular();
 
 // Validación básica
 function validarCampos(){
-  let valid=true;
-  ["capitalPendiente","tinActual","plazoRestante","plazoNuevo","tinNuevo","email"].forEach(id=>{
-    const el=document.getElementById(id);
-    const error=document.getElementById("error"+id.charAt(0).toUpperCase()+id.slice(1));
+  let valid = true;
+
+  // Campos numéricos obligatorios
+  const campos = [
+    {id:"capitalPendiente", min:0},
+    {id:"tinActual", min:0},
+    {id:"plazoRestante", min:1},
+    {id:"plazoNuevo", min:1},
+    {id:"tinNuevo", min:0},
+    {id:"email"}
+  ];
+
+  campos.forEach(campo=>{
+    const el = document.getElementById(campo.id);
+    const error = document.getElementById("error"+campo.id.charAt(0).toUpperCase() + campo.id.slice(1));
     if(!el) return;
-    if(el.value==="" || parseFloat(el.value)<0){
-      el.classList.add("error"); error.innerText="Campo obligatorio o inválido"; valid=false;
-    } else { el.classList.remove("error"); error.innerText=""; }
+
+    if(campo.id === "email"){
+      const re = /^\S+@\S+\.\S+$/;
+      if(!re.test(el.value.trim())){
+        error.innerText = "Email inválido";
+        valid = false;
+      } else { error.innerText=""; }
+    } else {
+      const val = parseFloat(el.value);
+      if(isNaN(val) || val < campo.min){
+        error.innerText = `Debe ser ≥ ${campo.min}`;
+        valid = false;
+      } else { error.innerText=""; }
+    }
   });
 
+  // RGPD
   const rgpd=document.getElementById("rgpd");
   const errorRgpd=document.getElementById("errorRgpd");
   if(!rgpd.checked){ errorRgpd.innerText="Debes aceptar la política"; valid=false; }
   else{ errorRgpd.innerText=""; }
 
+  // Validación de deudas
   if(document.getElementById("tipoOperacion").value==="consolidacion"){
     for(let i=1;i<=count;i++){
       const cap=document.getElementById("capital"+i);
       const tin=document.getElementById("interes"+i);
       const plazo=document.getElementById("plazo"+i);
-      if(!cap) continue;
-      if(cap.value===""||tin.value===""||plazo.value===""){ alert("Completa todas las deudas correctamente"); valid=false; break; }
+      if(cap && tin && plazo){
+        if(cap.value===""||tin.value===""||plazo.value===""){
+          alert("Completa todas las deudas correctamente");
+          valid=false; break;
+        }
+      }
     }
   }
 
@@ -453,11 +482,12 @@ function enviarPDF() {
     const despues = tr.cells[2].innerText;
 
     // Color según ahorro
-    const ahorro = parseFloat(antes.replace("€", "")) - parseFloat(despues.replace("€", ""));
-    const color = ahorro > 0 ? [198, 239, 206] : (ahorro < 0 ? [255, 199, 206] : [255, 255, 255]);
-    data.push({ concepto, antes, despues, fillColor: color });
-  });
-
+   const ahorro = parseFloat(antes.replace(/[^\d.-]/g,'')) 
+              - parseFloat(despues.replace(/[^\d.-]/g,''));
+const color = ahorro > 0 ? [198, 239, 206] 
+            : (ahorro < 0 ? [255, 199, 206] : [255, 255, 255]);
+data.push({ concepto, antes, despues, fillColor: color });
+    
   doc.autoTable({
     startY: y,
     head: [["Concepto", "Antes", "Después"]],
