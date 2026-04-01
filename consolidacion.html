@@ -359,7 +359,12 @@ if(
   isNaN(interesesAntes) || 
   isNaN(interesesDespues)
 ){
-  document.getElementById("resultados").style.display = "none";
+  document.getElementById("mensajeResultado").innerHTML = `
+    <div class="resultado-box warn">
+      ⚠️ Revisa los datos introducidos
+    </div>`;
+    
+  document.getElementById("resultados").style.display = "block";
   return;
 }
   
