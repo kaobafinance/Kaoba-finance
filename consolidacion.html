@@ -148,6 +148,7 @@ const { jsPDF } = window.jspdf;
 function cuota(c,i,p){
   let r=i/100/12;
   let m=p*12;
+  if(r === 0) return c / m;
   return (c*r*Math.pow(1+r,m))/(Math.pow(1+r,m)-1);
 }
 
