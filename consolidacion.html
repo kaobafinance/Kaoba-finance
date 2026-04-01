@@ -402,9 +402,10 @@ if(
       ⚠️ Revisa los datos introducidos
     </div>`;
     
-  document.getElementById("resultados").style.display = "block";
-  return;
-}
+if (!datosCompletos) {
+  document.getElementById("resultados").style.display = "none";
+  // return; // ❌ eliminar
+} 
   
   // Mostrar resultados
   const ahorroMensual = cuotaAntes - cuotaDespues;
