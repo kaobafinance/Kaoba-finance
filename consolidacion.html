@@ -325,14 +325,26 @@ function calcular(){
   const ahorroTotal = interesesAntes - interesesDespues;
   const box = document.getElementById("mensajeResultado");
 
-  if(ahorroMensual > 0 && ahorroTotal > 0){
-    box.innerHTML = `<div class="resultado-box ok">✔️ Podrías ahorrar ${ahorroMensual.toFixed(0)} €/mes<br>Ahorro total estimado: ${ahorroTotal.toFixed(0)} €</div>`;
-  } else if(ahorroMensual > 0){
-    box.innerHTML = `<div class="resultado-box warn">⚠️ Bajarías la cuota mensual<br>Pero pagarías más a largo plazo</div>`;
-  } else {
-    box.innerHTML = `<div class="resultado-box bad">❌ No parece una operación recomendable</div>`;
-  }
-
+ if (ahorroTotal > 0) {
+  box.innerHTML = `
+    <div class="resultado-box ok">
+      ✔️ Ahorrarías ${ahorroMensual.toFixed(0)} €/mes<br>
+      Ahorro total estimado: ${ahorroTotal.toFixed(0)} €
+    </div>`;
+} 
+else if (ahorroMensual > 0) {
+  box.innerHTML = `
+    <div class="resultado-box warn">
+      ⚠️ Reducirías tu cuota mensual en ${ahorroMensual.toFixed(0)} €/mes<br>
+      Pero el coste total aumentaría
+    </div>`;
+} 
+else {
+  box.innerHTML = `
+    <div class="resultado-box bad">
+      ❌ No parece una operación recomendable
+    </div>`;
+}
   // Tabla
   const tbody = document.querySelector("#tablaResultados tbody");
   tbody.innerHTML = "";
