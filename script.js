@@ -1,5 +1,35 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+// -----------------------------
+// EURIBOR ACTUAL (SIMULADO/API)
+// -----------------------------
+const euriborElement = document.getElementById("euribor-value");
+
+async function cargarEuribor() {
+  try {
+    // 👉 OPCIÓN REAL (API pública - ejemplo)
+    const response = await fetch("https://api.api-ninjas.com/v1/interestrate?name=euribor", {
+      headers: { "X-Api-Key": "TU_API_KEY_AQUI" }
+    });
+
+    if (!response.ok) throw new Error("Error API");
+
+    const data = await response.json();
+    const euribor = data.rate || 2.8;
+
+    euriborElement.innerText = euribor.toFixed(2) + " %";
+
+  } catch (error) {
+    console.warn("Usando euríbor simulado");
+
+    // 👉 fallback (MUY IMPORTANTE)
+    const euriborSimulado = 2.8;
+    euriborElement.innerText = euriborSimulado.toFixed(2) + " %";
+  }
+}
+
+cargarEuribor();
+  
   // -----------------------------
   // AUXILIARES
   // -----------------------------
