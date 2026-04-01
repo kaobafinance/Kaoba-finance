@@ -256,26 +256,18 @@ function calcular(){
   let cuotaAntes = 0, interesesAntes = 0, cuotaDespues = 0, interesesDespues = 0, totalCapital = 0;
 
   // 🚫 BLOQUEAR SI NO HAY DEUDAS COMPLETAS
-  if(op === "consolidacion"){
-    let hayDatosDeudas = false;
+if(op === "consolidacion"){
 
-    for(let i=1; i<=count; i++){
-      const cap = document.getElementById("capital"+i);
-      const tin = document.getElementById("interes"+i);
-      const plazo = document.getElementById("plazo"+i);
+  let hayDatosDeudas = false;
 
-      if(cap && tin && plazo && cap.value && tin.value && plazo.value){
-        hayDatosDeudas = true;
-        break;
-      }
-    }
+  for(let i=1; i<=count; i++){
+    const cap = document.getElementById("capital"+i);
+    const tin = document.getElementById("interes"+i);
+    const plazo = document.getElementById("plazo"+i);
 
-    if(!hayDatosDeudas){
-      document.getElementById("resultados").style.display = "none";
-      return;
-    }
-  }
-      
+    if(cap && tin && plazo && cap.value && tin.value && plazo.value){
+      hayDatosDeudas = true;
+
       const c = parseFloat(cap.value);
       const t = parseFloat(tin.value);
       const p = parseInt(plazo.value);
@@ -285,26 +277,40 @@ function calcular(){
       interesesAntes += cuotaInd * p * 12 - c;
       totalCapital += c;
     }
-    if(totalCapital > 0){
-      cuotaDespues = cuota(totalCapital + comisiones, tinNuevo, plazoNuevo);
-      interesesDespues = cuotaDespues * plazoNuevo * 12 - totalCapital - comisiones;
-    }
   }
+
+  if(!hayDatosDeudas){
+    document.getElementById("resultados").style.display = "none";
+    return;
+  }
+
+  if(totalCapital > 0){
+    const comisiones = parseFloat(document.getElementById("comisionesNuevo")?.value) || 0;
+
+    cuotaDespues = cuota(totalCapital + comisiones, tinNuevo, plazoNuevo);
+    interesesDespues = cuotaDespues * plazoNuevo * 12 - totalCapital - comisiones;
+  }
+}
    // 🚫 BLOQUEAR SI FALTAN DATOS DE HIPOTECA ACTUAL
-  if(op === "subrogacion"){
-    const capitalPend = parseFloat(document.getElementById("capitalPendiente")?.value);
-    const tinActual = parseFloat(document.getElementById("tinActual")?.value);
-    const plazoRest = parseInt(document.getElementById("plazoRestante")?.value);
+ else if(op === "subrogacion"){
 
-    if(!capitalPend || !tinActual || !plazoRest){
-      document.getElementById("resultados").style.display = "none";
-      return;
-    }
+  const capitalPend = parseFloat(document.getElementById("capitalPendiente")?.value);
+  const tinActual = parseFloat(document.getElementById("tinActual")?.value);
+  const plazoRest = parseInt(document.getElementById("plazoRestante")?.value);
+
+  if(!capitalPend || !tinActual || !plazoRest){
+    document.getElementById("resultados").style.display = "none";
+    return;
   }
 
-    if(capitalPend > 0 && tinActual > 0 && plazoRest > 0){
-      cuotaAntes = cuota(capitalPend, tinActual, plazoRest);
-      interesesAntes = cuotaAntes * plazoRest * 12 - capitalPend;
+  cuotaAntes = cuota(capitalPend, tinActual, plazoRest);
+  interesesAntes = cuotaAntes * plazoRest * 12 - capitalPend;
+
+  const comisiones = parseFloat(document.getElementById("comisionesNuevo")?.value) || 0;
+
+  cuotaDespues = cuota(capitalPend + comisiones, tinNuevo, plazoNuevo);
+  interesesDespues = cuotaDespues * plazoNuevo * 12 - capitalPend - comisiones;
+}
 
       const hip = document.getElementById("tipoHipoteca")?.value || "fija";
 
@@ -346,6 +352,17 @@ function calcular(){
     }
   }
 
+  // 🚫 PROTECCIÓN contra cálculos inválidos
+if(
+  isNaN(cuotaAntes) || 
+  isNaN(cuotaDespues) || 
+  isNaN(interesesAntes) || 
+  isNaN(interesesDespues)
+){
+  document.getElementById("resultados").style.display = "none";
+  return;
+}
+  
   // Mostrar resultados
   const ahorroMensual = cuotaAntes - cuotaDespues;
   const ahorroTotal = interesesAntes - interesesDespues;
