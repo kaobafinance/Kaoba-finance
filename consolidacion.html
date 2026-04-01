@@ -241,91 +241,106 @@ function validarCampos(){
 
 // Calcular cuotas
 function calcular(){
-  const op=document.getElementById("tipoOperacion").value;
-  const tinNuevo=parseFloat(document.getElementById("tinNuevo")?.value)||0;
-  const plazoNuevo=parseInt(document.getElementById("plazoNuevo")?.value)||1;
-  const comisiones=parseFloat(document.getElementById("comisionesNuevo")?.value)||0;
+  const op = document.getElementById("tipoOperacion").value;
+  const tinNuevo = parseFloat(document.getElementById("tinNuevo")?.value) || 0;
+  const plazoNuevo = parseInt(document.getElementById("plazoNuevo")?.value) || 1;
+  const comisiones = parseFloat(document.getElementById("comisionesNuevo")?.value) || 0;
 
-  let cuotaAntes=0,interesesAntes=0,cuotaDespues=0,interesesDespues=0,totalCapital=0;
+  let cuotaAntes = 0, interesesAntes = 0, cuotaDespues = 0, interesesDespues = 0, totalCapital = 0;
 
-  // CONSOLIDACION
-  if(op==="consolidacion"){
-    for(let i=1;i<=count;i++){
-      const cap=document.getElementById("capital"+i);
-      const tin=document.getElementById("interes"+i);
-      const plazo=document.getElementById("plazo"+i);
-      if(!cap||!tin||!plazo) continue;
-      const c=parseFloat(cap.value)||0;
-      const t=parseFloat(tin.value)||0;
-      const p=parseInt(plazo.value)||1;
-      cuotaAntes+=cuota(c,t,p);
-      interesesAntes+=cuota(c,t,p)*p*12-c;
-      totalCapital+=c;
+  if(op === "consolidacion"){
+    for(let i=1; i<=count; i++){
+      const cap = document.getElementById("capital"+i);
+      const tin = document.getElementById("interes"+i);
+      const plazo = document.getElementById("plazo"+i);
+      if(!cap || !tin || !plazo) continue;
+      if(cap.value === "" || tin.value === "" || plazo.value === "") continue;
+      
+      const c = parseFloat(cap.value);
+      const t = parseFloat(tin.value);
+      const p = parseInt(plazo.value);
+
+      const cuotaInd = cuota(c, t, p);
+      cuotaAntes += cuotaInd;
+      interesesAntes += cuotaInd * p * 12 - c;
+      totalCapital += c;
     }
-    cuotaDespues=cuota(totalCapital+comisiones,tinNuevo,plazoNuevo);
-    interesesDespues=cuotaDespues*plazoNuevo*12-totalCapital-comisiones;
+    if(totalCapital > 0){
+      cuotaDespues = cuota(totalCapital + comisiones, tinNuevo, plazoNuevo);
+      interesesDespues = cuotaDespues * plazoNuevo * 12 - totalCapital - comisiones;
+    }
   }
+  else if(op === "subrogacion"){
+    const capitalPend = parseFloat(document.getElementById("capitalPendiente")?.value) || 0;
+    const tinActual = parseFloat(document.getElementById("tinActual")?.value) || 0;
+    const plazoRest = parseInt(document.getElementById("plazoRestante")?.value) || 1;
 
-  // SUBROGACION
-  else if(op==="subrogacion"){
-    const capitalPend=parseFloat(document.getElementById("capitalPendiente")?.value)||0;
-    const tinActual=parseFloat(document.getElementById("tinActual")?.value)||0;
-    const plazoRest=parseInt(document.getElementById("plazoRestante")?.value)||1;
-    if(!capitalPend||!tinActual||!plazoRest){ document.getElementById("resultados").style.display="none"; return; }
+    if(capitalPend > 0 && tinActual > 0 && plazoRest > 0){
+      cuotaAntes = cuota(capitalPend, tinActual, plazoRest);
+      interesesAntes = cuotaAntes * plazoRest * 12 - capitalPend;
 
-    cuotaAntes=cuota(capitalPend,tinActual,plazoRest);
-    interesesAntes=cuotaAntes*plazoRest*12-capitalPend;
+      const hip = document.getElementById("tipoHipoteca")?.value || "fija";
 
-    const hip=document.getElementById("tipoHipoteca")?.value||"fija";
+      if(hip === "mixta"){
+        const plazoFijo = parseInt(document.getElementById("plazoFijo")?.value) || 0;
+        const tinFijo = parseFloat(document.getElementById("tinFijo")?.value) || 0;
+        const tramoVar = document.getElementById("tramoVariableCheck")?.checked;
+        let tinVar = tinNuevo;
+        if(tramoVar){
+          const euribor = parseFloat(document.getElementById("euribor")?.value) || 0;
+          const dif = parseFloat(document.getElementById("diferencial")?.value) || 0;
+          tinVar = euribor + dif;
+        }
 
-    if(hip==="mixta"){
-      const plazoFijo=parseInt(document.getElementById("plazoFijo")?.value)||0;
-      const tinFijo=parseFloat(document.getElementById("tinFijo")?.value)||0;
-      const tramoVar=document.getElementById("tramoVariableCheck")?.checked;
-      let tinVar=tinNuevo;
-      if(tramoVar){
-        const euribor=parseFloat(document.getElementById("euribor")?.value)||0;
-        const dif=parseFloat(document.getElementById("diferencial")?.value)||0;
-        tinVar=euribor+dif;
+        // Cuota periodo fijo
+        const cuotaFija = plazoFijo > 0 && tinFijo > 0 ? cuota(capitalPend + comisiones, tinFijo, plazoFijo) : 0;
+
+        // Capital pendiente tras periodo fijo
+        let capitalRest = 0;
+        if(cuotaFija > 0){
+          const rF = tinFijo / 100 / 12;
+          const nF = plazoFijo * 12;
+          capitalRest = (capitalPend + comisiones) * Math.pow(1+rF, nF) - (cuotaFija / rF) * (Math.pow(1+rF, nF) - 1);
+        } else {
+          capitalRest = capitalPend + comisiones;
+        }
+
+        const plazoVarTotal = Math.max(plazoNuevo - plazoFijo, 0);
+        const cuotaVariable = plazoVarTotal > 0 ? cuota(capitalRest, tinVar, plazoVarTotal) : 0;
+
+        const interesesFijo = cuotaFija * (plazoFijo * 12) - (capitalPend + comisiones);
+        const interesesVar = cuotaVariable * (plazoVarTotal * 12) - capitalRest;
+        interesesDespues = (interesesFijo > 0 ? interesesFijo : 0) + (interesesVar > 0 ? interesesVar : 0);
+        cuotaDespues = (plazoNuevo*12 > 0) ? (cuotaFija*(plazoFijo*12) + cuotaVariable*(plazoVarTotal*12)) / (plazoNuevo*12) : 0;
+      } else {
+        cuotaDespues = cuota(capitalPend + comisiones, tinNuevo, plazoNuevo);
+        interesesDespues = cuotaDespues * plazoNuevo * 12 - capitalPend - comisiones;
       }
-
-      const cuotaFija=cuota(capitalPend+comisiones,tinFijo,plazoFijo);
-
-      // Capital pendiente tras periodo fijo
-      const rF= tinFijo/100/12;
-      const nF=plazoFijo*12;
-      const capitalRest=(capitalPend+comisiones)*Math.pow(1+rF,nF)-(cuotaFija/rF)*(Math.pow(1+rF,nF)-1);
-
-      const plazoVar=Math.max(plazoNuevo-plazoFijo,0);
-      const cuotaVariable=plazoVar>0?cuota(capitalRest,tinVar,plazoVar):0;
-
-      const interesesFijo=cuotaFija*nF-(capitalPend+comisiones);
-      const interesesVar=cuotaVariable*plazoVar*12-capitalRest;
-      interesesDespues=interesesFijo+interesesVar;
-      cuotaDespues=plazoVar>0?(cuotaFija*nF+cuotaVariable*plazoVar*12)/(plazoNuevo*12):cuotaFija;
-    } else {
-      cuotaDespues=cuota(capitalPend+comisiones,tinNuevo,plazoNuevo);
-      interesesDespues=cuotaDespues*plazoNuevo*12-capitalPend-comisiones;
     }
   }
 
   // Mostrar resultados
-  const ahorroMensual=cuotaAntes-cuotaDespues;
-  const ahorroTotal=interesesAntes-interesesDespues;
-  const box=document.getElementById("mensajeResultado");
-  if(ahorroMensual>0 && ahorroTotal>0) box.innerHTML=`<div class="resultado-box ok">✔️ Podrías ahorrar ${ahorroMensual.toFixed(0)} €/mes<br>Ahorro total estimado: ${ahorroTotal.toFixed(0)} €</div>`;
-  else if(ahorroMensual>0) box.innerHTML=`<div class="resultado-box warn">⚠️ Bajarías la cuota mensual<br>Pero pagarías más a largo plazo</div>`;
-    else box.innerHTML=`<div class="resultado-box bad">❌ No parece una operación recomendable</div>`;
+  const ahorroMensual = cuotaAntes - cuotaDespues;
+  const ahorroTotal = interesesAntes - interesesDespues;
+  const box = document.getElementById("mensajeResultado");
 
-  const tbody=document.querySelector("#tablaResultados tbody");
-  tbody.innerHTML="";
-  tbody.innerHTML+=`<tr><td>Cuota mensual</td><td>${cuotaAntes.toFixed(2)} €</td><td>${cuotaDespues.toFixed(2)} €</td></tr>`;
-  tbody.innerHTML+=`<tr><td>Ahorro mensual</td><td>-</td><td>${ahorroMensual.toFixed(2)} €</td></tr>`;
-  tbody.innerHTML+=`<tr><td>Ahorro total</td><td>-</td><td>${ahorroTotal.toFixed(2)} €</td></tr>`;
+  if(ahorroMensual > 0 && ahorroTotal > 0){
+    box.innerHTML = `<div class="resultado-box ok">✔️ Podrías ahorrar ${ahorroMensual.toFixed(0)} €/mes<br>Ahorro total estimado: ${ahorroTotal.toFixed(0)} €</div>`;
+  } else if(ahorroMensual > 0){
+    box.innerHTML = `<div class="resultado-box warn">⚠️ Bajarías la cuota mensual<br>Pero pagarías más a largo plazo</div>`;
+  } else {
+    box.innerHTML = `<div class="resultado-box bad">❌ No parece una operación recomendable</div>`;
+  }
 
-  document.getElementById("resultados").style.display="block";
+  // Tabla
+  const tbody = document.querySelector("#tablaResultados tbody");
+  tbody.innerHTML = "";
+  tbody.innerHTML += `<tr><td>Cuota mensual</td><td>${cuotaAntes.toFixed(2)} €</td><td>${cuotaDespues.toFixed(2)} €</td></tr>`;
+  tbody.innerHTML += `<tr><td>Ahorro mensual</td><td>-</td><td>${ahorroMensual.toFixed(2)} €</td></tr>`;
+  tbody.innerHTML += `<tr><td>Ahorro total</td><td>-</td><td>${ahorroTotal.toFixed(2)} €</td></tr>`;
+
+  document.getElementById("resultados").style.display = "block";
 }
-
 // Función para generar PDF y enviar
 function enviarPDF() {
   if (!validarCampos()) return;
