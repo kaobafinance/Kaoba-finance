@@ -561,12 +561,12 @@ if (enviarBtn && statusSpan) {
 
   // Función para activar scripts de terceros solo si se aceptan cookies
   function activarScripts() {
-    // Ejemplo: Analytics
+    // Ejemplo: Google Analytics
     if (!window.gtag) {
-      const script = document.createElement('script');
-      script.src = 'https://www.googletagmanager.com/gtag/js?id=TU-ID-ANALYTICS';
-      script.async = true;
-      document.head.appendChild(script);
+      const scriptGA = document.createElement('script');
+      scriptGA.src = 'https://www.googletagmanager.com/gtag/js?id=TU-ID-ANALYTICS';
+      scriptGA.async = true;
+      document.head.appendChild(scriptGA);
 
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -575,7 +575,19 @@ if (enviarBtn && statusSpan) {
       gtag('config', 'TU-ID-ANALYTICS');
     }
 
-    // Aquí puedes añadir otros scripts de terceros como Pixel de Facebook
+    // Aquí puedes añadir otros scripts de terceros, como Pixel de Facebook
+    // Por ejemplo:
+    /*
+    if (!window.fbq) {
+      const scriptFB = document.createElement('script');
+      scriptFB.src = 'https://connect.facebook.net/en_US/fbevents.js';
+      scriptFB.async = true;
+      document.head.appendChild(scriptFB);
+      window.fbq = function(){window.fbq.callMethod ? window.fbq.callMethod.apply(window.fbq, arguments) : window.fbq.queue.push(arguments)};
+      fbq('init', 'TU-ID-FACEBOOK');
+      fbq('track', 'PageView');
+    }
+    */
   }
 
   // Función para eliminar cookies innecesarias si se rechazan
