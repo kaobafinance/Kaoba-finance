@@ -510,4 +510,6 @@ if (enviarBtn && statusSpan) {
       statusSpan.innerText = "Error al enviar la simulación al servidor.";
     }
   });
+} // cierra el if (enviarBtn && statusSpan)
 
+}); // cierra document.addEventListener("DOMContentLoaded")
