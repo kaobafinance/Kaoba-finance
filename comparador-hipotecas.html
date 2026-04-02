@@ -485,26 +485,31 @@ const recomendacion = document.getElementById("recomendacion").innerText;
 
 // ===== RECOMENDACIÓN =====
 doc.setFont("helvetica","bold").setFontSize(12);
-doc.text("Recomendación del simulador",20,finalY);
+doc.text("Recomendación del simulador", 20, finalY);
 
 doc.setFont("helvetica","normal").setFontSize(10);
-doc.text(recomendacion,20,finalY+8,{maxWidth:170});
 
-// 👉 calculamos siguiente posición
-let siguienteY = finalY + 25;
+const textoRecomendacion = doc.splitTextToSize(recomendacion, 170);
+doc.text(textoRecomendacion, 20, finalY + 8);
+
+// 👉 altura dinámica real
+let siguienteY = finalY + 8 + (textoRecomendacion.length * 6) + 6;
 
 
 // ===== MEJOR OPCIÓN =====
 doc.setFont("helvetica","bold").setFontSize(12);
-doc.text("Mejor opción recomendada",20,siguienteY);
+doc.text("Mejor opción recomendada", 20, siguienteY);
 
 doc.setFont("helvetica","normal").setFontSize(10);
-doc.text(
-  `Según el análisis, la opción más favorable es: ${mejorBanco}, al presentar el menor coste total.`,
-  20,
-  siguienteY+8,
-  {maxWidth:170}
-);
+
+const textoMejor = `Según el análisis, la opción más favorable es: ${mejorBanco}, al presentar el menor coste total.`;
+
+const textoMejorDividido = doc.splitTextToSize(textoMejor, 170);
+
+doc.text(textoMejorDividido, 20, siguienteY + 8);
+
+// 👉 siguiente bloque bien posicionado
+let siguienteY2 = siguienteY + 8 + (textoMejorDividido.length * 6) + 6;
 
   // Análisis financiero
   doc.setFont("helvetica","normal").setFontSize(10);
