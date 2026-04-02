@@ -346,9 +346,9 @@ resultados.push({
 resultados.forEach((r,index)=>{
   const row = document.createElement("tr");
   const ahorro = (r.total - mejorTotal).toFixed(2);
-  const mejorIndicador = index === 0 
-    ? '<span style="color:#198754;font-weight:600;">★ Mejor</span>' 
-    : '';
+const mejorIndicador = index === 0 
+  ? '<span style="color:#198754;font-weight:600;">✔ Mejor</span>' 
+  : '';
 
   row.innerHTML = `
     <td>${r.nombre} ${mejorIndicador}</td>
