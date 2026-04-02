@@ -459,8 +459,8 @@ doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 150, 20);
   doc.text(`Email: ${emailUsuario}`,20,59);
 
 // ===== DATOS DEL PRÉSTAMO =====
-const capital = document.getElementById("capital").value;
-const capitalFormateado = parseFloat(capital).toLocaleString("es-ES");
+const capital = parseFloat(document.getElementById("capital").value) || 0;
+const capitalFormateado = capital.toLocaleString("es-ES");
 const plazo = document.getElementById("plazo").value;
 const euribor = document.getElementById("euribor").value;
 
@@ -562,7 +562,6 @@ doc.text(analisisDividido, 20, analisisY + 8);
 let recomendacionesY = analisisY + 8 + (analisisDividido.length * 6) + 6;
 
 // ===== RECOMENDACIONES =====
-let recomendacionesY = analisisY + 25;
 
 doc.setFont("helvetica","bold").setFontSize(12);
 doc.text("Recomendaciones",20,recomendacionesY);
@@ -576,9 +575,16 @@ doc.setFont("helvetica","normal").setFontSize(10);
 ].forEach((rec,i)=>doc.text(rec,20,recomendacionesY+8+(i*6)));
 
   // Aviso hipotecas mixtas
-  doc.setFont("helvetica","italic").setFontSize(9);
-  doc.text("* Las hipotecas mixtas incluyen una fase variable calculada utilizando el Euríbor actual como referencia. Este valor es orientativo y puede variar durante la vida del préstamo.",20,265,{maxWidth:170});
+const aviso = "* Las hipotecas mixtas incluyen una fase variable calculada utilizando el Euríbor actual como referencia. Este valor es orientativo y puede variar durante la vida del préstamo.";
 
+const avisoDividido = doc.splitTextToSize(aviso, 170);
+doc.text(avisoDividido, 20, 265);
+
+const disclaimer = "Este documento es una simulación orientativa basada en condiciones introducidas por el usuario. No constituye una oferta vinculante ni garantiza la concesión de la hipoteca. La aprobación final depende de cada entidad bancaria.";
+
+const disclaimerDividido = doc.splitTextToSize(disclaimer, 170);
+doc.text(disclaimerDividido, 20, 280);
+  
   // Disclaimer
   doc.setFontSize(8).setTextColor(120);
   doc.text("Este documento es una simulación orientativa basada en condiciones introducidas por el usuario. No constituye una oferta vinculante ni garantiza la concesión de la hipoteca. La aprobación final depende de cada entidad bancaria.",20,280,{maxWidth:170});
