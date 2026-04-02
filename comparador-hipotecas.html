@@ -360,7 +360,6 @@ function calcular(){
 
     tbody.appendChild(row);
 
-  document.getElementById("recomendacion").innerText = generarRecomendacion(resultados);
     
     const amortDiv=document.getElementById("amort-"+index);
     let html="<table class='amort-table'><tr><th>Mes</th><th>Cuota</th><th>Amort</th><th>Pendiente</th></tr>";
@@ -373,6 +372,7 @@ function calcular(){
       </tr>`;
     });
 
+    document.getElementById("recomendacion").innerText = generarRecomendacion(resultados);
     amortDiv.innerHTML=html+"</table>";
   });
 }
