@@ -142,17 +142,16 @@ function toggleTipo(id){
 }
 
 // ===== Generar amortización =====
-function generarAmortizacion(capital, tin, plazoMeses, amortSi){
+function generarAmortizacion(capital, tin, plazoMeses){
   const amortRows=[];
   let capPend=capital;
   const i=tin/100/12;
   for(let m=1;m<=plazoMeses;m++){
     let cuotaBase=(capPend*i)/(1-Math.pow(1+i,-(plazoMeses-m+1)));
-    let amortizacion=amortSi?capPend*0.002:0;
     const intereses=capPend*i;
-    const pagoCapital=cuotaBase-intereses+amortizacion;
+    const pagoCapital = cuotaBase - intereses;
     capPend-=pagoCapital; if(capPend<0) capPend=0;
-    amortRows.push({mes:m,cuota:(cuotaBase+amortizacion).toFixed(2),amort:pagoCapital.toFixed(2),pendiente:capPend.toFixed(2)});
+    amortRows.push({mes:m,cuota: cuotaBase.toFixed(2),amort:pagoCapital.toFixed(2),pendiente:capPend.toFixed(2)});
   }
   return amortRows;
 }
@@ -214,22 +213,19 @@ function calcular(){
     const tipo=document.getElementById("tipo-"+i).value;
     const modo = document.querySelector('input[name="modo"]:checked')?.value || "comparador";
 
-const amortSi = modo === "simulador"
-  ? document.getElementById("amortSi-"+i).checked
-  : false;
 
     let amortRows=[];
 
     // ===== FIJA =====
     if(tipo==="fija"){ 
       const tin=parseFloat(document.getElementById("tinFijo-"+i).value)||0;
-      amortRows=generarAmortizacion(capital,tin,plazoMeses,amortSi); 
+      amortRows=generarAmortizacion(capital,tin,plazoMeses); 
     }
 
     // ===== VARIABLE =====
     else if(tipo==="variable"){ 
       const dif=parseFloat(document.getElementById("difVar-"+i).value)||0; 
-      amortRows=generarAmortizacion(capital,euribor+dif,plazoMeses,amortSi);
+      amortRows=generarAmortizacion(capital,euribor+dif,plazoMeses);
     }
 
     // ===== MIXTA =====
