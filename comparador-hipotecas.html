@@ -257,9 +257,9 @@ function calcular(){
       // --- TRAMO VARIABLE ---
       const mesesRestantes = plazoMeses - mesesFijo;
       const tinVariable = euribor + dif;
-if(mesesRestantes <= 0){
-  alert("Los meses fijos no pueden ser mayores o iguales al plazo total");
-  return;
+    if(mesesRestantes <= 0){
+    alert("Los meses fijos no pueden ser mayores o iguales al plazo total");
+    continue;
 }
      const cuotaVariable = calcularCuota(capPend, tinVariable, mesesRestantes);
 
