@@ -434,8 +434,6 @@ const modo = "comparador";
   const { jsPDF }=window.jspdf;
   const doc=new jsPDF();
 
-const autoTable = window.jspdf_autotable;
-
 // ===== CABECERA =====
 doc.setFont("helvetica","bold").setFontSize(16);
 doc.text("KAOBA FINANCE", 20, 20);
@@ -515,7 +513,7 @@ if(totalNum<mejorTotal){mejorTotal=totalNum; mejorBanco=banco;}
 data.push([banco,tipo,tae,cuota,intereses,total,diferencialTexto,ahorro]);
     }
 
-autoTable(doc, {
+doc.autoTable({
     head:[["Banco","Tipo","TAE","Cuota","Intereses","Total","Dif.","Ahorro"]],
     body:data,
     startY:100,
