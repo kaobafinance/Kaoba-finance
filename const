@@ -515,7 +515,7 @@ if(totalNum<mejorTotal){mejorTotal=totalNum; mejorBanco=banco;}
 data.push([banco,tipo,tae,cuota,intereses,total,diferencialTexto,ahorro]);
     }
 
-doc.autoTable({
+autoTable(doc, {
     head:[["Banco","Tipo","TAE","Cuota","Intereses","Total","Dif.","Ahorro"]],
     body:data,
     startY:100,
