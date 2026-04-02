@@ -200,6 +200,7 @@ function validarYCalcular(){
   for(let i=1;i<=contador;i++){
     const div=document.getElementById("banco-"+i); if(!div) continue;
     const tipo=document.getElementById("tipo-"+i).value;
+    const tae = parseFloat(document.getElementById("tae-"+i)?.value) || null;
     let tipoValido=true;
     if(tipo==="fija") tipoValido=parseFloat(document.getElementById("tinFijo-"+i).value)>=0;
     if(tipo==="mixta"){
@@ -340,7 +341,7 @@ function calcular(){
 
     row.innerHTML=`
       <td>${r.nombre} ${mejorIndicador}</td>
-      <td>${r.tipo}</td>
+      <td style="text-transform:capitalize;">${r.tipo}</td>
       <td>${r.tae ? r.tae.toFixed(2)+" %" : "-"}</td>
       <td>${
         r.tipo==="mixta"?
@@ -353,8 +354,12 @@ function calcular(){
       <td>${r.intereses.toFixed(2)} €</td>
       <td>${r.total.toFixed(2)} €</td>
       <td class="ahorro">${ahorro>0?ahorro+' €':''}</td>
-      <td><span class="amort-toggle" onclick="toggleAmort(${index})">Ver</span>
-      <div id="amort-${index}" style="display:none;"></div></td>
+<td>
+  ${modo === "simulador"
+    ? `<span class="amort-toggle" onclick="toggleAmort(${index})">Ver</span>`
+    : "-"}
+  <div id="amort-${index}" style="display:none;"></div>
+</td>
     `;
 
     tbody.appendChild(row);
@@ -480,7 +485,10 @@ function descargarPDF(){
     mejorTAE = [...conTAE].sort((a,b)=>a.tae-b.tae)[0];
   }
 
-  let texto = `La mejor opción por coste total es ${mejorCoste.nombre}, con un total de ${mejorCoste.total.toFixed(2)} €.`;
+ let texto = `✔ Mejor opción: ${mejorCoste.nombre} (${mejorCoste.tipo}) con un coste total de ${mejorCoste.total.toFixed(2)} €.`;
+    if(mejorCoste.tipo==="fija"){
+  texto += " Ofrece estabilidad total sin cambios en la cuota.";
+}
 
   if(mejorTAE && mejorTAE.nombre !== mejorCoste.nombre){
     texto += ` Sin embargo, ${mejorTAE.nombre} tiene una TAE más baja (${mejorTAE.tae.toFixed(2)}%).`;
