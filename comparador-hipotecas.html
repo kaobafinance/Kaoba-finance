@@ -427,6 +427,10 @@ function descargarPDF(){
   const emailUsuario=document.getElementById("emailUsuario").value.trim();
   if(!nombreUsuario||!emailUsuario){ alert("Completa nombre y correo"); return; }
 
+ if (!document.querySelector("#tabla tbody").rows.length) {
+    alert("Primero debes calcular resultados");
+    return;
+  
   const { jsPDF }=window.jspdf;
   const doc=new jsPDF();
 
