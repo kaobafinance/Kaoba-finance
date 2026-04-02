@@ -263,9 +263,12 @@ else if(tipo==="variable"){
   amortRows=generarAmortizacion(capital,euribor+dif,plazoMeses);
 }
 
+let amortRows = [];
+let mesesFijo = null;
+
 // ===== MIXTA =====
 else if(tipo==="mixta"){ 
-  const mesesFijo = parseInt(document.getElementById("mesesFijo-"+i).value)||0;
+  mesesFijo = parseInt(document.getElementById("mesesFijo-"+i).value)||0;
   const tinFijo = parseFloat(document.getElementById("tinMixtoFijo-"+i).value)||0;
   const dif = parseFloat(document.getElementById("diferencial-"+i).value)||0;
 
