@@ -127,8 +127,7 @@ function addBanco(){
     </label>
   </div>
 </div>
-    <button class="remove-btn" onclick="removeBanco(${contador})">×</button>
-    <label>Nombre<input type="text" id="nombre-${contador}" placeholder="Banco ${contador}"></label>
+   
     <label>Tipo<select id="tipo-${contador}" onchange="toggleTipo(${contador});">
       <option value="fija">Fija</option>
       <option value="mixta">Mixta</option>
@@ -156,7 +155,6 @@ function removeBanco(id){document.getElementById("banco-"+id)?.remove();}
 // ===== Mostrar bloques según tipo =====
 function toggleTipo(id){
   const tipo=document.getElementById("tipo-"+id).value;
-  const tae = parseFloat(document.getElementById("tae-"+i)?.value);
   document.getElementById("bloque-fija-"+id).style.display=tipo==="fija"?"block":"none";
   document.getElementById("bloque-mixta-"+id).style.display=tipo==="mixta"?"block":"none";
   document.getElementById("bloque-variable-"+id).style.display=tipo==="variable"?"block":"none";
@@ -202,6 +200,7 @@ function validarYCalcular(){
   for(let i=1;i<=contador;i++){
     const div=document.getElementById("banco-"+i); if(!div) continue;
     const tipo=document.getElementById("tipo-"+i).value;
+    const tae = parseFloat(document.getElementById("tae-"+i)?.value);
     let tipoValido=true;
     if(tipo==="fija") tipoValido=parseFloat(document.getElementById("tinFijo-"+i).value)>=0;
     if(tipo==="mixta"){
@@ -260,7 +259,7 @@ function calcular(){
       let capPend = capital;
 
       // --- TRAMO FIJO ---
-     const cuotaFija = calcularCuota(capital, tinFijo, plazoMeses);
+     const cuotaFija = calcularCuota(capital, tinFijo, mesesFijo);
 
       for(let m=1; m<=mesesFijo; m++){
         const iMensual = tinFijo/100/12;
@@ -372,9 +371,11 @@ function calcular(){
       </tr>`;
     });
 
-    document.getElementById("recomendacion").innerText = generarRecomendacion(resultados);
-    amortDiv.innerHTML=html+"</table>";
+    amortDiv.innerHTML=html+"</table>";   
   });
+
+ document.getElementById("recomendacion").innerText = generarRecomendacion(resultados);
+  
 }
 function toggleAmort(index){
   const div=document.getElementById("amort-"+index);
