@@ -545,9 +545,7 @@ doc.text("Mejor opción recomendada", 20, siguienteY);
 
 doc.setFont("helvetica","normal").setFontSize(10);
 
-const textoMejor = limpiarTexto(
-  `Según el análisis, la opción más favorable es: ${mejorBanco}, al presentar el menor coste total.`
-);
+const textoMejor = `Según el análisis, la opción más favorable es: ${mejorBanco}, al presentar el menor coste total.`;
   
 const textoMejorDividido = doc.splitTextToSize(textoMejor, 170);
 
