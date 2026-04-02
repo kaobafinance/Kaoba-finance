@@ -461,7 +461,10 @@ doc.text(`Euríbor utilizado: ${euribor} %`, 20, 90);
   const data=[]; let mejorBanco=""; let mejorTotal=Infinity;
 
   for(let row of tbody.rows){
-let banco = row.cells[0].innerText;
+let banco = row.cells[0].innerText
+  .replace("✔ Mejor", "")
+  .replace(/[^\x20-\x7EáéíóúÁÉÍÓÚñÑüÜ€.,()%\- ]/g, "")
+  .trim();
 const tipo = row.cells[1].innerText;
 const tae = row.cells[2].innerText;
 let cuota = row.cells[3].innerText;
@@ -522,8 +525,10 @@ doc.text("Mejor opción recomendada", 20, siguienteY);
 
 doc.setFont("helvetica","normal").setFontSize(10);
 
-const textoMejor = `Según el análisis, la opción más favorable es: ${mejorBanco}, al presentar el menor coste total.`;
-
+const textoMejor = limpiarTexto(
+  `Según el análisis, la opción más favorable es: ${mejorBanco}, al presentar el menor coste total.`
+);
+  
 const textoMejorDividido = doc.splitTextToSize(textoMejor, 170);
 
 doc.text(textoMejorDividido, 20, siguienteY + 8);
