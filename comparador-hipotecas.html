@@ -111,42 +111,55 @@ function addBanco(){
   const div=document.createElement("div");
   div.className="banco-card";
   div.id="banco-"+contador;
+
   div.innerHTML=`
   <button class="remove-btn" onclick="removeBanco(${contador})">×</button>
 
-<div style="display:flex; gap:10px;">
-  <div style="flex:2;">
-    <label>Nombre
-      <input type="text" id="nombre-${contador}" placeholder="Banco ${contador}">
-    </label>
+  <div style="display:flex; gap:10px;">
+    <div style="flex:2;">
+      <label>Nombre
+        <input type="text" id="nombre-${contador}" placeholder="Banco ${contador}">
+      </label>
+    </div>
+
+    <div style="flex:1;">
+      <label>TAE (%) <small>(opcional)</small>
+        <input type="number" id="tae-${contador}" step="0.01" placeholder="2.85">
+      </label>
+    </div>
   </div>
 
-  <div style="flex:1;">
-    <label>TAE (%) <small>(opcional)</small>
-      <input type="number" id="tae-${contador}" step="0.01" placeholder="2.85">
-    </label>
-  </div>
-</div>
-   
-    <label>Tipo<select id="tipo-${contador}" onchange="toggleTipo(${contador});">
-      <option value="fija">Fija</option>
+  <label>Tipo
+    <select id="tipo-${contador}" onchange="toggleTipo(${contador});">
+      <option value="fija" selected>Fija</option>
       <option value="mixta">Mixta</option>
       <option value="variable">Variable</option>
-    </select></label>
-    <div id="bloque-fija-${contador}"><label>TIN fijo (%)<input type="number" id="tinFijo-${contador}" step="0.01" onchange="calcular();"></label></div>
-    <div id="bloque-mixta-${contador}" style="display:none;">
-      <label>Meses fijo<input type="number" id="mesesFijo-${contador}" value="60" onchange="calcular();"></label>
-      <label>TIN fijo (%)<input type="number" id="tinMixtoFijo-${contador}" step="0.01" onchange="calcular();"></label>
-      <label>Diferencial (%)<input type="number" id="diferencial-${contador}" step="0.01" onchange="calcular();"></label>
-    </div>
-    <div id="bloque-variable-${contador}" style="display:none;">
-      <label>Diferencial (%)<input type="number" id="difVar-${contador}" step="0.01" onchange="calcular();"></label>
-    </div>
-    <p id="aviso-mixta-${contador}" style="display:none; font-size:12px; color:#b45309; margin-top:6px;">
-      * En la fase variable se utiliza el Euríbor actual como estimación. Este valor puede variar en el futuro.
-    </p>
-`;
+    </select>
+  </label>
+
+  <div id="bloque-fija-${contador}">
+    <label>TIN fijo (%)<input type="number" id="tinFijo-${contador}" step="0.01" onchange="calcular();"></label>
+  </div>
+
+  <div id="bloque-mixta-${contador}" style="display:none;">
+    <label>Meses fijo<input type="number" id="mesesFijo-${contador}" value="60" onchange="calcular();"></label>
+    <label>TIN fijo (%)<input type="number" id="tinMixtoFijo-${contador}" step="0.01" onchange="calcular();"></label>
+    <label>Diferencial (%)<input type="number" id="diferencial-${contador}" step="0.01" onchange="calcular();"></label>
+  </div>
+
+  <div id="bloque-variable-${contador}" style="display:none;">
+    <label>Diferencial (%)<input type="number" id="difVar-${contador}" step="0.01" onchange="calcular();"></label>
+  </div>
+
+  <p id="aviso-mixta-${contador}" style="display:none; font-size:12px; color:#b45309; margin-top:6px;">
+    * En la fase variable se utiliza el Euríbor actual como estimación. Este valor puede variar en el futuro.
+  </p>
+  `;
+
   document.getElementById("bancos").appendChild(div);
+
+  // Forzar la actualización del tipo al inicializar
+  toggleTipo(contador);
 }
 
 // ===== Quitar banco =====
