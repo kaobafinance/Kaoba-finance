@@ -248,7 +248,8 @@ const modo = document.querySelector('input[name="modo"]:checked')?.value || "com
     const tipo=document.getElementById("tipo-"+i).value;
     const tae = parseFloat(document.getElementById("tae-"+i)?.value) || null;
     
-
+  let amortRows = [];
+  let mesesFijo = null;
 
    // ===== FIJA =====
 if(tipo==="fija"){ 
@@ -262,8 +263,6 @@ else if(tipo==="variable"){
   amortRows=generarAmortizacion(capital,euribor+dif,plazoMeses);
 }
 
-let amortRows = [];
-let mesesFijo = null;
 
 // ===== MIXTA =====
 else if(tipo==="mixta"){ 
