@@ -419,7 +419,7 @@ function toggleAmort(index){
 
 // Inicial banco
 addBanco();
-  
+
 // ===== Descargar PDF =====
 function descargarPDF(){
   const modo = document.querySelector('input[name="modo"]:checked')?.value || "comparador";
@@ -429,6 +429,8 @@ function descargarPDF(){
 
   const { jsPDF }=window.jspdf;
   const doc=new jsPDF();
+
+const autoTable = window.jspdf?.autoTable || window.autoTable;
 
 // ===== CABECERA =====
 doc.setFont("helvetica","bold").setFontSize(16);
@@ -509,7 +511,7 @@ if(totalNum<mejorTotal){mejorTotal=totalNum; mejorBanco=banco;}
 data.push([banco,tipo,tae,cuota,intereses,total,diferencialTexto,ahorro]);
     }
 
-  doc.autoTable({
+doc.autoTable({
     head:[["Banco","Tipo","TAE","Cuota","Intereses","Total","Dif.","Ahorro"]],
     body:data,
     startY:100,
@@ -519,8 +521,7 @@ alternateRowStyles:{fillColor:[245,247,250]},
   });
 
   let finalY=doc.lastAutoTable.finalY+10;
-const recomendacion = document.getElementById("recomendacion").innerText;
-
+const recomendacion = document.getElementById("recomendacion")?.innerText || "";
 // ===== RECOMENDACIÓN =====
 doc.setFont("helvetica","bold").setFontSize(12);
 doc.text("Recomendación del simulador", 20, finalY);
