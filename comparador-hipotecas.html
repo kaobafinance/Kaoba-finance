@@ -455,24 +455,43 @@ doc.setFontSize(9);
 doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 150, 20);
 
   // Datos del cliente
-  doc.setFont("helvetica","bold").setFontSize(12).text("Datos del cliente",20,45);
-  doc.setFont("helvetica","normal").setFontSize(10);
-  doc.text(`Nombre: ${nombreUsuario}`,20,53);
-  doc.text(`Email: ${emailUsuario}`,20,59);
-
-// ===== DATOS DEL PRÉSTAMO =====
-const capital = parseFloat(document.getElementById("capital").value) || 0;
-const euribor = document.getElementById("euribor").value || "0";
-const plazo = document.getElementById("plazo").value || "-";
+// ===== BLOQUE ALINEADO (TIPO TABLA) =====
 
 doc.setFont("helvetica","bold").setFontSize(12);
-doc.text("Datos del préstamo", 20, 70);
+doc.text("Datos del cliente", 20, 45);
+doc.text("Datos del préstamo", 110, 45);
 
 doc.setFont("helvetica","normal").setFontSize(10);
-const capitalFormateado = capital.toLocaleString("es-ES") + " €";
-doc.text(`Capital solicitado: ${capitalFormateado}`, 20, 78);
-doc.text(`Plazo: ${plazo} años`, 20, 84);
-doc.text(`Euríbor utilizado: ${euribor} %`, 20, 90);
+
+// posiciones base
+let y = 53;
+
+// fila 1
+doc.text("Nombre:", 20, y);
+doc.text(nombreUsuario, 55, y);
+
+doc.text("Capital:", 110, y);
+doc.text(capitalFormateado, 145, y);
+
+// fila 2
+y += 6;
+doc.text("Email:", 20, y);
+doc.text(emailUsuario, 55, y);
+
+doc.text("Plazo:", 110, y);
+doc.text(`${plazo} años`, 145, y);
+
+// fila 3
+y += 6;
+doc.text("", 20, y); // vacío izquierda
+doc.text("", 55, y);
+
+doc.text("Euríbor:", 110, y);
+doc.text(`${euribor} %`, 145, y);
+
+// línea separadora
+doc.setDrawColor(220);
+doc.line(20, y + 6, 190, y + 6);
   
   // Tabla comparativa
   const tbody=document.querySelector("#tabla tbody");
