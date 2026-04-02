@@ -434,6 +434,12 @@ const modo = "comparador";
   const { jsPDF }=window.jspdf;
   const doc=new jsPDF();
 
+const capital = parseFloat(document.getElementById("capital").value) || 0;
+const euribor = document.getElementById("euribor").value || "0";
+const plazo = document.getElementById("plazo").value || "-";
+
+const capitalFormateado = capital.toLocaleString("es-ES") + " €";
+  
 // ===== CABECERA =====
 doc.setFont("helvetica","bold").setFontSize(16);
 doc.text("KAOBA FINANCE", 20, 20);
@@ -453,7 +459,7 @@ doc.line(20, 38, 190, 38);
 
 doc.setFontSize(9);
 doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 150, 20);
-
+  
   // Datos del cliente
 // ===== BLOQUE ALINEADO (TIPO TABLA) =====
 
