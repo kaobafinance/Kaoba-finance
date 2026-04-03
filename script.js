@@ -358,7 +358,16 @@ if (mensajePerfil) {
 // -----------------------------
 const actualizarViviendaInfo = () => {
   if (!perfilFields.viviendaCheck || !perfilFields.viviendaInfo) return;
-  perfilFields.viviendaInfo.style.display = perfilFields.viviendaCheck.checked ? "block" : "none";
+
+  const activo = perfilFields.viviendaCheck.checked;
+
+  perfilFields.viviendaInfo.style.display = activo ? "block" : "none";
+
+  // sincroniza estilo visual
+  if (toggleCard) {
+    toggleCard.classList.toggle("active", activo);
+  }
+
   calcularPerfil();
 };
 
@@ -367,6 +376,17 @@ if (perfilFields.viviendaCheck && perfilFields.viviendaInfo) {
   actualizarViviendaInfo();
 }
 
+// -----------------------------
+// TOGGLE CARD VIVIENDA (CLICK EN TARJETA)
+// -----------------------------
+const toggleCard = document.getElementById("toggleVivienda");
+
+if (toggleCard && perfilFields.viviendaCheck && perfilFields.viviendaInfo) {
+  toggleCard.addEventListener("click", () => {
+    perfilFields.viviendaCheck.checked = !perfilFields.viviendaCheck.checked;
+    actualizarViviendaInfo();
+  });
+}
 // -----------------------------
 // EVENTOS PERFIL
 // -----------------------------
