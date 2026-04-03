@@ -353,6 +353,7 @@ if (mensajePerfil) {
   }
 }
 
+  const toggleCard = document.getElementById("toggleVivienda");
 // -----------------------------
 // ACTUALIZAR VIVIENDA INFO
 // -----------------------------
@@ -379,7 +380,6 @@ if (perfilFields.viviendaCheck && perfilFields.viviendaInfo) {
 // -----------------------------
 // TOGGLE CARD VIVIENDA (CLICK EN TARJETA)
 // -----------------------------
-const toggleCard = document.getElementById("toggleVivienda");
 
 if (toggleCard && perfilFields.viviendaCheck && perfilFields.viviendaInfo) {
   toggleCard.addEventListener("click", () => {
