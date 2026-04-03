@@ -473,26 +473,40 @@ function calcular(){
 
   const box = document.getElementById("mensajeResultado");
 
-  if (ahorroTotal > 0 && ahorroMensual > 0) {
-    box.innerHTML = `
-      <div class="resultado-box ok">
-        ✔️ Ahorrarías ${ahorroMensual.toFixed(0)} €/mes<br>
-        Ahorro total estimado: ${ahorroTotal.toFixed(0)} €
-      </div>`;
-  } 
-  else if (ahorroMensual > 0) {
-    box.innerHTML = `
-      <div class="resultado-box warn">
-        ⚠️ Reducirías ${ahorroMensual.toFixed(0)} €/mes<br>
-        Pero pagarías más intereses
-      </div>`;
-  } 
-  else {
-    box.innerHTML = `
-      <div class="resultado-box bad">
-        ❌ No parece recomendable
-      </div>`;
-  }
+if (ahorroTotal > 0 && ahorroMensual > 0) {
+  // 🔵 Caso ideal
+  box.innerHTML = `
+    <div class="resultado-box ok">
+      ✔️ Ahorrarías ${ahorroMensual.toFixed(0)} €/mes<br>
+      Ahorro total estimado: ${ahorroTotal.toFixed(0)} €
+    </div>`;
+} 
+
+else if (ahorroTotal > 0 && ahorroMensual < 0) {
+  // 🟣 NUEVO CASO CLAVE
+  box.innerHTML = `
+    <div class="resultado-box ok">
+      📈 Pagarías ${Math.abs(ahorroMensual).toFixed(0)} €/mes más<br>
+      Pero ahorrarías ${ahorroTotal.toFixed(0)} € en intereses
+    </div>`;
+} 
+
+else if (ahorroMensual > 0 && ahorroTotal <= 0) {
+  // 🟡 Liquidez
+  box.innerHTML = `
+    <div class="resultado-box warn">
+      ⚠️ Reducirías ${ahorroMensual.toFixed(0)} €/mes<br>
+      Pero pagarías más intereses
+    </div>`;
+} 
+
+else {
+  // 🔴 Malo
+  box.innerHTML = `
+    <div class="resultado-box bad">
+      ❌ No parece recomendable
+    </div>`;
+}
 
   const tbody = document.querySelector("#tablaResultados tbody");
   tbody.innerHTML = `
