@@ -450,8 +450,8 @@ if(hip === "mixta"){
 } else {
 
   // 👉 HIPOTECA NORMAL (FIJA)
-  cuotaDespues = cuota(capitalPend + comisiones, tinNuevo, plazoNuevo);
-  interesesDespues = cuotaDespues * plazoNuevo * 12 - (capitalPend + comisiones);
+cuotaDespues = cuota(capitalPend + comisiones, tinFinal, plazoNuevo);
+interesesDespues = cuotaDespues * plazoNuevo * 12 - (capitalPend + comisiones);
 
 }
     if(cuotaDespues <= 0){
