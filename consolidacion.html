@@ -784,24 +784,21 @@ recomendaciones.forEach((rec, i) => {
   doc.text(`• ${rec}`, margenX, y + i * 14);
 });
 
-  y += 70;
+  
+// ===== DISCLAIMER (footer fijo) =====
+doc.setFont("helvetica", "italic").setFontSize(9);
+doc.setTextColor(120);
 
-  // ===== DISCLAIMER =====
-  doc.setFont("helvetica", "italic").setFontSize(9);
-  doc.setTextColor(120);
-  doc.text(
-    "Este informe es orientativo y no constituye una oferta vinculante. La aprobación final depende de cada entidad financiera.",
-    margenX,
-    y,
-    { maxWidth: 500 }
-  );
+const pageHeight = doc.internal.pageSize.height;
 
-  // ===== FOOTER =====
-  doc.setFont("helvetica", "normal").setFontSize(9);
-  doc.setTextColor(150);
-  doc.text("Kaoba Finance · www.kaobafinance.com", margenX, 800);
-  doc.text("Página 1 de 1", 550, 800, { align: "right" });
+const disclaimer = doc.splitTextToSize(
+  "Este informe es orientativo y no constituye una oferta vinculante. La aprobación final depende de cada entidad financiera.",
+  500
+);
 
+// Siempre abajo
+doc.text("Kaoba Finance · www.kaobafinance.com", margenX, 800);
+doc.text("Página 1 de 1", 550, 800, { align: "right" });
   // ===== EXPORTAR =====
   doc.save("Informe_KaobaFinance.pdf");
 
