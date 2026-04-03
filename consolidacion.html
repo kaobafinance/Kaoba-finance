@@ -561,10 +561,24 @@ function enviarPDF() {
   doc.setFont("helvetica", "normal").setFontSize(11);
   doc.setTextColor(0);
 
-  const cuotaActual = document.getElementById("cuotaActual")?.innerText || "-";
-  const cuotaNueva = document.getElementById("cuotaNueva")?.innerText || "-";
-  const ahorroMensual = document.getElementById("ahorroMensual")?.innerText || "-";
+  const filas = document.querySelectorAll("#tablaResultados tbody tr");
 
+let cuotaActual = "-";
+let cuotaNueva = "-";
+let ahorroMensual = "-";
+
+filas.forEach(fila => {
+  const concepto = fila.cells[0]?.innerText;
+
+  if (concepto.includes("Cuota mensual")) {
+    cuotaActual = fila.cells[1]?.innerText;
+    cuotaNueva = fila.cells[2]?.innerText;
+  }
+
+  if (concepto.includes("Ahorro mensual")) {
+    ahorroMensual = fila.cells[2]?.innerText;
+  }
+});
   doc.text(`• Cuota actual: ${cuotaActual}`, margenX, y);
   y += 15;
   doc.text(`• Nueva cuota: ${cuotaNueva}`, margenX, y);
