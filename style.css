@@ -392,7 +392,6 @@ MODAL CALCULADORA
 #modalCalculadora {
   max-height: 80vh;   /* nunca más alto que la pantalla */
   overflow-y: auto;   /* scroll interno si excede la altura */
-  display: flex;
   flex-direction: column; /* mantiene todo en columna */
 }
 #cerrarModal {
