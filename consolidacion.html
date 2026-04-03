@@ -658,10 +658,18 @@ const { ahorroMensual, ahorroTotal } = datos;
  let mensajePDF = "";
 let colorMensaje = [0,0,0];
 
-if (ahorroTotal > 0) {mensajePDF = `Ahorrarías ${ahorroMensual.toFixed(0)} € al mes.\nAhorro total estimado: ${ahorroTotal.toFixed(0)} €.`; colorMensaje = [30, 126, 52]; // verde} 
-else if (ahorroMensual > 0) {mensajePDF = `Reducirías ${ahorroMensual.toFixed(0)} € al mes. Esto puede darte más liquidez mensual, aunque el coste total sería mayor.`; colorMensaje = [180, 120, 0]; // naranja} 
-else {mensajePDF = `La operación no parece recomendable según los datos actuales.`; colorMensaje = [180, 0, 0]; // rojo}
-
+if (ahorroTotal > 0) {
+  mensajePDF = `Ahorrarías ${ahorroMensual.toFixed(0)} € al mes.\nAhorro total estimado: ${ahorroTotal.toFixed(0)} €.`;
+  colorMensaje = [30, 126, 52]; // verde
+} 
+else if (ahorroMensual > 0) {
+  mensajePDF = `Reducirías ${ahorroMensual.toFixed(0)} € al mes. Esto puede darte más liquidez mensual, aunque el coste total sería mayor.`;
+  colorMensaje = [180, 120, 0]; // naranja
+} 
+else {
+  mensajePDF = `La operación no parece recomendable según los datos actuales.`;
+  colorMensaje = [180, 0, 0]; // rojo
+}
   doc.setFont("helvetica", "bold").setFontSize(14);
   doc.setTextColor(13, 79, 139);
   doc.text("Resultado de la simulación", margenX, y);
