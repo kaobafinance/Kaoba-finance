@@ -213,6 +213,34 @@ TITULARES
   text-align: center;
   cursor: pointer;
 }
+.titulares-selector {
+  display: flex;
+  gap: 8px;
+  max-width: 220px;
+  margin-bottom: 10px;
+}
+
+.opcion {
+  flex: 1;
+  text-align: center;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  cursor: pointer;
+  font-size: 13px;
+  background: #fff;
+  transition: 0.2s;
+}
+
+.opcion:hover {
+  border-color: #0072CE;
+}
+
+.opcion.active {
+  background: #0072CE;
+  color: #fff;
+  border-color: #0072CE;
+}
 
 /* MÓVIL */
 @media (max-width: 768px) {
