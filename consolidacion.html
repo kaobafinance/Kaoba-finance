@@ -795,7 +795,8 @@ const disclaimer = doc.splitTextToSize(
   "Este informe es orientativo y no constituye una oferta vinculante. La aprobación final depende de cada entidad financiera.",
   500
 );
-
+doc.text(disclaimer, margenX, pageHeight - 60);
+  
 // Siempre abajo
 doc.text("Kaoba Finance · www.kaobafinance.com", margenX, 800);
 doc.text("Página 1 de 1", 550, 800, { align: "right" });
