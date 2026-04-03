@@ -741,7 +741,7 @@ doc.setTextColor(...colorMensaje);
 const textoFormateado = doc.splitTextToSize(mensajePDF, 500);
 doc.text(textoFormateado, margenX, y);
 
-  y += 35;
+y += textoFormateado.length * 14 + 10;
 
   doc.setDrawColor(220);
   doc.line(margenX, y, 550, y);
