@@ -375,6 +375,24 @@ const actualizarViviendaInfo = () => {
   calcularPerfil();
 };
 
+  // -----------------------------
+// SELECTOR TITULARES (BOTONES)
+// -----------------------------
+const botonesTitulares = document.querySelectorAll(".btn-selector");
+const inputTitulares = document.getElementById("perfilTitulares");
+
+botonesTitulares.forEach(btn => {
+  btn.addEventListener("click", () => {
+    botonesTitulares.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    inputTitulares.value = btn.dataset.value;
+
+    // 🔥 esto hace que tu sistema actual funcione
+    inputTitulares.dispatchEvent(new Event("change"));
+  });
+});
+  
 // -----------------------------
 // EVENTO CHECKBOX
 // -----------------------------
