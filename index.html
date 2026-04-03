@@ -252,10 +252,13 @@
         <input type="text" id="leadNombre" placeholder="Ej: Juan Pérez" required>
         <label>Correo electrónico</label>
         <input type="email" id="leadEmail" placeholder="Ej: juan@email.com" required>
-        <label>
-          <input type="checkbox" id="leadConsentimiento" required>
-          Acepto la <a href="politica-privacidad.html" target="_blank">política de privacidad</a>.
-        </label>
+       <label class="checkbox-linea">
+  <input type="checkbox" id="leadConsentimiento" required>
+  <span>
+    Acepto la 
+    <a href="politica-privacidad.html" target="_blank">política de privacidad</a>.
+  </span>
+</label>
         <button type="button" id="enviarLead">Recibir simulación</button>
       </form>
       <p id="leadMensaje" class="lead-mensaje">¡Simulación lista! Puedes descargar tu PDF.</p>
