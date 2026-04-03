@@ -662,10 +662,36 @@ doc.text(`• Ahorro mensual: ${ahorroMensual.toFixed(0)} €`, margenX, y);
     data.push([concepto, antes, despues]);
   });
 
-  doc.autoTable({startY: y, head: [["Concepto", "Antes", "Después"]], body: data, theme: "plain", headStyles: {fontStyle: 'bold', textColor: 0, lineWidth: 0.5}, styles: {fontSize: 10, cellPadding: 6, lineColor: [220, 220, 220], lineWidth: 0.2}
-  });
+doc.autoTable({
+  startY: y,
+  head: [["Concepto", "Antes", "Después"]],
+  body: data,
 
-  y = doc.lastAutoTable.finalY + 30;
+  theme: "grid", // 🔥 clave
+
+  headStyles: {
+    fillColor: [13, 79, 139], // azul Kaoba
+    textColor: 255,
+    fontStyle: "bold",
+    halign: "center"
+  },
+
+  styles: {
+    fontSize: 10,
+    cellPadding: 8,
+    halign: "center"
+  },
+
+  columnStyles: {
+    0: { halign: "left", fontStyle: "bold" },
+    1: { textColor: [120, 120, 120] }, // gris antes
+    2: { textColor: [13, 79, 139], fontStyle: "bold" } // azul después
+  },
+
+  alternateRowStyles: {
+    fillColor: [245, 247, 251] // zebra suave
+  }
+});
 
   // ===== RESULTADO DESTACADO =====
  let mensajePDF = "";
