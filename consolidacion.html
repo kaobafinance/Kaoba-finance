@@ -615,9 +615,35 @@ filas.forEach(fila => {
   }
 
   if (concepto.includes("Ahorro mensual")) {
-    ahorroMensual = fila.cells[2]?.innerText;
+    ahorroMensual = parseFloat(fila.cells[2]?.innerText.replace(/[^\d.-]/g, ""));
   }
 });
+
+  const tipoOperacion = document.getElementById("tipoOperacion").value;
+
+// 👉 SUBROGACIÓN
+if (tipoOperacion === "subrogacion") {
+  const capitalPendiente = document.getElementById("capitalPendiente")?.value || 0;
+
+  doc.text(`• Capital pendiente: ${parseFloat(capitalPendiente).toLocaleString()} €`, margenX, y);
+  y += 15;
+}
+
+// 👉 CONSOLIDACIÓN
+if (tipoOperacion === "consolidacion") {
+  let totalDeudas = 0;
+
+  for (let i = 1; i <= count; i++) {
+    const cap = document.getElementById("capital" + i);
+    if (cap && cap.value) {
+      totalDeudas += parseFloat(cap.value);
+    }
+  }
+
+  doc.text(`• Total de deudas: ${totalDeudas.toLocaleString()} €`, margenX, y);
+  y += 15;
+}
+  
   doc.text(`• Cuota actual: ${cuotaActual}`, margenX, y);
   y += 15;
   doc.text(`• Nueva cuota: ${cuotaNueva}`, margenX, y);
@@ -663,7 +689,7 @@ if (ahorroTotal > 0) {
   colorMensaje = [30, 126, 52]; // verde
 } 
 else if (ahorroMensual > 0) {
-  mensajePDF = `Reducirías ${ahorroMensual.toFixed(0)} € al mes. Esto puede darte más liquidez mensual, aunque el coste total sería mayor.`;
+ mensajePDF = `Reducirías tu cuota en ${ahorroMensual.toFixed(0)} € al mes, mejorando tu liquidez mensual.\n\nA cambio, el coste total del préstamo sería mayor, por lo que esta opción es recomendable si tu prioridad es pagar menos cada mes.`;
   colorMensaje = [180, 120, 0]; // naranja
 } 
 else {
@@ -697,14 +723,31 @@ doc.text(mensajePDF, margenX, y, { maxWidth: 500 });
   doc.setFont("helvetica", "normal").setFontSize(10);
   doc.setTextColor(0);
 
-  [
-    "Verifica los tipos de interés antes de decidir",
-    "Revisa gastos y comisiones adicionales",
-    "Analiza la duración y el coste total de la operación",
-    "Consulta con un asesor financiero si es necesario"
-  ].forEach((rec, i) => {
-    doc.text(`• ${rec}`, margenX, y + i * 14);
-  });
+let recomendaciones = [];
+
+if (ahorroTotal > 0) {
+  recomendaciones = [
+    "Esta operación reduce el coste total de tu financiación",
+    "Revisa posibles comisiones de cancelación",
+    "Valora asegurar un tipo fijo si el mercado sube"
+  ];
+} else if (ahorroMensual > 0) {
+  recomendaciones = [
+    "Mejora tu liquidez mensual reduciendo la cuota",
+    "Recomendado si necesitas aliviar carga financiera",
+    "Ten en cuenta el mayor coste total a largo plazo"
+  ];
+} else {
+  recomendaciones = [
+    "Las condiciones actuales pueden ser más favorables",
+    "Compara otras ofertas antes de decidir",
+    "Consulta con un asesor financiero"
+  ];
+}
+
+recomendaciones.forEach((rec, i) => {
+  doc.text(`• ${rec}`, margenX, y + i * 14);
+});
 
   y += 70;
 
