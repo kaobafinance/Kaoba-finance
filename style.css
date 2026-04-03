@@ -444,41 +444,44 @@ MODAL
 /* ==============================
 FOOTER PRO
 ============================== */
+/* ==============================
+FOOTER COMPLETO
+============================== */
 footer {
   background: linear-gradient(to bottom, #111827, #0b1220);
   color: #fff;
-  padding: 50px 20px 20px;
+  padding: 60px 20px 30px;
+  font-family: 'Inter', Arial, sans-serif;
 }
 
 .footer-container {
   max-width: 1100px;
   margin: auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
   gap: 30px;
 }
 
 .footer-col {
+  flex: 1 1 220px;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
 .footer-col h4 {
-  font-size: 15px;
-  margin-bottom: 5px;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
   color: #ffffff;
 }
 
-.footer-col p {
-  font-size: 13px;
-  color: #9ca3af;
-  line-height: 1.5;
-}
-
+.footer-col p,
 .footer-col a {
   font-size: 13px;
   color: #9ca3af;
+  line-height: 1.5;
   text-decoration: none;
   transition: 0.2s;
 }
@@ -489,7 +492,7 @@ footer {
 
 .footer-bottom {
   text-align: center;
-  margin-top: 30px;
+  margin-top: 40px;
   border-top: 1px solid #374151;
   padding-top: 15px;
   font-size: 12px;
@@ -497,17 +500,21 @@ footer {
 }
 
 /* ==============================
-RESPONSIVE
+RESPONSIVE FOOTER
 ============================== */
 @media (max-width: 768px) {
   .footer-container {
+    flex-direction: column;
+    align-items: center;
     text-align: center;
   }
 
   .footer-col {
     align-items: center;
+    text-align: center;
   }
-
+}
+@media (max-width: 768px) {
   .operacion-card {
     flex: 0 1 100%;
   }
