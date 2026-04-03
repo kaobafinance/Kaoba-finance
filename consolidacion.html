@@ -449,12 +449,13 @@ if (ahorroTotal > 0 && ahorroMensual > 0) {
 
 // 🟣 SUBE CUOTA PERO AHORRA (SOLO HIPOTECAS)
 else if (ahorroTotal > 0 && ahorroMensual < 0)
-  box.innerHTML = `
+box.innerHTML = `
     <div class="resultado-box ok">
       📈 Pagarías ${Math.abs(ahorroMensual).toFixed(0)} €/mes más<br>
-      Pero ahorrarías ${ahorroTotal.toFixed(0)} € en intereses
+      Pero ahorrarías ${ahorroTotal.toFixed(0)} € en intereses<br>
+      <small>Interesante si buscas reducir el coste total</small>
     </div>`;
-} 
+}
 
 // 🟡 LIQUIDEZ
 else if (ahorroMensual > 0 && ahorroTotal <= 0) {
