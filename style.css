@@ -51,14 +51,13 @@ BRAND
 
 .euribor-badge {
   display: inline-block;
-  text-align: center;
   margin-bottom: 25px;
   font-size: 14px;
-  color: #0072CE;           /* texto azul */
-  border: 1px solid #0072CE; /* borde azul */
-  border-radius: 8px;        /* esquinas redondeadas */
-  padding: 6px 12px;         /* espacio interno */
-  background: #e6f0fc;       /* fondo muy suave azul */
+  color: #0072CE;
+  border: 1px solid #0072CE;
+  border-radius: 8px;
+  padding: 6px 12px;
+  background: #e6f0fc;
   font-weight: 500;
 }
 
@@ -67,8 +66,9 @@ GRID OPERACIONES
 ============================== */
 .operaciones-grid {
   display: flex;
-  gap: 20px;
   flex-wrap: wrap;
+  gap: 20px;
+  align-items: flex-start;
 }
 
 .operaciones-grid .operacion-card {
@@ -79,30 +79,19 @@ GRID OPERACIONES
   justify-content: center;
 }
 
-.operaciones-grid-centro .operacion-card {
-  flex: 0 1 calc(33.33% - 20px);
-}
-
 /* ==============================
-TARJETAS + ACORDEÓN
+TARJETAS
 ============================== */
-.operaciones-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  align-items: flex-start; /* evita que las tarjetas se estiren al abrir una */
-}
-
 .operacion-card {
-  flex: 0 1 calc(33.33% - 20px); /* ancho de cada tarjeta */
+  flex: 0 1 calc(33.33% - 20px);
   display: flex;
-  flex-direction: column; /* para que el contenido expandible solo afecte la tarjeta */
+  flex-direction: column;
   background: #fff;
   border-radius: 12px;
   padding: 18px;
   cursor: pointer;
   border: 1px solid #e5e7eb;
-  transition: all 0.3s ease;
+  transition: 0.3s;
 }
 
 .operacion-card:hover {
@@ -116,10 +105,6 @@ TARJETAS + ACORDEÓN
   align-items: center;
 }
 
-.operacion-card strong {
-  font-size: 16px;
-}
-
 .card-sub {
   font-size: 13px;
   color: #9ca3af;
@@ -131,29 +116,28 @@ ACORDEÓN
 .card-content {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.4s ease, margin-top 0.4s ease;
+  transition: 0.4s;
 }
 
 .card-content.open {
-  max-height: 500px; /* ajustable según contenido */
+  max-height: 500px;
   margin-top: 10px;
 }
 
 /* ==============================
-RESPONSIVE TARJETAS
-============================== */
-@media (max-width: 768px) {
-  .operacion-card {
-    flex: 0 1 100%; /* tarjetas apiladas en móvil */
-  }
-}
-/* ==============================
 FORMULARIOS
 ============================== */
-input, select {
+input {
   width: 100%;
+}
+
+select {
+  width: 100%;
+}
+
+input, select {
   padding: 10px;
-  margin: 6px 0 14px 0;
+  margin: 6px 0 14px;
   border-radius: 8px;
   border: 1px solid #d1d5db;
   font-size: 14px;
@@ -163,6 +147,18 @@ input:focus, select:focus {
   border-color: #0072CE;
   outline: none;
   box-shadow: 0 0 4px rgba(0,114,206,0.3);
+}
+
+/* SELECT TITULARES */
+#perfilTitulares {
+  width: auto;
+  min-width: 140px;
+  max-width: 180px;
+  padding: 6px 10px;
+  font-size: 13px;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
 }
 
 /* ==============================
@@ -188,96 +184,45 @@ TITULARES
 ============================== */
 .titulares-grid {
   display: flex;
-  gap: 10px;
-  justify-content: flex-start; /* se queda a la izquierda */
+  gap: 15px;
+  flex-wrap: wrap; /* 🔥 clave */
 }
 
 .titular {
-  flex: 1;
-  padding: 10px;
-  border-radius: 8px;
+  flex: 1 1 300px;   /* 🔥 ancho mínimo decente */
+  min-width: 280px;  /* evita que se encojan demasiado */
+  padding: 15px;
+  border-radius: 10px;
   background: #f9fafb;
   border: 1px solid #ddd;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 /* ==============================
-SELECT TITULARES (SIMPLE Y PRO)
+CARDS RESULTADOS
 ============================== */
-#perfilTitulares {
-  width: auto;              /* no ocupa todo */
-  min-width: 150px;
-  max-width: 200px;
-  padding: 6px 10px;
-  font-size: 13px;
-  border-radius: 6px;
-  margin-top: 5px;
-  background-color: #fff;
-  cursor: pointer;
-}
-
-/* contenedor opcional para alinearlo mejor */
-.form-group-inline {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-/* MÓVIL */
-@media (max-width: 768px) {
-  .titulares-grid {
-    flex-direction: column;
-  }
-}
-/* ==============================
-TARJETAS RESULTADOS
-============================== */
-.cards {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.card {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 12px;
-  min-width: 130px;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
 .cards, .resultados-container {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
+  gap: 12px;
+  overflow-x: auto;
 }
 
 .card, .resultado-card {
-  flex: 1 1 140px; /* ancho mínimo de cada tarjeta */
-  max-width: 180px; /* evita que se estiren demasiado */
+  flex: 0 0 160px;
   text-align: center;
-}
-.card h3 {
-  margin: 5px 0;
-  color: #0072CE;
-}
-
-.card p {
-  margin: 3px 0 0 0;
-  font-size: 14px;
-  color: #333;
+  background: #fff;
+  border-radius: 10px;
+  padding: 12px;
+  border: 1px solid #ddd;
 }
 
 /* ==============================
 TABLA
 ============================== */
 #tablaContainer {
-  overflow-x: auto;
-  margin-top: 20px;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 15px;
 }
 
 #tablaContainer table {
@@ -286,242 +231,64 @@ TABLA
   background: #fff;
 }
 
-#tablaContainer th,
-#tablaContainer td {
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-  text-align: right;
-}
-
-#tablaContainer th {
-  background: #f3f4f6;
-  text-align: center;
-}
-
-#tablaContainer {
-  max-height: 300px; /* altura máxima del contenedor */
-  overflow-y: auto;  /* scroll vertical si excede altura */
-  margin-top: 15px;
-}
-
 /* ==============================
-TARJETAS RESULTADOS - LÍNEA Y RESPONSIVE
-============================== */
-.cards, .resultados-container {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 12px;
-  justify-content: flex-start;
-  overflow-x: auto;
-  padding-bottom: 5px;
-}
-
-.card, .resultado-card {
-  flex: 0 0 160px;
-  max-width: 160px;
-  text-align: center;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card:hover, .resultado-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.12);
-}
-
-@media (max-width: 768px) {
-  .cards, .resultados-container {
-    flex-wrap: wrap;
-    justify-content: center;
-    overflow-x: visible;
-  }
-
-  .card, .resultado-card {
-    flex: 1 1 45%;
-    max-width: 300px;
-    margin-bottom: 12px;
-  }
-}
-
-
- /* ==============================
-TOGGLE VIVIENDA (BOTÓN REAL)
+TOGGLE VIVIENDA
 ============================== */
 #toggleVivienda {
   cursor: pointer;
   border: 2px solid #e0e0e0;
   border-radius: 12px;
   padding: 16px;
-  transition: all 0.25s ease;
   background: #fff;
+  transition: 0.25s;
 }
 
-/* Hover */
 #toggleVivienda:hover {
   border-color: #0072CE;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   transform: translateY(-2px);
 }
 
-/* Click */
-#toggleVivienda:active {
-  transform: scale(0.98);
-}
-
-/* Activo */
 #toggleVivienda.active {
   border-color: #0072CE;
   background: #e6f0fc;
-  box-shadow: 0 6px 18px rgba(0,114,206,0.15);
 }
 
 /* ==============================
-BOTÓN FLOTANTE CALCULADORA
+BOTÓN FLOTANTE
 ============================== */
 #btnCalculadoraFlotante {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  z-index: 9999;
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: #0d4f8b; /* azul principal */
+  background: #0d4f8b;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.25);
-  border: none;
-  padding: 0;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-#btnCalculadoraFlotante:hover {
-  transform: scale(1.1);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.3);
-}
-
-#btnCalculadoraFlotante svg {
-  width: 36px;
-  height: 36px;
 }
 
 /* ==============================
-MODAL CALCULADORA
+MODAL
 ============================== */
 #modalCalculadora {
-  display: none; /* oculto por defecto */
+  display: none;
   position: fixed;
-  bottom: 100px; /* separado del botón flotante */
+  bottom: 100px;
   right: 20px;
-  z-index: 9999;
+  width: 320px;
   background: #fff;
   padding: 25px;
   border-radius: 12px;
-  width: 320px;
-  max-width: 90%;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-  transition: all 0.3s ease;
 }
 
 #modalCalculadora.open {
   display: block;
 }
 
-#modalCalculadora table {
-  width: 100%;
-  max-height: 250px;
-  overflow-y: auto;
-  display: block;
-  border-collapse: collapse;
-}
-
-#modalCalculadora th, 
-#modalCalculadora td {
-  padding: 8px;
-  text-align: right;
-  border-bottom: 1px solid #eee;
-}
-
-#modalCalculadora th {
-  background: #f3f4f6;
-  text-align: center;
-}
-#modalCalculadora {
-  max-height: 80vh;   /* nunca más alto que la pantalla */
-  overflow-y: auto;   /* scroll interno si excede la altura */
-  flex-direction: column; /* mantiene todo en columna */
-}
-#cerrarModal {
-  font-size: 24px;        /* más grande */
-  width: 40px;             /* área clicable */
-  height: 40px;
-  line-height: 40px;       /* centra la X */
-  text-align: center;
-  cursor: pointer;
-  border-radius: 50%;
-  background-color: #eee;  /* opcional, mejor visibilidad */
-  position: absolute;       /* asegúrate que esté en la esquina */
-  top: 10px;
-  right: 10px;
-  font-weight: bold;
-}
-#cerrarModal:hover {
-  background-color: #ddd;  /* feedback al pasar mouse */
-}
 /* ==============================
-RESPONSIVE MÓVIL
-============================== */
-@media (max-width: 768px) {
-
-  #btnCalculadoraFlotante {
-    bottom: 15px;
-    right: 15px;
-    width: 50px;
-    height: 50px;
-  }
-
-  #btnCalculadoraFlotante svg {
-    width: 28px;
-    height: 28px;
-  }
-
-  #modalCalculadora {
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    max-width: 100%;
-    border-radius: 16px 16px 0 0;
-    padding: 20px;
-  }
-  }
-/* ==============================
-COOKIES
-============================== */
-#cookie-banner {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background: #0072CE;
-  color: #fff;
-  padding: 10px 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-#cookie-banner button {
-  background: #fff;
-  color: #0072CE;
-}
-
-/* ==============================
-FOOTER LIMPIO PRO
+FOOTER
 ============================== */
 footer {
   background: #111827;
@@ -529,7 +296,6 @@ footer {
   padding: 40px 20px 20px;
 }
 
-/* CONTENEDOR */
 .footer-container {
   max-width: 1100px;
   margin: auto;
@@ -538,38 +304,6 @@ footer {
   gap: 30px;
 }
 
-/* COLUMNAS */
-.footer-col h3,
-.footer-col h4 {
-  margin-bottom: 10px;
-}
-
-.footer-col p {
-  font-size: 14px;
-  color: #ccc;
-}
-
-/* LISTAS */
-.footer-col ul {
-  list-style: none;
-  padding: 0;
-}
-
-.footer-col li {
-  margin-bottom: 6px;
-}
-
-.footer-col a {
-  text-decoration: none;
-  color: #ccc;
-  font-size: 14px;
-}
-
-.footer-col a:hover {
-  color: #fff;
-}
-
-/* PARTE INFERIOR */
 .footer-bottom {
   text-align: center;
   margin-top: 30px;
@@ -578,231 +312,31 @@ footer {
   font-size: 13px;
   color: #9ca3af;
 }
-footer {
-  position: relative;
-  z-index: 1;
-}
-/* ==============================
-FAQ FLOTANTE
-============================== */
-#faqButton {
-  position: fixed;
-  bottom: 100px;  /* separa del footer y calculadora */
-  right: 20px;    /* siempre a la derecha */
-  z-index: 10000; /* encima de todo */
-  width: 50px;
-  height: 50px;
-  background: #0072CE;
-  color: #fff;
-  border-radius: 50%;
-  font-size: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.2);
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-#faqButton:hover {
-  transform: scale(1.1);
-}
-
-/* ==============================
-FORMULARIO PERFIL / ANALIZAR PERFIL
-============================== */
-.perfil-form {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
-  background: #ffffff;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-  margin-top: 20px;
-  font-size: 14px;
-}
-
-.perfil-form .form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.perfil-form label {
-  font-weight: 500;
-  margin-bottom: 6px;
-  color: #1f2937;
-}
-
-.perfil-form input,
-.perfil-form select {
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
-  font-size: 14px;
-  transition: 0.3s;
-}
-
-.perfil-form input:focus,
-.perfil-form select:focus {
-  border-color: #0072ce;
-  box-shadow: 0 0 6px rgba(0, 114, 206, 0.25);
-  outline: none;
-}
-
-/* ==============================
-CHECKBOX / PREGUNTAS
-============================== */
-.perfil-form .pregunta {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
-  font-weight: 500;
-  color: #1f2937;
-  cursor: pointer;
-}
-
-.perfil-form .pregunta input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  accent-color: #0072ce; /* color azul moderno */
-  flex-shrink: 0;
-}
-
-/* ==============================
-RESULTADOS / TARJETAS PERFIL
-============================== */
-.perfil-cards {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 20px;
-  justify-content: center;
-}
-
-.perfil-cards .card {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 12px 18px;
-  border: 1px solid #e5e7eb;
-  min-width: 140px;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.perfil-cards .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.12);
-}
-
-.perfil-cards .card h3 {
-  margin-bottom: 6px;
-  font-size: 16px;
-  color: #0072ce;
-}
-
-.perfil-cards .card p {
-  font-size: 13px;
-  color: #4b5563;
-}
-
-/* ==============================
-MENSAJE DE PERFIL / COMPATIBILIDAD
-============================== */
-#mensajePerfil {
-  margin-top: 18px;
-  padding: 12px 18px;
-  border-radius: 10px;
-  font-weight: 500;
-  font-size: 14px;
-}
-
-#mensajePerfil.mensaje-ok {
-  background: #d1fae5;
-  color: #065f46;
-}
-
-#mensajePerfil.mensaje-warning {
-  background: #fef3c7;
-  color: #92400e;
-}
-
-#mensajePerfil.mensaje-bad {
-  background: #fee2e2;
-  color: #991b1b;
-}
 
 /* ==============================
 RESPONSIVE
 ============================== */
 @media (max-width: 768px) {
 
-  .perfil-form {
-    grid-template-columns: 1fr;
-    padding: 18px;
+  .operacion-card {
+    flex: 0 1 100%;
   }
 
-  .perfil-cards {
+  .titulares-grid {
     flex-direction: column;
-    align-items: center;
-  }
-
-  .perfil-cards .card {
-    width: 100%;
-    max-width: 300px;
   }
 
   .cards {
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 8px;
     flex-wrap: wrap;
   }
 
-  .cards .card {
+  .card {
     flex: 1 1 45%;
-    min-width: auto;
   }
 
-  #perfil {
-    flex-direction: column;
-    padding: 15px;
-  }
-
-  .perfil-section {
-    flex: 1 1 100%;
-    margin-bottom: 12px;
-  }
-
-  #avisoSegunda {
-    font-size: 13px;
-    padding: 8px;
-  }
-
-  /* BOTÓN FAQ */
-  #faqButton {
-    bottom: 80px;
-  }
-
-  /* BOTÓN CALCULADORA */
-  #btnCalculadoraFlotante {
-    bottom: 15px;
-    right: 15px;
-    padding: 10px;
-    font-size: 16px;
-  }
-
-  /* MODAL CALCULADORA */
   #modalCalculadora {
     bottom: 0;
     right: 0;
     width: 100%;
-    max-width: 100%;
-    border-radius: 16px 16px 0 0;
-    padding: 20px;
   }
-
 }
