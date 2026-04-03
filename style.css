@@ -442,19 +442,16 @@ MODAL
 }
 
 /* ==============================
-FOOTER PRO
-============================== */
-/* ==============================
-FOOTER COMPLETO
+FOOTER AJUSTADO
 ============================== */
 footer {
   background: linear-gradient(to bottom, #111827, #0b1220);
   color: #fff;
-  padding: 60px 20px 30px;
+  padding: 50px 20px 30px;
   font-family: 'Inter', Arial, sans-serif;
 }
 
-.footer-container {
+footer .footer-top {
   max-width: 1100px;
   margin: auto;
   display: flex;
@@ -463,34 +460,44 @@ footer {
   gap: 30px;
 }
 
-.footer-col {
-  flex: 1 1 220px;
+footer .footer-logo {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px;
 }
 
-.footer-col h4 {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 8px;
+footer .footer-logo .brand-main {
+  font-size: 24px;
+  font-weight: bold;
   color: #ffffff;
 }
 
-.footer-col p,
-.footer-col a {
+footer .footer-logo .brand-sub {
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+footer .footer-links,
+footer .footer-social {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+footer .footer-links a,
+footer .footer-social a {
   font-size: 13px;
   color: #9ca3af;
-  line-height: 1.5;
   text-decoration: none;
   transition: 0.2s;
 }
 
-.footer-col a:hover {
+footer .footer-links a:hover,
+footer .footer-social a:hover {
   color: #ffffff;
 }
 
-.footer-bottom {
+footer .footer-bottom {
   text-align: center;
   margin-top: 40px;
   border-top: 1px solid #374151;
@@ -503,13 +510,14 @@ footer {
 RESPONSIVE FOOTER
 ============================== */
 @media (max-width: 768px) {
-  .footer-container {
+  footer .footer-top {
     flex-direction: column;
     align-items: center;
     text-align: center;
   }
 
-  .footer-col {
+  footer .footer-links,
+  footer .footer-social {
     align-items: center;
     text-align: center;
   }
