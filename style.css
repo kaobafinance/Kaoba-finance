@@ -240,6 +240,27 @@ CARDS RESULTADOS
   border: 1px solid #ddd;
 }
 
+.resultado-card {
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  transition: 0.25s;
+}
+
+.resultado-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+}
+
+.resultado-card strong {
+  display: block;
+  font-size: 18px;
+  color: #0d4f8b;
+}
+
+.resultado-card span {
+  font-size: 12px;
+  color: #6b7280;
+}
 /* ==============================
 TABLA
 ============================== */
@@ -255,6 +276,20 @@ TABLA
   background: #fff;
 }
 
+#tablaContainer table th,
+#tablaContainer table td {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 13px;
+}
+
+#tablaContainer table th {
+  background: #f3f4f6;
+  position: sticky;
+  top: 0;
+  font-weight: 600;
+}
 /* ==============================
 TOGGLE VIVIENDA
 ============================== */
