@@ -134,6 +134,17 @@ background: #e6f0fc;
 font-weight: 500;
 }
 
+.brand-title {
+  display: flex;
+  justify-content: space-between; /* separa texto y badge */
+  align-items: center;            /* alinea verticalmente */
+  width: 100%;
+}
+
+.euribor-badge {
+  margin-bottom: 0;               /* elimina margen inferior si lo hay */
+}
+
 /* ==============================
 GRID OPERACIONES
 ============================== */
