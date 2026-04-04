@@ -1,77 +1,69 @@
 /* ========================
    Header profesional logo
 ========================= */
-header.logo-header {
+.logo-header {
   position: sticky;
   top: 0;
   width: 100%;
-  background-color: #0d4f8b; /* fondo azul elegante */
-  padding: 18px 0;
-  text-align: center;
-  z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  background-color: #0d4f8b !important; /* fondo azul elegante */
+  padding: 20px 0 !important;
+  text-align: center !important;
+  z-index: 1000 !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
 }
 
 /* Logo principal */
-header.logo-header .logo-left .brand {
-  display: block;
-  font-size: 2.8rem;   /* tamaño base */
-  font-weight: 800;
-  color: #fff;
-  line-height: 1;
+.logo-left .brand {
+  display: block !important;
+  font-size: 3rem !important;       /* grande por defecto */
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  line-height: 1 !important;
+  margin-bottom: 4px !important;
 }
 
-/* Subtítulo del logo */
-header.logo-header .logo-right .subtitle {
-  display: block;
-  font-size: 1.8rem;   /* tamaño base */
-  font-weight: 600;
-  color: #ffe066;      /* contraste elegante */
-  margin-top: -4px;    /* justo debajo del logo */
-}
-
-/* Hover opcional: efecto de color */
-header.logo-header:hover .brand,
-header.logo-header:hover .subtitle {
-  color: #fff3a1;
-  transition: color 0.3s ease;
+/* Subtítulo */
+.logo-right .subtitle {
+  display: block !important;
+  font-size: 2rem !important;       /* tamaño visible */
+  font-weight: 600 !important;
+  color: #ffe066 !important;        /* contraste amarillo suave */
+  margin-top: -2px !important;
 }
 
 /* ========================
-   Ajustes para pantallas grandes
+   Ajustes responsivos
 ========================= */
-@media (min-width: 992px) {
-  header.logo-header .logo-left .brand {
-    font-size: 3.2rem;
+
+/* Pantallas medianas (tablets) */
+@media (max-width: 992px) {
+  .logo-left .brand {
+    font-size: 2.5rem !important;
   }
-  header.logo-header .logo-right .subtitle {
-    font-size: 2rem;
+  .logo-right .subtitle {
+    font-size: 1.6rem !important;
   }
 }
 
-/* ========================
-   Ajustes para tablets/medianos
-========================= */
+/* Pantallas pequeñas (móviles) */
 @media (max-width: 768px) {
-  header.logo-header .logo-left .brand {
-    font-size: 2.4rem;
+  .logo-left .brand {
+    font-size: 2.2rem !important;
   }
-  header.logo-header .logo-right .subtitle {
-    font-size: 1.5rem;
+  .logo-right .subtitle {
+    font-size: 1.4rem !important;
   }
 }
 
-/* ========================
-   Ajustes para móviles pequeños
-========================= */
+/* Pantallas muy pequeñas */
 @media (max-width: 576px) {
-  header.logo-header .logo-left .brand {
-    font-size: 2rem;
+  .logo-left .brand {
+    font-size: 1.8rem !important;
   }
-  header.logo-header .logo-right .subtitle {
-    font-size: 1.2rem;
+  .logo-right .subtitle {
+    font-size: 1.2rem !important;
   }
 }
