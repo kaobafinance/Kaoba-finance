@@ -68,7 +68,7 @@
   }
 }
    /* Texto descriptivo debajo del header */
-..header-description {
+.header-description {
   text-align: center;
   font-size: 14px;
   color: #6b7280;
