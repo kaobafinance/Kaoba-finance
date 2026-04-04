@@ -456,13 +456,11 @@ BOTÓN FLOTANTE
   justify-content: center;
   z-index: 1000;
 }
-#btnCalculadoraFlotante:hover {
-  background: #5cd67a;
-}
 
 #btnCalculadoraFlotante svg {
   width: 28px;
   height: 28px;
+   transform: scale(1.2);
 }
 #btnCalculadoraFlotante,
 #faqButton {
