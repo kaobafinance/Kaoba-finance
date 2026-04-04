@@ -144,6 +144,12 @@ BRAND HEADER CON EURÍBOR
   font-weight: 500;
   margin-bottom: 0;
 }
+@media (max-width: 768px) {
+  .brand-title {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+}
 /* ==============================
 GRID OPERACIONES
 ============================== */
