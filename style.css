@@ -9,16 +9,17 @@ padding: 0;
 /* ==============================
 HEADER NORMAL (no fijo)
 ============================== */
+/* HEADER NORMAL, no fijo, solo al inicio */
 .logo-header {
+  position: relative; /* no sticky ni fixed */
   width: 100%;
   padding: 20px 0;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: rgba(245, 241, 231, 0.1); /* beige muy suave */
+  background-color: rgba(245, 241, 231, 0.1); /* beige suave */
   box-shadow: none; /* sin sombra */
-  position: relative; /* header normal, se desplaza con la página */
 }
 
 /* Logo principal */
@@ -26,7 +27,6 @@ HEADER NORMAL (no fijo)
   font-size: 3rem;
   font-weight: 800;
   color: #2a5d8f; /* azul suave */
-  line-height: 1;
 }
 
 /* Subtítulo */
@@ -37,6 +37,10 @@ HEADER NORMAL (no fijo)
   margin-top: 4px;
 }
 
+/* No tocar el body con padding-top */
+body {
+  padding-top: 0;
+}
 /* ==============================
 RESPONSIVE
 ============================== */
