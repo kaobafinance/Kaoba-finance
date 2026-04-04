@@ -261,7 +261,7 @@ function addBanco(){
     <input type="number" id="difVar-${contador}" step="0.01" onchange="calcular();">
   </label>
 </div>
-`;`;
+`;
 
   document.getElementById("bancos").appendChild(div);
 
@@ -750,7 +750,7 @@ doc.text(disclaimerDividido, 20, disclaimerY);
     mejorTAE = [...conTAE].sort((a,b)=>a.tae-b.tae)[0];
   }
 
-llet texto = `La opción más favorable es ${mejorCoste.nombre} (${mejorCoste.tipo}), con un coste total de ${mejorCoste.total.toLocaleString("es-ES", {minimumFractionDigits:2})} €.`;
+let texto = `La opción más favorable es ${mejorCoste.nombre} (${mejorCoste.tipo}), con un coste total de ${mejorCoste.total.toLocaleString("es-ES", {minimumFractionDigits:2})} €.`;
 
 texto += " Esta alternativa ofrece el mejor equilibrio entre cuota mensual y coste total del préstamo.";
 
