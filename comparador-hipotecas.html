@@ -64,80 +64,124 @@ th{background:#f1f3f6;}
 </head>
 
 <body>
+
 <a href="index.html" class="volver">← Volver al inicio</a>
 
 <main>
+
   <h2>Datos generales</h2>
 
   <label>
     Capital (€)
-    <span class="help-icon" data-tooltip="Importe total del préstamo hipotecario.">?</span>
+    <span class="help-icon" data-tooltip="Importe total del préstamo solicitado a la entidad financiera, sin incluir intereses. Este valor será la base sobre la que se calcularán las cuotas y el coste total de la hipoteca.">?</span>
     <input type="number" id="capital" placeholder="150000">
   </label>
   <div id="errorCapital" class="error-msg"></div>
 
   <label>
     Plazo total (años)
-    <span class="help-icon" data-tooltip="Tiempo en el que devolverás la hipoteca. A más años, menor cuota pero más intereses.">?</span>
+    <span class="help-icon" data-tooltip="Duración total del préstamo hipotecario. Un plazo más largo reduce la cuota mensual, pero incrementa el coste total en intereses.">?</span>
     <input type="number" id="plazo" placeholder="20">
   </label>
   <div id="errorPlazo" class="error-msg"></div>
 
   <label>
     Euríbor actual (%)
-    <span class="help-icon" data-tooltip="Índice de referencia para hipotecas variables. Puede subir o bajar con el mercado.">?</span>
-    <input type="number" id="euribor" placeholder="2.82%" step="0.01">
+    <span class="help-icon" data-tooltip="Índice de referencia utilizado en la mayoría de hipotecas variables en Europa. Su valor fluctúa según el mercado y afecta directamente al importe de las cuotas en préstamos a tipo variable.">?</span>
+    <input type="number" id="euribor" placeholder="2.82" step="0.01">
   </label>
   <div id="errorEuribor" class="error-msg"></div>
 
-  <p style="font-size:12px; color:#b45309; margin-top:6px;" id="aviso-tecnico">
+  <p style="font-size:12px; color:#b45309; margin-top:6px;">
     * Para hipotecas mixtas o variables, los cálculos usan el Euríbor actual como referencia. Valores orientativos; pueden variar con el mercado.
   </p>
 
-  
   <hr style="margin:18px 0;">
+
   <h2>Ofertas bancarias</h2>
   <div id="bancos"></div>
-<button id="btnAddBanco" onclick="addBanco()">+ Añadir banco</button>
+
+  <button id="btnAddBanco" onclick="addBanco()">+ Añadir banco</button>
 
   <hr style="margin:18px 0;">
+
   <h2>Resultados</h2>
-  <label>Nombre<input type="text" id="nombreUsuario" placeholder="Tu nombre"></label>
-  <div id="errorNombre" class="error-msg"></div>
-  <label>Email<input type="email" id="emailUsuario" placeholder="tu@email.com"></label>
-  <div id="errorEmail" class="error-msg"></div>
- <div class="rgpd-container">
-  <label class="rgpd-label">
-    <input type="checkbox" id="acepta">
-    <span>
-      Acepto la 
-      <a href="/privacidad" target="_blank">política de privacidad</a>
-    </span>
+
+  <label>
+    Nombre
+    <input type="text" id="nombreUsuario" placeholder="Tu nombre">
   </label>
-  <div id="errorAcepta" class="error-msg"></div>
-</div>
-  
+  <div id="errorNombre" class="error-msg"></div>
+
+  <label>
+    Email
+    <input type="email" id="emailUsuario" placeholder="tu@email.com">
+  </label>
+  <div id="errorEmail" class="error-msg"></div>
+
+  <div class="rgpd-container">
+    <label class="rgpd-label">
+      <input type="checkbox" id="acepta">
+      <span>
+        Acepto la 
+        <a href="/privacidad" target="_blank">política de privacidad</a>
+      </span>
+    </label>
+    <div id="errorAcepta" class="error-msg"></div>
+  </div>
+
   <button onclick="validarYCalcular()">Calcular</button>
   <button onclick="descargarPDF()">Descargar PDF</button>
 
   <div class="table-container">
     <table id="tabla">
       <thead>
-        <tr><th>Banco</th><th>Tipo</th><th>TAE</th><th>Cuota media</th><th>Intereses</th><th>Total</th><th>Exceso de interés</th><th>Amortización</th></tr>
+        <tr>
+          <th>Banco</th>
+          <th>Tipo</th>
+          <th>
+            TAE
+            <span class="help-icon" data-tooltip="Tasa Anual Equivalente. Refleja el coste total del préstamo incluyendo intereses, comisiones y otros gastos. Es el indicador más útil para comparar diferentes ofertas hipotecarias.">?</span>
+          </th>
+          <th>
+            Cuota
+            <span class="help-icon" data-tooltip="Importe mensual estimado a pagar. En hipotecas variables o mixtas, esta cuota puede variar en función de la evolución del Euríbor.">?</span>
+          </th>
+          <th>
+            Intereses
+            <span class="help-icon" data-tooltip="Coste total en intereses que pagarás a lo largo de la vida del préstamo, sin incluir el capital solicitado.">?</span>
+          </th>
+          <th>
+            Total
+            <span class="help-icon" data-tooltip="Suma total a devolver al banco: capital solicitado más todos los intereses generados durante el préstamo.">?</span>
+          </th>
+          <th>
+            Exceso de interés
+            <span class="help-icon" data-tooltip="Diferencia de coste respecto a la mejor oferta disponible. Indica cuánto pagarías de más si eliges esta opción.">?</span>
+          </th>
+          <th>
+            Amortización
+            <span class="help-icon" data-tooltip="Detalle mensual del préstamo donde se muestra la evolución de la deuda pendiente, los intereses pagados y el capital amortizado.">?</span>
+          </th>
+        </tr>
       </thead>
       <tbody></tbody>
     </table>
+
     <div id="recomendacion" style="
-  margin-top:20px;
-  padding:15px;
-  background:#eef6ff;
-  border-left:4px solid #0d4f8b;
-  border-radius:8px;
-  font-size:14px;
-"></div>
+      margin-top:20px;
+      padding:15px;
+      background:#eef6ff;
+      border-left:4px solid #0d4f8b;
+      border-radius:8px;
+      font-size:14px;">
+    </div>
+
   </div>
+
 </main>
 
+</body>
 <script>
 let contador=0;
 
@@ -148,49 +192,76 @@ function addBanco(){
   div.className="banco-card";
   div.id="banco-"+contador;
 
-  div.innerHTML=`
-  <button class="remove-btn" onclick="removeBanco(${contador})">X</button>
+ div.innerHTML=`
+<button class="remove-btn" onclick="removeBanco(${contador})">X</button>
 
-  <div style="display:flex; gap:10px;">
-    <div style="flex:2;">
-      <label>Nombre
-        <input type="text" id="nombre-${contador}" placeholder="Banco ${contador}">
-      </label>
-    </div>
-
-    <div style="flex:1;">
-      <label>TAE (%) <small>(opcional)</small>
-        <input type="number" id="tae-${contador}" step="0.01" placeholder="2.85">
-      </label>
-    </div>
+<div style="display:flex; gap:10px;">
+  <div style="flex:2;">
+    <label>
+      Nombre
+      <span class="help-icon" data-tooltip="Entidad financiera que comercializa la hipoteca. Este campo permite identificar y comparar las distintas ofertas disponibles.">?</span>
+      <input type="text" id="nombre-${contador}" placeholder="Banco ${contador}">
+    </label>
   </div>
 
-  <label>Tipo
-    <select id="tipo-${contador}" onchange="toggleTipo(${contador});">
-      <option value="fija" selected>Fija</option>
-      <option value="mixta">Mixta</option>
-      <option value="variable">Variable</option>
-    </select>
+  <div style="flex:1;">
+    <label>
+      TAE (%) <small>(opcional)</small>
+      <span class="help-icon" data-tooltip="Tasa Anual Equivalente. Refleja el coste total del préstamo incluyendo intereses y gastos. Es el mejor indicador para comparar ofertas.">?</span>
+      <input type="number" id="tae-${contador}" step="0.01" placeholder="2.85">
+    </label>
+  </div>
+</div>
+
+<label>
+  Tipo
+  <span class="help-icon" data-tooltip="Modalidad de interés aplicada al préstamo:
+- Fija: tipo constante durante toda la hipoteca.
+- Mixta: periodo inicial fijo y después variable.
+- Variable: depende del Euríbor más un diferencial.">?</span>
+  <select id="tipo-${contador}" onchange="toggleTipo(${contador});">
+    <option value="fija" selected>Fija</option>
+    <option value="mixta">Mixta</option>
+    <option value="variable">Variable</option>
+  </select>
+</label>
+
+<div id="bloque-fija-${contador}">
+  <label>
+    TIN fijo (%)
+    <span class="help-icon" data-tooltip="Tipo de Interés Nominal aplicado durante el periodo fijo. Determina la cuota mensual.">?</span>
+    <input type="number" id="tinFijo-${contador}" step="0.01" onchange="calcular();">
+  </label>
+</div>
+
+<div id="bloque-mixta-${contador}" style="display:none;">
+  <label>
+    Meses fijo
+    <span class="help-icon" data-tooltip="Periodo inicial con interés fijo antes de pasar a tipo variable.">?</span>
+    <input type="number" id="mesesFijo-${contador}" value="60" onchange="calcular();">
   </label>
 
-  <div id="bloque-fija-${contador}">
-    <label>TIN fijo (%)<input type="number" id="tinFijo-${contador}" step="0.01" onchange="calcular();"></label>
-  </div>
+  <label>
+    TIN fijo (%)
+    <span class="help-icon" data-tooltip="Tipo aplicado durante la fase inicial fija.">?</span>
+    <input type="number" id="tinMixtoFijo-${contador}" step="0.01" onchange="calcular();">
+  </label>
 
-  <div id="bloque-mixta-${contador}" style="display:none;">
-    <label>Meses fijo<input type="number" id="mesesFijo-${contador}" value="60" onchange="calcular();"></label>
-    <label>TIN fijo (%)<input type="number" id="tinMixtoFijo-${contador}" step="0.01" onchange="calcular();"></label>
-    <label>Diferencial (%)<input type="number" id="diferencial-${contador}" step="0.01" onchange="calcular();"></label>
-  </div>
+  <label>
+    Diferencial (%)
+    <span class="help-icon" data-tooltip="Margen que se suma al Euríbor en la fase variable.">?</span>
+    <input type="number" id="diferencial-${contador}" step="0.01" onchange="calcular();">
+  </label>
+</div>
 
-  <div id="bloque-variable-${contador}" style="display:none;">
-    <label>Diferencial (%)<input type="number" id="difVar-${contador}" step="0.01" onchange="calcular();"></label>
-  </div>
-
-  <p id="aviso-mixta-${contador}" style="display:none; font-size:12px; color:#b45309; margin-top:6px;">
-    * En la fase variable se utiliza el Euríbor actual como estimación. Este valor puede variar en el futuro.
-  </p>
-  `;
+<div id="bloque-variable-${contador}" style="display:none;">
+  <label>
+    Diferencial (%)
+    <span class="help-icon" data-tooltip="Margen que se suma al Euríbor para calcular el tipo de interés variable.">?</span>
+    <input type="number" id="difVar-${contador}" step="0.01" onchange="calcular();">
+  </label>
+</div>
+`;`;
 
   document.getElementById("bancos").appendChild(div);
 
@@ -679,22 +750,26 @@ doc.text(disclaimerDividido, 20, disclaimerY);
     mejorTAE = [...conTAE].sort((a,b)=>a.tae-b.tae)[0];
   }
 
-let texto = `La mejor opción es ${mejorCoste.nombre} (${mejorCoste.tipo}), con un coste total de ${mejorCoste.total.toLocaleString("es-ES", {minimumFractionDigits:2})} €.`;
-    if(mejorCoste.tipo==="fija"){
-  texto += " Ofrece estabilidad total sin cambios en la cuota.";
+llet texto = `La opción más favorable es ${mejorCoste.nombre} (${mejorCoste.tipo}), con un coste total de ${mejorCoste.total.toLocaleString("es-ES", {minimumFractionDigits:2})} €.`;
+
+texto += " Esta alternativa ofrece el mejor equilibrio entre cuota mensual y coste total del préstamo.";
+
+if(resultados.length > 1){
+  const diferencia = (resultados[1].total - mejorCoste.total).toFixed(2);
+  texto += ` En comparación con la siguiente mejor oferta, supone un ahorro aproximado de ${diferencia} €.`;
 }
 
-  if(mejorTAE && mejorTAE.nombre !== mejorCoste.nombre){
-    texto += ` Sin embargo, ${mejorTAE.nombre} tiene una TAE más baja (${mejorTAE.tae.toLocaleString("es-ES", {minimumFractionDigits:2})}%).`;
-  }
+if(mejorCoste.tipo==="fija"){
+  texto += " Además, garantiza estabilidad total en las cuotas durante toda la vida del préstamo.";
+}
 
-  if(mejorCoste.tipo==="variable"){
-    texto += " Es variable y puede cambiar con el Euríbor.";
-  }
+if(mejorCoste.tipo==="variable"){
+  texto += " Al tratarse de un tipo variable, las cuotas podrán variar en función de la evolución del Euríbor.";
+}
 
-  if(mejorCoste.tipo==="mixta"){
-    texto += " Tiene un tramo fijo inicial y luego variable.";
-  }
+if(mejorCoste.tipo==="mixta"){
+  texto += " Combina estabilidad inicial con un tramo variable posterior, lo que puede implicar variaciones futuras en la cuota.";
+}
 
   return texto;
 }
