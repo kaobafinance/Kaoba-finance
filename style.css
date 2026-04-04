@@ -6,19 +6,24 @@ box-sizing: border-box;
 margin: 0;
 padding: 0;
 }
-/* HEADER LOGO NORMAL (sin desplazamiento) */
+/* ==============================
+HEADER FIJO CON FONDO TRANSPARENTE Y ESPACIO PARA EL CONTENIDO
+============================== */
 .logo-header {
-  position: relative; /* o simplemente quitar position */
+  position: fixed;      /* header siempre visible */
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   width: 100%;
   padding: 20px 0;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* sin fondo ni sombra */
-  background-color: transparent;
-  box-shadow: none;
-  z-index: auto;
+  background-color: rgba(245, 241, 231, 0.05); /* beige muy suave, casi transparente */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);      /* sombra ligera */
+  backdrop-filter: blur(4px);                  /* efecto vidrio ligero */
 }
 
 /* Logo principal */
@@ -39,7 +44,9 @@ padding: 0;
   margin-top: 4px;
 }
 
-/* RESPONSIVE */
+/* ==============================
+RESPONSIVE
+============================== */
 @media (max-width: 992px) {
   .logo-inner .brand { font-size: 2.5rem; }
   .logo-inner .subtitle { font-size: 1.6rem; }
@@ -51,6 +58,21 @@ padding: 0;
 @media (max-width: 576px) {
   .logo-inner .brand { font-size: 1.8rem; }
   .logo-inner .subtitle { font-size: 1.2rem; }
+}
+
+/* ==============================
+ESPACIO PARA QUE EL CONTENIDO NO SE ESCONDA DETRÁS DEL HEADER
+============================== */
+body {
+  padding-top: 80px; /* ajusta según la altura real del header */
+}
+
+/* Si quieres, puedes hacer que el padding sea dinámico usando media queries */
+@media (max-width: 768px) {
+  body { padding-top: 70px; }
+}
+@media (max-width: 576px) {
+  body { padding-top: 60px; }
 }
 /* ==============================
 CHECKBOX LEAD (ARREGLADO)
