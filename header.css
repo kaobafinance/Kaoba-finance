@@ -68,11 +68,10 @@
   }
 }
    /* Texto descriptivo debajo del header */
-.header-description {
+..header-description {
   text-align: center;
   font-size: 14px;
   color: #6b7280;
-  margin-top: 20px;  /* espacio desde el header */
-  margin-bottom: 20px; /* opcional, separa del siguiente contenido */
+  margin-top: 30px;  /* aumenta para separarlo del header */
+  margin-bottom: 20px;
 }
-
