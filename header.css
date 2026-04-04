@@ -1,50 +1,55 @@
-/* header.css - Logo profesional con fondo */
+/* ===============================
+   HEADER / LOGO (escritorio + móvil)
+   =============================== */
+
+/* Selector con mayor especificidad */
 header.logo-header {
   position: sticky;
-  top: 10px;
-  max-width: 400px;
-  margin: 0 auto;
-  background-color: #0d4f8b !important;
-  padding: 15px 25px;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  top: 0;
+  width: 100%;
+  background-color: #0d4f8b !important; /* fondo azul sólido */
+  padding: 25px 20px !important;
+  border-radius: 0 0 15px 15px !important; /* redondea solo abajo */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+  text-align: center !important;
   z-index: 1000;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
-header.logo-header .logo-left {
-  font-size: 3rem !important;
-  font-weight: 800;
+/* Logo principal: Kaoba Finance */
+header.logo-header .logo-left .brand {
+  font-size: 3.2rem !important;   /* más grande */
+  font-weight: 800 !important;
   color: #ffffff !important;
-  line-height: 1;
+  line-height: 1.1 !important;
 }
 
-header.logo-header .logo-right {
-  font-size: 2rem !important;
-  font-weight: 600;
+/* Subtítulo: Simulator */
+header.logo-header .logo-right .subtitle {
+  font-size: 2rem !important;     /* visible, pero menor que la marca */
+  font-weight: 600 !important;
   color: #ffffff !important;
-  margin-top: -6px;
+  margin-top: 6px !important;
 }
 
-/* Responsive */
+/* Ajustes responsive */
 @media (max-width: 992px) {
-  header.logo-header .logo-left {
-    font-size: 2.5rem !important;
+  header.logo-header .logo-left .brand {
+    font-size: 2.8rem !important;
   }
-  header.logo-header .logo-right {
+  header.logo-header .logo-right .subtitle {
     font-size: 1.8rem !important;
-    margin-top: -4px;
   }
 }
 
 @media (max-width: 576px) {
-  header.logo-header .logo-left {
-    font-size: 2rem !important;
+  header.logo-header .logo-left .brand {
+    font-size: 2.4rem !important;
   }
-  header.logo-header .logo-right {
-    font-size: 1.4rem !important;
-    margin-top: -2px;
+  header.logo-header .logo-right .subtitle {
+    font-size: 1.6rem !important;
   }
 }
