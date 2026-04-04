@@ -1,30 +1,25 @@
+/* header.css */
 .logo-header {
   position: sticky;
   top: 0;
   width: 100%;
-  background-color: #f5f0e6;
-  color: #3a3a3a;
+  background-color: #f5f1eb; /* beige suave */
+  padding: 16px 20px;
   text-align: center;
-  padding: 18px 0;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  z-index: 999;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.07);
+  z-index: 1000;
   border-bottom: 1px solid #e0dacf;
 }
 
-.logo-header .logo-text {
-  display: inline-block;
-}
-
-.logo-header .brand {
+.logo-text .brand {
   font-size: 1.8rem;
   font-weight: 700;
-  letter-spacing: 1px;
+  color: #0d4f8b;
 }
 
-.logo-header .subtitle {
+.logo-text .subtitle {
   display: block;
   font-size: 1rem;
-  font-weight: 400;
-  color: #7a6f5f;
+  color: #6b7280;
   margin-top: 2px;
 }
