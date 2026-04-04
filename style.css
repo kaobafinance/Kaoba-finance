@@ -456,10 +456,6 @@ BOTÓN FLOTANTE
   justify-content: center;
   z-index: 1000;
 }
-#btnCalculadoraFlotante span {
-  font-size: 26px;
-  line-height: 1;
-}
 #btnCalculadoraFlotante:hover {
   background: #5cd67a;
 }
