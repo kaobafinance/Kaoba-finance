@@ -7,10 +7,9 @@ margin: 0;
 padding: 0;
 }
 /* ==============================
-HEADER FIJO CON FONDO TRANSPARENTE Y ESPACIO PARA EL CONTENIDO
-============================== */
+HEADER FIJO CON FONDO TRANSPARENTE Y ESPACIO PARA EL /* HEADER FIJO ARRIBA */
 .logo-header {
-  position: fixed;      /* header siempre visible */
+  position: fixed;       /* mantiene el header arriba siempre */
   top: 0;
   left: 0;
   right: 0;
@@ -21,59 +20,37 @@ HEADER FIJO CON FONDO TRANSPARENTE Y ESPACIO PARA EL CONTENIDO
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: rgba(245, 241, 231, 0.05); /* beige muy suave, casi transparente */
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);      /* sombra ligera */
-  backdrop-filter: blur(4px);                  /* efecto vidrio ligero */
+
+  /* fondo casi transparente */
+  background-color: rgba(245, 241, 231, 0.05);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  backdrop-filter: blur(4px);
 }
 
 /* Logo principal */
 .logo-inner .brand {
-  display: block;
   font-size: 3rem;
   font-weight: 800;
-  color: #2a5d8f; /* azul suave */
+  color: #2a5d8f;
   line-height: 1;
 }
 
 /* Subtítulo */
 .logo-inner .subtitle {
-  display: block;
   font-size: 2rem;
   font-weight: 600;
-  color: #7a7a7a; /* gris suave */
+  color: #7a7a7a;
   margin-top: 4px;
 }
 
-/* ==============================
-RESPONSIVE
-============================== */
-@media (max-width: 992px) {
-  .logo-inner .brand { font-size: 2.5rem; }
-  .logo-inner .subtitle { font-size: 1.6rem; }
-}
-@media (max-width: 768px) {
-  .logo-inner .brand { font-size: 2.2rem; }
-  .logo-inner .subtitle { font-size: 1.4rem; }
-}
-@media (max-width: 576px) {
-  .logo-inner .brand { font-size: 1.8rem; }
-  .logo-inner .subtitle { font-size: 1.2rem; }
-}
-
-/* ==============================
-ESPACIO PARA QUE EL CONTENIDO NO SE ESCONDA DETRÁS DEL HEADER
-============================== */
+/* ESPACIO PARA EL CONTENIDO */
 body {
-  padding-top: 80px; /* ajusta según la altura real del header */
+  padding-top: 80px; /* ajusta según la altura del header */
 }
 
-/* Si quieres, puedes hacer que el padding sea dinámico usando media queries */
-@media (max-width: 768px) {
-  body { padding-top: 70px; }
-}
-@media (max-width: 576px) {
-  body { padding-top: 60px; }
-}
+/* Responsive */
+@media (max-width: 768px) { body { padding-top: 70px; } }
+@media (max-width: 576px) { body { padding-top: 60px; } }
 /* ==============================
 CHECKBOX LEAD (ARREGLADO)
 ============================== */
