@@ -6,7 +6,74 @@ box-sizing: border-box;
 margin: 0;
 padding: 0;
 }
+/* ==============================
+HEADER LOGO
+============================== */
+.logo-header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background-color: #0d4f8b;
+  padding: 20px 0;
+  text-align: center;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
+/* Logo principal */
+.logo-left .brand {
+  display: block;
+  font-size: 3rem;  /* tamaño grande */
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1;
+}
+
+/* Subtítulo */
+.logo-right .subtitle {
+  display: block;
+  font-size: 2rem;  /* tamaño visible */
+  font-weight: 600;
+  color: #ffe066;
+  margin-top: 2px;
+}
+
+/* ==============================
+RESPONSIVE
+============================== */
+
+/* Tablets */
+@media (max-width: 992px) {
+  .logo-left .brand {
+    font-size: 2.5rem;
+  }
+  .logo-right .subtitle {
+    font-size: 1.6rem;
+  }
+}
+
+/* Móviles medianos */
+@media (max-width: 768px) {
+  .logo-left .brand {
+    font-size: 2.2rem;
+  }
+  .logo-right .subtitle {
+    font-size: 1.4rem;
+  }
+}
+
+/* Móviles pequeños */
+@media (max-width: 576px) {
+  .logo-left .brand {
+    font-size: 1.8rem;
+  }
+  .logo-right .subtitle {
+    font-size: 1.2rem;
+  }
+}
 .header-description {
   text-align: center;
   font-size: 14px;
