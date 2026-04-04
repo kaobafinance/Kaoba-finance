@@ -489,17 +489,20 @@ padding: 12px 0;
 }
 
 .faq-question {
-font-weight: 600;
-cursor: pointer;
-position: relative;
-padding-right: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+  padding-right: 30px; /* 👈 más espacio para el icono */
 }
 
 .faq-question::after {
-content: "+";
-position: absolute;
-right: 0;
-font-weight: bold;
+  content: "+";
+  position: absolute;
+  right: 10px; /* 👈 lo separa del borde */
+  top: 50%;
+  transform: translateY(-50%); /* 👈 centrado vertical perfecto */
+  font-weight: bold;
+  font-size: 18px;
 }
 
 .faq-answer {
