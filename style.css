@@ -105,27 +105,14 @@ margin-bottom: 15px;
 }
 
 /* ==============================
-BRAND
+BRAND HEADER CON EURÍBOR
 ============================== */
-.brand-title {
-text-align: center;
-margin-bottom: 10px;
-}
-
-.brand-main {
-font-size: 28px;
-font-weight: bold;
-}
-
-.brand-sub {
-font-size: 14px;
-color: #6b7280;
-}
 .brand-title {
   display: flex;
   justify-content: space-between; /* logo a la izquierda, badge a la derecha */
   align-items: center;            /* centra verticalmente */
   width: 100%;
+  margin-bottom: 25px;
   gap: 20px;                      /* espacio entre logo y badge */
 }
 
@@ -134,33 +121,30 @@ color: #6b7280;
   flex-direction: column;         /* logo arriba, subtítulo abajo */
 }
 
-.euribor-badge {
-  white-space: nowrap;            /* evita que se rompa el texto */
+.brand-text .brand {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #2a5d8f; /* azul suave */
+}
+
+.brand-text .subtitle {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #7a7a7a; /* gris suave */
+  margin-top: 4px;
 }
 
 .euribor-badge {
-display: inline-block;
-margin-bottom: 25px;
-font-size: 14px;
-color: #0072CE;
-border: 1px solid #0072CE;
-border-radius: 8px;
-padding: 6px 12px;
-background: #e6f0fc;
-font-weight: 500;
+  white-space: nowrap;
+  font-size: 14px;
+  color: #0072CE;
+  border: 1px solid #0072CE;
+  border-radius: 8px;
+  padding: 6px 12px;
+  background: #e6f0fc;
+  font-weight: 500;
+  margin-bottom: 0;
 }
-
-.brand-title {
-  display: flex;
-  justify-content: space-between; /* separa texto y badge */
-  align-items: center;            /* alinea verticalmente */
-  width: 100%;
-}
-
-.euribor-badge {
-  margin-bottom: 0;               /* elimina margen inferior si lo hay */
-}
-
 /* ==============================
 GRID OPERACIONES
 ============================== */
