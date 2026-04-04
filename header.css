@@ -1,38 +1,49 @@
 /* header.css */
+
 .logo-header {
   position: sticky;
   top: 0;
   width: 100%;
-  background-color: #f5f1eb; /* beige suave */
-  padding: 16px 20px;
-  text-align: left; /* alineamos a la izquierda */
+  background-color: #f5f1eb; /* fondo beige sólido */
+  padding: 20px 30px;
+  text-align: left; /* alineado a la izquierda */
   box-shadow: 0 2px 4px rgba(0,0,0,0.07);
   z-index: 1000;
   border-bottom: 1px solid #e0dacf;
-  font-family: sans-serif;
+  display: flex;
+  align-items: flex-end; /* alinea la base del logo y subtítulo */
+}
+
+.logo-text {
+  display: inline-block;
+  line-height: 1; /* para que "Simulator" quede justo debajo */
 }
 
 .logo-text .brand {
-  font-size: 1.8rem;
-  font-weight: 700;
+  display: block;
+  font-size: 2.8rem; /* tamaño grande tipo logo */
+  font-weight: 800;
   color: #0d4f8b;
-  display: inline-block;
 }
 
 .logo-text .subtitle {
-  font-size: 1rem;
-  color: #6b7280;
   display: block;
-  margin-left: 5ch; /* mueve "Simulator" aproximadamente debajo de "nce" */
+  font-size: 1.6rem; /* más grande que antes */
+  font-weight: 600;
+  color: #6b7280;
+  margin-left: 0; /* empieza justo debajo de "nce" */
   margin-top: 2px;
 }
 
-/* RESPONSIVE: móviles se centran y apilan */
+/* Opcional: responsive para pantallas pequeñas */
 @media (max-width: 768px) {
-  .logo-text {
-    text-align: center;
+  .logo-header {
+    padding: 16px 20px;
+  }
+  .logo-text .brand {
+    font-size: 2rem;
   }
   .logo-text .subtitle {
-    margin-left: 0;
+    font-size: 1.2rem;
   }
 }
