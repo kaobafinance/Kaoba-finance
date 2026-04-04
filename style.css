@@ -24,7 +24,7 @@ HEADER LOGO
 }
 
 /* Logo principal */
-.logo-left .brand {
+.logo-inner .brand {
   display: block;
   font-size: 3rem;  /* tamaño grande */
   font-weight: 800;
@@ -32,8 +32,7 @@ HEADER LOGO
   line-height: 1;
 }
 
-/* Subtítulo */
-.logo-right .subtitle {
+.logo-inner .subtitle {
   display: block;
   font-size: 2rem;  /* tamaño visible */
   font-weight: 600;
