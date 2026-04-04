@@ -1,7 +1,7 @@
 /* ========================
    Header profesional logo
 ========================= */
-.logo-header {
+header.logo-header {
   position: sticky;
   top: 0;
   width: 100%;
@@ -10,50 +10,68 @@
   text-align: center;
   z-index: 1000;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.logo-left .brand {
+/* Logo principal */
+header.logo-header .logo-left .brand {
   display: block;
-  font-size: 2.8rem;
+  font-size: 2.8rem;   /* tamaño base */
   font-weight: 800;
   color: #fff;
   line-height: 1;
 }
 
-.logo-right .subtitle {
+/* Subtítulo del logo */
+header.logo-header .logo-right .subtitle {
   display: block;
-  font-size: 1.8rem;
+  font-size: 1.8rem;   /* tamaño base */
   font-weight: 600;
-  color: #ffe066; /* suave contraste */
-  margin-top: -4px; /* ajusta justo debajo */
+  color: #ffe066;      /* contraste elegante */
+  margin-top: -4px;    /* justo debajo del logo */
 }
 
-/* Ajustes más grandes en pantallas grandes */
+/* Hover opcional: efecto de color */
+header.logo-header:hover .brand,
+header.logo-header:hover .subtitle {
+  color: #fff3a1;
+  transition: color 0.3s ease;
+}
+
+/* ========================
+   Ajustes para pantallas grandes
+========================= */
 @media (min-width: 992px) {
-  .logo-left .brand {
+  header.logo-header .logo-left .brand {
     font-size: 3.2rem;
   }
-  .logo-right .subtitle {
+  header.logo-header .logo-right .subtitle {
     font-size: 2rem;
   }
 }
 
-/* Ajustes para pantallas medianas */
+/* ========================
+   Ajustes para tablets/medianos
+========================= */
 @media (max-width: 768px) {
-  .logo-left .brand {
+  header.logo-header .logo-left .brand {
     font-size: 2.4rem;
   }
-  .logo-right .subtitle {
+  header.logo-header .logo-right .subtitle {
     font-size: 1.5rem;
   }
 }
 
-/* Ajustes para móviles pequeños */
+/* ========================
+   Ajustes para móviles pequeños
+========================= */
 @media (max-width: 576px) {
-  .logo-left .brand {
+  header.logo-header .logo-left .brand {
     font-size: 2rem;
   }
-  .logo-right .subtitle {
+  header.logo-header .logo-right .subtitle {
     font-size: 1.2rem;
   }
 }
