@@ -24,22 +24,16 @@ input.error, select.error{border-color:#dc2626;}
 .error-msg{color:#dc2626;font-size:0.85rem;margin-top:3px;}
 button{background:#0d4f8b;color:#fff;border:none;padding:10px 18px;border-radius:8px;cursor:pointer;margin-top:16px;}
 button:hover{background:#09407a;}
-  #btnAddBanco {
-  background: #fff;
-  color: #0d4f8b;
-  border: 2px dashed #0d4f8b;
-  width: auto;
-  display: inline-block;
-  margin-top: 16px;
-}
+  #btnAddBanco {background: #fff; color: #0d4f8b; border: 2px dashed #0d4f8b; width: auto; display: inline-block; margin-top: 16px;}
 
-#btnAddBanco:hover {
-  background: #0d4f8b;
-  color: #fff;
-}
-  #bancos {
-  margin-bottom: 25px;
-}
+#btnAddBanco:hover {background: #0d4f8b; color: #fff;}
+  #bancos { margin-bottom: 25px;}
+  .rgpd-container {margin-top: 15px;}
+
+.rgpd-label {display: flex; align-items: center; gap: 8px; font-size: 0.9rem; cursor: pointer;}
+.rgpd-label input { width: auto; transform: scale(1.1);
+  cursor: pointer;}
+.rgpd-label a {color: #0d4f8b; text-decoration: underline;}
 .banco-card{background:#fafbff;border:1px solid #e3e8ef;padding:18px;border-radius:10px;margin-top:20px;position:relative;transition:0.2s;}
 .banco-card:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(0,0,0,0.07);}
 .remove-btn {position:absolute; top:6px; right:10px; width:30px; height:30px; border-radius:50%; background:#f1f3f6; color:#6b7280; font-size:16px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.2s;}
@@ -86,9 +80,16 @@ th{background:#f1f3f6;}
   <div id="errorNombre" class="error-msg"></div>
   <label>Email<input type="email" id="emailUsuario" placeholder="tu@email.com"></label>
   <div id="errorEmail" class="error-msg"></div>
-  <label><input type="checkbox" id="acepta"> Acepto política de privacidad</label>
+ <div class="rgpd-container">
+  <label class="rgpd-label">
+    <input type="checkbox" id="acepta">
+    <span>
+      Acepto la 
+      <a href="/privacidad" target="_blank">política de privacidad</a>
+    </span>
+  </label>
   <div id="errorAcepta" class="error-msg"></div>
-
+</div>
   
   <button onclick="validarYCalcular()">Calcular</button>
   <button onclick="descargarPDF()">Descargar PDF</button>
