@@ -836,6 +836,14 @@ doc.text("Página 1 de 1", 550, 800, { align: "right" });
     .then(d => alert(d.message || "PDF enviado correctamente"))
     .catch(() => alert("Error enviando PDF"));
 }
+
+  document.addEventListener("click", function(e){
+  if(e.target.classList.contains("help-icon")){
+    e.target.classList.toggle("active");
+  } else {
+    document.querySelectorAll(".help-icon").forEach(el => el.classList.remove("active"));
+  }
+});
 </script>
 </body>
 </html>
