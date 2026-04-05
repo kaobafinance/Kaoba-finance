@@ -31,29 +31,33 @@ main {
 
   box-shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
-@media (max-width: 768px) {
 
-  .container {
-    padding: 0;
-  }
-
-  main {
-    width: 100%;
-    border-radius: 0; /* evita efecto “caja flotante” */
-  }
-
-}
 .operaciones-section {
   margin-bottom: 60px;
 }
 
-#perfil {
-  margin-top: 60px;
-}
+/* ==============================
+MOBILE FIX (ARREGLADO)
+============================== */
 @media (max-width: 768px) {
-  #perfil {
-    margin-top: 100px;
+
+  .container {
+    max-width: 100%;   /* 🔥 evita desplazamiento */
+    margin: 0;         /* 🔥 centra correctamente */
+    padding: 0;        /* 🔥 quita margen lateral */
   }
+
+  main {
+    width: 100%;
+    margin: 0;
+    padding: 15px;     /* 🔥 menos espacio en móvil */
+    border-radius: 0;  /* 🔥 elimina efecto caja */
+  }
+
+  #perfil {
+    margin-top: 30px;  /* 🔥 antes 100px → demasiado */
+  }
+
 }
 /* ==============================
 HEADER NORMAL (no fijo)
