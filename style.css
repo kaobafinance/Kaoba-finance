@@ -41,12 +41,6 @@ MOBILE FIX (ARREGLADO)
 ============================== */
 @media (max-width: 768px) {
 
-  .container {
-    max-width: 100%;   /* 🔥 evita desplazamiento */
-    margin: 0;         /* 🔥 centra correctamente */
-    padding: 0;        /* 🔥 quita margen lateral */
-  }
-
   main {
     width: 100%;
     margin: 0;
