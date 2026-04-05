@@ -387,16 +387,25 @@ font-size: 14px;
   transition: 0.2s;
 }
 
+.help-icon {
+  position: relative;
+  z-index: 10;
+}
+
+.help-icon::after {
+  z-index: 9999;
+}
+
 .help-icon:hover::after {
   opacity: 1;
 }
 /* ==============================
 CARDS RESULTADOS
 ============================== */
-.cards, .resultados-container {
-display: flex;
-gap: 12px;
-overflow-x: auto;
+.cards,
+.resultados-container {
+  overflow-x: auto;
+  overflow-y: visible; /* 🔥 clave */
 }
 
 .card, .resultado-card {
