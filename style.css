@@ -11,9 +11,31 @@ main {
   display: flex;
   flex-direction: column;
   gap: 40px;
+  background: #f9fafb; /* gris muy suave */
+  padding: 30px;
+  border-radius: 16px;
 }
 main {
   border: 4px solid red;
+}
+main {
+  width: 100%;
+  max-width: 1100px; /* igual que .container */
+  margin: 0 auto;
+}
+#perfil {
+  max-width: 700px;   /* 👈 aquí controlas el tamaño */
+  margin: 60px auto 0 auto; /* centrado */
+}
+#perfil {
+  max-width: 700px;
+  margin: 60px auto 0 auto;
+
+  background: #ffffff; /* blanco limpio */
+  padding: 25px;
+  border-radius: 12px;
+
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
 .operaciones-section {
   margin-bottom: 60px;
