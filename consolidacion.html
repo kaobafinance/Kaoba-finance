@@ -51,13 +51,17 @@ th{background:#f1f3f6;}
 
   .help-icon {display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; margin-left: 6px; border-radius: 50%; background: #e5e7eb;
   color: #6b7280; font-size: 11px; font-weight: bold; cursor: pointer; position: relative;}
-
 .help-icon:hover {background: #0d4f8b; color: white;}
-
 .help-icon::after {content: attr(data-tooltip); position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%);
   background: #111827; color: #fff;
   padding: 6px 8px; border-radius: 6px; font-size: 12px; width: 200px; opacity: 0; pointer-events: none; transition: 0.2s;}
 .help-icon:hover::after {opacity: 1;}
+
+.help-icon {display: inline-block; width: 16px; height: 16px; background: #0d4f8b; color: #fff; border-radius: 50%; text-align: center; font-size: 12px; cursor: pointer; margin-left: 6px;
+}
+.help-text {display: none; background: #333; color: #fff; font-size: 12px; padding: 6px 8px; border-radius: 6px; margin-top: 4px; position: absolute; z-index: 20;
+}
+.help-icon.active + .help-text {display: block;}
 
 /* ===== BOTÓN ELIMINAR IGUAL ===== */
 .remove-btn {position:absolute; top:8px; right:10px; width:30px; height:30px; border-radius:50%; background:#f1f3f6; color:#6b7280; font-size:16px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.2s;}
@@ -276,20 +280,30 @@ function addDeuda() {
   div.id = "d" + count;
 
   div.innerHTML = `
-    <button class="remove-btn" onclick="removeDeuda(${count})">×</button>
+div.innerHTML = `
+  <button class="remove-btn" onclick="removeDeuda(${count})">×</button>
 
-   <label>Capital (€)
-  <input type="number" id="capital${count}" placeholder="20000" min="0">
-</label>
+  <label>
+    Capital (€)
+    <span class="help-icon">?</span>
+    <div class="help-text">Importe pendiente de esta deuda</div>
+    <input type="number" id="capital${count}" placeholder="20000" min="0">
+  </label>
 
-<label>TIN (%)
-  <input type="number" id="interes${count}" placeholder="5" step="0.01" min="0">
-</label>
+  <label>
+    TIN (%)
+    <span class="help-icon">?</span>
+    <div class="help-text">Tipo de interés anual de la deuda</div>
+    <input type="number" id="interes${count}" placeholder="5" step="0.01" min="0">
+  </label>
 
-<label>Plazo (años)
-  <input type="number" id="plazo${count}" placeholder="3" min="1">
-</label>
-  `;
+  <label>
+    Plazo (años)
+    <span class="help-icon">?</span>
+    <div class="help-text">Años que quedan por pagar</div>
+    <input type="number" id="plazo${count}" placeholder="3" min="1">
+  </label>
+`;
 
   document.getElementById("deudas").appendChild(div);
 
