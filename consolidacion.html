@@ -107,15 +107,13 @@ th{background:#f1f3f6;}
   <div class="banco-card">
 
   <label>
-  Capital pendiente (€)
+  Capital pendiente (€)<input type="number" id="capitalPendiente" placeholder="150000" min="0">
   <span class="help-icon" data-tooltip="Cantidad que aún debes al banco de tu hipoteca actual.">?</span>
-  <input type="number" id="capitalPendiente" placeholder="150000" min="0">
 </label>
 
    <label>
-  TIN actual (%)
+  TIN actual (%)<input type="number" id="tinActual" placeholder="3.5" step="0.01" min="0">
   <span class="help-icon" data-tooltip="Tipo de interés nominal que estás pagando actualmente en tu hipoteca.">?</span>
-  <input type="number" id="tinActual" placeholder="3.5" step="0.01" min="0">
 </label>
     <div id="errorTinActual" class="error-msg"></div>
  <div id="infoMixta" class="small-tip" style="display:none;">
