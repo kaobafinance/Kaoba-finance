@@ -83,7 +83,12 @@ cargarEuribor();
       return;
     }
 
-    const cuota = capital * (interes * Math.pow(1 + interes, n)) / (Math.pow(1 + interes, n) - 1);
+   let cuota;
+if (interes === 0) {
+  cuota = capital / n;
+} else {
+  cuota = capital * (interes * Math.pow(1 + interes, n)) / (Math.pow(1 + interes, n) - 1);
+}
     const totalPagado = cuota * n;
     const interesesTotales = totalPagado - capital;
 
@@ -94,7 +99,6 @@ cargarEuribor();
     resultadosDiv && (resultadosDiv.style.display = "block");
     verTablaBtn && (verTablaBtn.style.display = "block");
     tablaContainer && (tablaContainer.style.display = "none");
-    resultadosDiv?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   const generarTabla = () => {
@@ -110,15 +114,25 @@ cargarEuribor();
       const interesMes = saldo * interes;
       const capitalMes = cuota - interesMes;
       saldo -= capitalMes;
-      tbody.innerHTML += `<tr>
-        <td>${i}</td>
-        <td>${formatMoney(cuota)}</td>
-        <td>${formatMoney(interesMes)}</td>
-        <td>${formatMoney(capitalMes)}</td>
-        <td>${formatMoney(Math.max(saldo,0))}</td>
-      </tr>`;
-    }
-  };
+     let html = "";
+
+for (let i = 1; i <= n; i++) {
+  const interesMes = saldo * interes;
+  const capitalMes = cuota - interesMes;
+  saldo -= capitalMes;
+
+  html += `
+    <tr>
+      <td>${i}</td>
+      <td>${formatMoney(cuota)}</td>
+      <td>${formatMoney(interesMes)}</td>
+      <td>${formatMoney(capitalMes)}</td>
+      <td>${formatMoney(Math.max(saldo,0))}</td>
+    </tr>
+  `;
+}
+
+tbody.innerHTML = html;
 
   [prestamoInput, interesInput, anosInput].forEach(el => el && el.addEventListener("input", calcular));
   verTablaBtn && verTablaBtn.addEventListener("click", () => {
@@ -200,7 +214,7 @@ function calcularPerfil() {
   // -----------------------------
   // 1. CAPACIDAD POR INGRESOS
   // -----------------------------
-  const cuotaMax = ingresosAnuales * 0.35 / 12 - deudas;
+  const cuota = calcularCuota(capitalPosible, tipoRef, n);
   let capacidadPorIngresos = cuotaMax * (Math.pow(1 + tipoRef, n) - 1) / (tipoRef * Math.pow(1 + tipoRef, n));
 
   // -----------------------------
@@ -717,6 +731,16 @@ const precioFormateado = formatMoney(parseFloat(precio) || 0);
     borrarCookiesInnecesarias();
   });
 
+      function calcularCuota(capital, interes, n) {
+  if (interes === 0) return capital / n;
+  return capital * (interes * Math.pow(1 + interes, n)) / (Math.pow(1 + interes, n) - 1);
+}
+
+function calcularCapacidad(ingresosAnuales, deudas, tipoRef, n) {
+  const cuotaMax = ingresosAnuales * 0.35 / 12 - deudas;
+  return cuotaMax * (Math.pow(1 + tipoRef, n) - 1) / (tipoRef * Math.pow(1 + tipoRef, n));
+}
+      
   document.addEventListener("click", function(e){
   if(e.target.classList.contains("help-icon")){
     e.target.classList.toggle("active");
