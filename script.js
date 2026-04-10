@@ -290,35 +290,33 @@ const perfilFields = {
 }
       
 function calcularPerfil() {
-  // =============================
-  // 1. INPUTS BASE (CACHEADOS)
-  // =============================
-  const titulares = parseInt(perfilFields.titulares?.value) || 1;
+  const f = perfilFields;
 
-  const edad1 = parseInt(perfilFields.edad1?.value) || 0;
-  const edad2 = titulares === 2 ? (parseInt(perfilFields.edad2?.value) || 0) : 0;
+  // =========================
+  // INPUTS BASE
+  // =========================
+  const titulares = parseInt(f.titulares?.value) || 1;
+
+  const edad1 = parseInt(f.edad1?.value) || 0;
+  const edad2 = titulares === 2 ? (parseInt(f.edad2?.value) || 0) : 0;
 
   const maxEdad = Math.max(edad1, edad2);
   const plazoMax = Math.max(0, Math.min(30, 75 - maxEdad));
 
-  if (perfilFields.plazo) {
-    perfilFields.plazo.max = plazoMax;
-
-    if (!plazoEditadoPorUsuario) {
-      perfilFields.plazo.value = plazoMax;
-    }
+  if (f.plazo) {
+    f.plazo.max = plazoMax;
+    if (!plazoEditadoPorUsuario) f.plazo.value = plazoMax;
   }
 
   if (plazoMax <= 0) return;
 
-  const nYears = parseInt(perfilFields.plazo?.value) || plazoMax;
-  const nMonths = nYears * 12;
+  const n = (parseInt(f.plazo?.value) || plazoMax) * 12;
 
-  // =============================
-  // 2. INGRESOS
-  // =============================
-  const s1 = parseFloat(perfilFields.salario1?.value) || 0;
-  const s2 = titulares === 2 ? (parseFloat(perfilFields.salario2?.value) || 0) : 0;
+  // =========================
+  // INGRESOS
+  // =========================
+  const s1 = parseFloat(f.salario1?.value) || 0;
+  const s2 = titulares === 2 ? (parseFloat(f.salario2?.value) || 0) : 0;
 
   const p1 = parseInt(document.getElementById("perfilPagas1")?.value) || 12;
   const p2 = titulares === 2 ? (parseInt(document.getElementById("perfilPagas2")?.value) || 12) : 12;
@@ -326,25 +324,24 @@ function calcularPerfil() {
   const ingresosAnuales =
     (s1 * p1) +
     (s2 * p2) +
-    (parseFloat(perfilFields.otroIngreso?.value) || 0);
+    (parseFloat(f.otroIngreso?.value) || 0);
 
-  const ahorros = parseFloat(perfilFields.ahorros?.value) || 0;
-  const deudas = parseFloat(perfilFields.deuda?.value) || 0;
+  const ahorros = parseFloat(f.ahorros?.value) || 0;
+  const deudas = parseFloat(f.deuda?.value) || 0;
 
-  // =============================
-  // 3. INTERÉS
-  // =============================
+  // =========================
+  // FACTOR HIPOTECA (más eficiente)
+  // =========================
   const tipoRef = 0.035 / 12;
+  const pow = Math.pow(1 + tipoRef, n);
 
-  const factorHipoteca =
-    tipoRef > 0
-      ? (Math.pow(1 + tipoRef, nMonths) - 1) /
-        (tipoRef * Math.pow(1 + tipoRef, nMonths))
-      : nMonths;
+  const factorHipoteca = tipoRef
+    ? (pow - 1) / (tipoRef * pow)
+    : n;
 
-  // =============================
-  // 4. SCORING BANCO
-  // =============================
+  // =========================
+  // SCORE BANCO (OPTIMIZADO)
+  // =========================
   let score = 0;
 
   score += ingresosAnuales > 60000 ? 3 : ingresosAnuales > 30000 ? 2 : 1;
@@ -360,113 +357,133 @@ function calcularPerfil() {
   score += antiguedad > 5 ? 2 : antiguedad > 2 ? 1 : 0;
 
   const scoreFactor =
-    score >= 8 ? 1.0 :
+    score >= 8 ? 1 :
     score >= 6 ? 0.9 :
     score >= 4 ? 0.8 : 0.7;
 
-  // =============================
-  // 5. VIVIENDA
-  // =============================
-  const usarVivienda = perfilFields.viviendaCheck?.checked || false;
+  // =========================
+  // VIVIENDA
+  // =========================
+  const usarVivienda = f.viviendaCheck?.checked || false;
 
-  const precio = usarVivienda
-    ? (parseFloat(perfilFields.precio?.value) || 0)
-    : 0;
+  const precio = usarVivienda ? (parseFloat(f.precio?.value) || 0) : 0;
 
-  const tipoVivienda = perfilFields.tipoVivienda?.value;
-  const comunidad = parseFloat(perfilFields.comunidad?.value) || 0;
+  const comunidad = parseFloat(f.comunidad?.value) || 0;
 
   const impuestos = usarVivienda
-    ? (tipoVivienda === "obraNueva"
-        ? precio * 0.10
-        : precio * comunidad)
+    ? (f.tipoVivienda?.value === "obraNueva" ? precio * 0.10 : precio * comunidad)
     : 0;
 
   const gastos = impuestos + (usarVivienda ? 2500 : 0);
 
-  const esSegunda = perfilFields.primeraSegunda?.value === "segunda";
+  const esSegunda = f.primeraSegunda?.value === "segunda";
 
-  const maxFinanciacionBase =
+  // =========================
+  // 🔥 FINANCIACIÓN (ARREGLADO 100% JÓVENES)
+  // =========================
+  const esJoven = (edad1 < 35 || edad2 < 35);
+
+  let maxFinanciacionBase =
     esSegunda ? 0.7 :
     ingresosAnuales < 50000 ? 0.9 : 0.8;
 
   let maxFinanciacion;
 
-const esJoven = (edad1 < 35 || edad2 < 35);
-
-if (esJoven) {
-  // 🔥 EXCEPCIÓN BANCO: joven = hasta 100%
-  maxFinanciacion = maxFinanciacionBase;
-} else {
-  // 🏦 resto de perfiles sí dependen del score
-  maxFinanciacion = Math.min(maxFinanciacionBase, scoreFactor);
-}
-
-  const maxPrestamoBanco = usarVivienda ? precio * maxFinanciacion : Infinity;
-
-  const importeTotal = usarVivienda ? precio + gastos : 0;
-
-  const prestamoNecesario = usarVivienda
-    ? Math.max(importeTotal - ahorros, 0)
-    : 0;
-
-  // =============================
-  // 6. CAPACIDAD FINANCIERA
-  // =============================
-  const ratio = usarVivienda ? 0.40 : 0.35;
-
-  const cuotaMaxMensual = (ingresosAnuales * ratio) / 12 - deudas;
-
-  let capitalPosible = cuotaMaxMensual * factorHipoteca;
-
-  if (usarVivienda) {
-    capitalPosible = Math.min(
-      capitalPosible,
-      maxPrestamoBanco,
-      prestamoNecesario
-    );
+  if (esJoven) {
+    // 👉 aquí sí puede llegar a 100% si el banco lo permite
+    maxFinanciacion = Math.min(1.0, maxFinanciacionBase + 0.1);
+  } else {
+    maxFinanciacion = Math.min(maxFinanciacionBase, scoreFactor);
   }
 
-  capitalPosible = Math.max(0, capitalPosible);
+  const maxPrestamo = usarVivienda ? precio * maxFinanciacion : Infinity;
 
-  const cuota = capitalPosible > 0
-    ? capitalPosible * (tipoRef * Math.pow(1 + tipoRef, nMonths)) /
-      (Math.pow(1 + tipoRef, nMonths) - 1)
+  const totalOperacion = usarVivienda ? precio + gastos : 0;
+  const prestamoNecesario = usarVivienda ? Math.max(totalOperacion - ahorros, 0) : 0;
+
+  // =========================
+  // CAPACIDAD FINANCIERA
+  // =========================
+  const ratio = usarVivienda ? 0.40 : 0.35;
+
+  const cuotaMax = (ingresosAnuales * ratio) / 12 - deudas;
+
+  let capital = cuotaMax * factorHipoteca;
+
+  if (usarVivienda) {
+    capital = Math.min(capital, maxPrestamo, prestamoNecesario);
+  }
+
+  capital = Math.max(0, capital);
+
+  const cuota = capital > 0
+    ? capital * (tipoRef * pow) / (pow - 1)
     : 0;
 
-  const ltv = precio ? (capitalPosible / precio) * 100 : 0;
+  const ltv = precio ? (capital / precio) * 100 : 0;
 
   const lti = ingresosAnuales
     ? ((cuota + deudas) * 12) / ingresosAnuales
     : 0;
 
-  // =============================
-  // 7. OUTPUTS PRINCIPALES
-  // =============================
-  perfilFields.capitalOut.innerText = formatMoney(capitalPosible);
-  perfilFields.cuotaOut.innerText = formatMoney(cuota);
-  perfilFields.ltvOut.innerText = ltv ? ltv.toFixed(1) + "%" : "-";
-  perfilFields.gastosOut.innerText = formatMoney(gastos);
-  perfilFields.ltiOut.innerText = (lti * 100).toFixed(1) + "%";
+  // =========================
+  // OUTPUTS
+  // =========================
+  f.capitalOut.innerText = formatMoney(capital);
+  f.cuotaOut.innerText = formatMoney(cuota);
+  f.ltvOut.innerText = ltv ? ltv.toFixed(1) + "%" : "-";
+  f.gastosOut.innerText = formatMoney(gastos);
+  f.ltiOut.innerText = (lti * 100).toFixed(1) + "%";
 
-  // =============================
-  // 8. COMPATIBILIDAD (UI BANK STYLE)
-  // =============================
-  if (perfilFields.compatibleOut) {
-    const el = perfilFields.compatibleOut;
-    el.className = "";
+  if (f.compatibleOut) {
+    f.compatibleOut.className = "";
 
     if (lti <= 0.35) {
-      el.innerText = "Compatible";
-      el.classList.add("green");
+      f.compatibleOut.innerText = "Compatible";
+      f.compatibleOut.classList.add("green");
     } else if (lti <= 0.40) {
-      el.innerText = "Aceptable";
-      el.classList.add("orange");
+      f.compatibleOut.innerText = "Aceptable";
+      f.compatibleOut.classList.add("orange");
     } else {
-      el.innerText = "No viable";
-      el.classList.add("red");
+      f.compatibleOut.innerText = "No viable";
+      f.compatibleOut.classList.add("red");
     }
   }
+
+  // =========================
+  // BADGE
+  // =========================
+  if (f.operacionBadge) {
+    f.operacionBadge.innerText =
+      `Operación: ${esSegunda ? "Inversión" : "Primera vivienda"} | Score ${score}`;
+  }
+
+  // =========================
+  // MENSAJE
+  // =========================
+  const mensaje = document.getElementById("mensajePerfil");
+
+  if (mensaje) {
+    mensaje.className = "mensaje-perfil";
+
+    if (prestamoNecesario === 0 && usarVivienda) {
+      mensaje.innerText = "No necesitas financiación: tus ahorros cubren la operación.";
+      mensaje.classList.add("mensaje-ok");
+    } else if (lti <= 0.35) {
+      mensaje.innerText = "¡Excelente perfil financiero! Alta probabilidad de aprobación.";
+      mensaje.classList.add("mensaje-ok");
+    } else if (lti <= 0.40) {
+      mensaje.innerText = "Buen perfil. Posible aprobación con condiciones normales.";
+      mensaje.classList.add("mensaje-warning");
+    } else if (lti <= 0.45) {
+      mensaje.innerText = "Perfil aceptable. El banco puede pedir garantías adicionales.";
+      mensaje.classList.add("mensaje-warning");
+    } else {
+      mensaje.innerText = "Perfil de riesgo elevado. Difícil aprobación sin cambios.";
+      mensaje.classList.add("mensaje-warning");
+    }
+  }
+}
 
   // =============================
   // 9. BADGE + MENSAJE BANCO
