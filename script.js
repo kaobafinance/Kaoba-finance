@@ -453,7 +453,7 @@ const mensajePerfil = document.getElementById("mensajePerfil");
 if (mensajePerfil) {
   mensajePerfil.className = "mensaje-perfil";
 
-  if (ingresos <= 0 || cuota <= 0) {
+  if (ingresosAnuales <= 0 || cuota <= 0) {
     mensajePerfil.style.display = "none";
   } else {
     mensajePerfil.style.display = "block";
