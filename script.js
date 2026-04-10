@@ -431,11 +431,7 @@ if (edad1 < 35 || edad2 < 35) {
   const ltv = agregarVivienda && precio > 0
     ? (capitalPosible / precio) * 100
     : 0;
-
-  const lti = ingresosAnuales > 0
-    ? ((cuota + deudas) * 12) / ingresosAnuales
-    : 0;
-
+ 
   // -----------------------------
   // MÉTRICAS AVANZADAS
   // -----------------------------
