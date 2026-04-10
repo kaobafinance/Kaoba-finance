@@ -460,18 +460,20 @@ if (edad1 < 35 || edad2 < 35) {
 
       const faltaDinero = prestamoNecesario - capitalPosible;
 
-      if (prestamoNecesario === 0 && agregarVivienda) {
-        mensajePerfil.innerText = "No necesitas financiación: tus ahorros cubren la operación.";
-        mensajePerfil.classList.add("mensaje-ok");
-        } else if ((edad1 < 35 || edad2 < 35) && faltaDinero > 0) {
- mensajePerfil.innerHTML = `
-  Puedes financiar el <strong>100%</strong> de la vivienda.<br><br>
-  Necesitas aportar aproximadamente <strong>${formatMoney(gastos)}</strong> para cubrir gastos.
-`;
-  mensajePerfil.classList.add("mensaje-warning");
-      if (faltaDinero > 0) {
+if (prestamoNecesario === 0 && agregarVivienda) {
 
-  const ahorroUsado = Math.min(ahorros, importeTotalOperacion);
+  mensajePerfil.innerText = "No necesitas financiación: tus ahorros cubren la operación.";
+  mensajePerfil.classList.add("mensaje-ok");
+
+} else if ((edad1 < 35 || edad2 < 35) && faltaDinero > 0) {
+
+  mensajePerfil.innerHTML = `
+    Puedes financiar el <strong>100%</strong> de la vivienda.<br><br>
+    Necesitas aportar aproximadamente <strong>${formatMoney(gastos)}</strong> para cubrir gastos.
+  `;
+  mensajePerfil.classList.add("mensaje-warning");
+
+} else if (faltaDinero > 0) {
 
   let mensaje = `
     Tus ahorros (${formatMoney(ahorros)}) reducen el préstamo necesario a 
@@ -479,36 +481,44 @@ if (edad1 < 35 || edad2 < 35) {
   `;
 
   if (capacidadPorIngresos < prestamoNecesario) {
-    // ❌ PROBLEMA DE INGRESOS
+    // ❌ INGRESOS
     mensaje += `
       Tu capacidad de endeudamiento es insuficiente.<br><br>
       El banco te concedería aproximadamente <strong>${formatMoney(capitalPosible)}</strong>,
       pero necesitas <strong>${formatMoney(prestamoNecesario)}</strong>.
     `;
   } else {
-    // ❌ PROBLEMA DE AHORRO
+    // ❌ AHORRO
     mensaje += `
       No tienes suficiente ahorro para completar la operación.<br><br>
-      Necesitarías aportar aproximadamente <strong>${formatMoney(entradaMinima)}</strong> de entrada y gastos.
+      Necesitarías aportar aproximadamente <strong>${formatMoney(entradaMinima)}</strong>.
     `;
   }
 
   mensajePerfil.innerHTML = mensaje;
   mensajePerfil.classList.add("mensaje-warning");
+
+} else if (lti <= 0.35) {
+
+  mensajePerfil.innerText = "¡Excelente perfil financiero! Alta probabilidad de aprobación.";
+  mensajePerfil.classList.add("mensaje-ok");
+
+} else if (lti <= 0.40) {
+
+  mensajePerfil.innerText = "Buen perfil. Posible aprobación con condiciones normales.";
+  mensajePerfil.classList.add("mensaje-ok");
+
+} else if (lti <= 0.45) {
+
+  mensajePerfil.innerText = "Perfil aceptable. El banco puede exigir garantías adicionales.";
+  mensajePerfil.classList.add("mensaje-warning");
+
+} else {
+
+  mensajePerfil.innerText = "Perfil de riesgo elevado. Difícil aprobación sin cambios.";
+  mensajePerfil.classList.add("mensaje-warning");
+
 }
-      } else if (lti <= 0.35) {
-        mensajePerfil.innerText = "¡Excelente perfil financiero! Alta probabilidad de aprobación.";
-        mensajePerfil.classList.add("mensaje-ok");
-      } else if (lti <= 0.40) {
-        mensajePerfil.innerText = "Buen perfil. Posible aprobación con condiciones normales.";
-        mensajePerfil.classList.add("mensaje-ok");
-      } else if (lti <= 0.45) {
-        mensajePerfil.innerText = "Perfil aceptable. El banco puede exigir garantías adicionales.";
-        mensajePerfil.classList.add("mensaje-warning");
-      } else {
-        mensajePerfil.innerText = "Perfil de riesgo elevado. Difícil aprobación sin cambios.";
-        mensajePerfil.classList.add("mensaje-warning");
-      }
     }
   }
 
