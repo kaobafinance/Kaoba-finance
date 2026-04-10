@@ -500,25 +500,6 @@ if (mensajePerfil) {
   }
 }
 
-// -----------------------------
-// OUTPUT (compatible 35 / 40)
-// -----------------------------
-if (perfilFields.compatibleOut) {
-  perfilFields.compatibleOut.className = "";
-
-  if (lti <= 0.35) {
-    perfilFields.compatibleOut.innerText = "Compatible";
-    perfilFields.compatibleOut.classList.add("green");
-
-  } else if (lti <= 0.40) {
-    perfilFields.compatibleOut.innerText = "Aceptable";
-    perfilFields.compatibleOut.classList.add("orange");
-
-  } else {
-    perfilFields.compatibleOut.innerText = "No viable";
-    perfilFields.compatibleOut.classList.add("red");
-  }
-}
 
   // -----------------------------
   // OUTPUTS
