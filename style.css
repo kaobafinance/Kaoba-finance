@@ -678,19 +678,38 @@ font-size: 14px;
 MODAL
 ============================== */
 #modalCalculadora {
-display: none;
-position: fixed;
-bottom: 100px;
-right: 20px;
-width: 320px;
-background: #fff;
-padding: 25px;
-z-index: 2000;
-border-radius: 12px;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  background: rgba(0,0,0,0.5);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 3000;
 }
 
 #modalCalculadora.open {
-display: block;
+  display: flex;
+}
+.modal-content {
+  background: #fff;
+  width: 90%;
+  max-width: 500px;
+
+  max-height: 90vh;
+  overflow-y: auto;
+
+  padding: 25px;
+  border-radius: 12px;
+
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
 }
 @media (max-width: 768px) {
 #modalCalculadora {
