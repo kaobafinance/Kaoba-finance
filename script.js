@@ -469,9 +469,33 @@ if (edad1 < 35 || edad2 < 35) {
   Necesitas aportar aproximadamente <strong>${formatMoney(gastos)}</strong> para cubrir gastos.
 `;
   mensajePerfil.classList.add("mensaje-warning");
-      } else if (faltaDinero > 0) {
-        mensajePerfil.innerText = `Te faltan ${formatMoney(faltaDinero)} para completar la operación.`;
-        mensajePerfil.classList.add("mensaje-warning");
+      if (faltaDinero > 0) {
+
+  const ahorroUsado = Math.min(ahorros, importeTotalOperacion);
+
+  let mensaje = `
+    Tus ahorros (${formatMoney(ahorros)}) reducen el préstamo necesario a 
+    <strong>${formatMoney(prestamoNecesario)}</strong>.<br><br>
+  `;
+
+  if (capacidadPorIngresos < prestamoNecesario) {
+    // ❌ PROBLEMA DE INGRESOS
+    mensaje += `
+      Tu capacidad de endeudamiento es insuficiente.<br><br>
+      El banco te concedería aproximadamente <strong>${formatMoney(capitalPosible)}</strong>,
+      pero necesitas <strong>${formatMoney(prestamoNecesario)}</strong>.
+    `;
+  } else {
+    // ❌ PROBLEMA DE AHORRO
+    mensaje += `
+      No tienes suficiente ahorro para completar la operación.<br><br>
+      Necesitarías aportar aproximadamente <strong>${formatMoney(entradaMinima)}</strong> de entrada y gastos.
+    `;
+  }
+
+  mensajePerfil.innerHTML = mensaje;
+  mensajePerfil.classList.add("mensaje-warning");
+}
       } else if (lti <= 0.35) {
         mensajePerfil.innerText = "¡Excelente perfil financiero! Alta probabilidad de aprobación.";
         mensajePerfil.classList.add("mensaje-ok");
