@@ -1,3 +1,59 @@
+// -----------------------------
+// FUNCIONES GLOBALES (FUERA)
+// -----------------------------
+window.abrirOperacion = function(id){
+  document.querySelectorAll('.card-content').forEach(cc => {
+    if(cc.id === id){
+      cc.classList.toggle('open'); 
+    } else {
+      cc.classList.remove('open'); 
+    }
+  });
+};
+
+window.irAnalisis = function(event, tipoOperacion){
+  event.stopPropagation();
+
+  if(tipoOperacion === 'Cambio de Hipoteca'){ 
+    window.location.href = 'consolidacion.html'; 
+    return;
+  }
+
+  if(tipoOperacion === 'Consolidación'){ 
+    window.location.href = 'consolidacion.html'; 
+    return; 
+  }
+
+  const idMap = { 
+    'Compra Primera Vivienda': 'compra', 
+    'Inversión': 'inversion' 
+  };
+
+  const id = idMap[tipoOperacion];
+  if(id) abrirOperacion(id);
+
+  const perfilDiv = document.getElementById("perfil");
+  const badge = document.getElementById("operacionSeleccionada");
+  const primeraSegunda = document.getElementById("perfilPrimeraSegunda");
+
+  if(!perfilDiv || !badge) return;
+
+  perfilDiv.style.display = "block";
+  badge.style.display = "block";
+  badge.innerText = `Operación seleccionada: ${tipoOperacion}`;
+
+  if (primeraSegunda) {
+    if(tipoOperacion === 'Compra Primera Vivienda') primeraSegunda.value = 'primera';
+    if(tipoOperacion === 'Inversión') primeraSegunda.value = 'segunda';
+  }
+
+  setTimeout(() => {
+    const yOffset = -40;
+    const y = perfilDiv.getBoundingClientRect().top + window.pageYOffset + yOffset;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  }, 100);
+};
+
 document.addEventListener("DOMContentLoaded", () => {
 
 // -----------------------------
@@ -167,12 +223,12 @@ const perfilFields = {
   titular2Div: document.getElementById("titular2Div"),
   salario1: document.getElementById("perfilSalario1"),
   salario2: document.getElementById("perfilSalario2"),
-  pagas: document.getElementById("perfilPagas"),
+
   ahorros: document.getElementById("perfilAhorros"),
   deuda: document.getElementById("perfilDeuda"),
   otroIngreso: document.getElementById("perfilOtroIngreso"),
-  contrato: document.getElementById("perfilContrato"),
-antiguedad: document.getElementById("perfilAntiguedad"),
+ 
+
   viviendaCheck: document.getElementById("agregardatosdelavivienda"),
   viviendaInfo: document.getElementById("viviendaInfo"),
   precio: document.getElementById("perfilPrecio"),
@@ -219,7 +275,7 @@ antiguedad: document.getElementById("perfilAntiguedad"),
 }
       
 function calcularPerfil() {
-  const nTitulares = parseInt(perfilFields.titulares.value) || 1;
+  const nTitulares = parseInt(perfilFields.titulares?.value) || 1;
   const edad1 = parseInt(perfilFields.edad1.value) || 0;
   const edad2 = nTitulares === 2 ? parseInt(perfilFields.edad2.value) || 0 : 0;
   const maxEdad = Math.max(edad1, edad2);
@@ -550,8 +606,6 @@ window.irAnalisis = function(event, tipoOperacion){
   const idMap = { 'Compra Primera Vivienda': 'compra', 'Inversión': 'inversion' };
   const id = idMap[tipoOperacion];
   if(id) abrirOperacion(id);
-
-  if(!perfilFields.operacionBadge || !perfilDiv) return;
 
   perfilDiv.style.display = "block";
   perfilFields.operacionBadge.style.display = "block";
