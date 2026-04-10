@@ -447,73 +447,78 @@ if (edad1 < 35 || edad2 < 35) {
 
   const faltaAhorro = Math.max(entradaMinima - ahorros, 0);
 
-  // -----------------------------
-  // MENSAJES INTELIGENTES
-  // -----------------------------
-  const mensajePerfil = document.getElementById("mensajePerfil");
+// -----------------------------
+// LTI (ratio endeudamiento)
+// -----------------------------
+const lti = ingresosAnuales > 0
+  ? ((cuota + deudas) * 12) / ingresosAnuales
+  : 0;
 
-  if (mensajePerfil) {
-    mensajePerfil.className = "mensaje-perfil";
+// -----------------------------
+// MENSAJE PERFIL (35% / 40% / 45%)
+// -----------------------------
+const mensajePerfil = document.getElementById("mensajePerfil");
 
-    if (ingresos <= 0 || cuota <= 0) {
-      mensajePerfil.style.display = "none";
-    } else {
-      mensajePerfil.style.display = "block";
+if (mensajePerfil) {
+  mensajePerfil.className = "mensaje-perfil";
 
-      const faltaDinero = prestamoNecesario - capitalPosible;
-
-if (prestamoNecesario === 0 && agregarVivienda) {
-
-  mensajePerfil.innerText = "No necesitas financiación: tus ahorros cubren la operación.";
-  mensajePerfil.classList.add("mensaje-ok");
-
-
-} else if (faltaDinero > 0) {
-
-  let mensaje = `
-    Tus ahorros (${formatMoney(ahorros)}) reducen el préstamo necesario a 
-    <strong>${formatMoney(prestamoNecesario)}</strong>.<br><br>
-  `;
-
-  if (capacidadPorIngresos < prestamoNecesario) {
-    mensaje += `
-      Tu capacidad de endeudamiento es insuficiente.<br><br>
-      El banco te concedería aproximadamente <strong>${formatMoney(capitalPosible)}</strong>,
-      pero necesitas <strong>${formatMoney(prestamoNecesario)}</strong>.
-    `;
+  if (ingresos <= 0 || cuota <= 0) {
+    mensajePerfil.style.display = "none";
   } else {
-    mensaje += `
-      No tienes suficiente ahorro para completar la operación.<br><br>
-      Necesitarías aportar aproximadamente <strong>${formatMoney(entradaMinima)}</strong>.
-    `;
-  }
+    mensajePerfil.style.display = "block";
 
-  mensajePerfil.innerHTML = mensaje;
-  mensajePerfil.classList.add("mensaje-warning");
+    if (prestamoNecesario === 0 && agregarVivienda) {
 
-} else if (lti <= 0.35) {
+      mensajePerfil.innerText =
+        "No necesitas financiación: tus ahorros cubren la operación.";
+      mensajePerfil.classList.add("mensaje-ok");
 
-  mensajePerfil.innerText = "¡Excelente perfil financiero! Alta probabilidad de aprobación.";
-  mensajePerfil.classList.add("mensaje-ok");
+    } else if (lti <= 0.35) {
 
-} else if (lti <= 0.40) {
+      mensajePerfil.innerText =
+        "¡Excelente perfil financiero! Alta probabilidad de aprobación.";
+      mensajePerfil.classList.add("mensaje-ok");
 
-  mensajePerfil.innerText = "Buen perfil. Posible aprobación con condiciones normales.";
-  mensajePerfil.classList.add("mensaje-ok");
+    } else if (lti <= 0.40) {
 
-} else if (lti <= 0.45) {
+      mensajePerfil.innerText =
+        "Buen perfil. Posible aprobación con condiciones normales.";
+      mensajePerfil.classList.add("mensaje-warning"); // naranja
 
-  mensajePerfil.innerText = "Perfil aceptable. El banco puede exigir garantías adicionales.";
-  mensajePerfil.classList.add("mensaje-warning");
+    } else if (lti <= 0.45) {
 
-} else {
+      mensajePerfil.innerText =
+        "Perfil aceptable. El banco puede exigir garantías adicionales.";
+      mensajePerfil.classList.add("mensaje-warning");
 
-  mensajePerfil.innerText = "Perfil de riesgo elevado. Difícil aprobación sin cambios.";
-  mensajePerfil.classList.add("mensaje-warning");
+    } else {
 
-}
+      mensajePerfil.innerText =
+        "Perfil de riesgo elevado. Difícil aprobación sin cambios.";
+      mensajePerfil.classList.add("mensaje-warning");
     }
   }
+}
+
+// -----------------------------
+// OUTPUT (compatible 35 / 40)
+// -----------------------------
+if (perfilFields.compatibleOut) {
+  perfilFields.compatibleOut.className = "";
+
+  if (lti <= 0.35) {
+    perfilFields.compatibleOut.innerText = "Compatible";
+    perfilFields.compatibleOut.classList.add("green");
+
+  } else if (lti <= 0.40) {
+    perfilFields.compatibleOut.innerText = "Aceptable";
+    perfilFields.compatibleOut.classList.add("orange");
+
+  } else {
+    perfilFields.compatibleOut.innerText = "No viable";
+    perfilFields.compatibleOut.classList.add("red");
+  }
+}
 
   // -----------------------------
   // OUTPUTS
