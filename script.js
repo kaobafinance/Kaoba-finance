@@ -391,14 +391,16 @@ const comunidad = limpiarNumero(f.comunidad?.value, 0, 0.2);
 
   const esSegunda = f.primeraSegunda?.value === "segunda";
 if (!usarVivienda) {
-  f.capitalOut.innerText = formatMoney(0);
-  f.cuotaOut.innerText = formatMoney(0);
+  const cuota = calcularCuota(capital, tipoRef, n);
+
+  f.capitalOut.innerText = formatMoney(capital);
+  f.cuotaOut.innerText = formatMoney(cuota);
   f.ltvOut.innerText = "-";
   f.gastosOut.innerText = formatMoney(0);
   f.ltiOut.innerText = "-";
 
   if (msg) {
-    msg.innerText = "Perfil financiero calculado sin operación inmobiliaria.";
+    msg.innerText = "Capacidad de compra estimada sin vivienda seleccionada.";
     msg.className = "mensaje-perfil mensaje-ok";
     msg.style.display = "block";
   }
