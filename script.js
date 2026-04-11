@@ -390,23 +390,7 @@ const comunidad = limpiarNumero(f.comunidad?.value, 0, 0.2);
   const gastos = impuestos + (usarVivienda ? 2500 : 0);
 
   const esSegunda = f.primeraSegunda?.value === "segunda";
-if (!usarVivienda) {
-  const cuota = calcularCuota(capital, tipoRef, n);
 
-  f.capitalOut.innerText = formatMoney(capital);
-  f.cuotaOut.innerText = formatMoney(cuota);
-  f.ltvOut.innerText = "-";
-  f.gastosOut.innerText = formatMoney(0);
-  f.ltiOut.innerText = "-";
-
-  if (msg) {
-    msg.innerText = "Capacidad de compra estimada sin vivienda seleccionada.";
-    msg.className = "mensaje-perfil mensaje-ok";
-    msg.style.display = "block";
-  }
-
-  return;
-}
   // =====================
   // 🔥 FINANCIACIÓN JÓVENES (100% OK)
   // =====================
@@ -432,12 +416,10 @@ const prestamoNecesario = usarVivienda
 // CAPACIDAD
 // =====================
 const ratio = usarVivienda ? 0.40 : 0.35;
-
 const cuotaMax = (ingresosAnuales * ratio) / 12 - deudas;
 
 let capital = cuotaMax * factorHipoteca;
 
-// 🔥 límite financiación banco
 const maxPrestamo = usarVivienda ? precio * maxFinanciacion : Infinity;
 
 if (usarVivienda) {
@@ -446,6 +428,26 @@ if (usarVivienda) {
 
 capital = Math.max(0, capital);
 
+// 👉 AHORA SÍ EXISTE capital
+const cuota = calcularCuota(capital, tipoRef, n);
+
+// =====================
+// SIN VIVIENDA
+// =====================
+if (!usarVivienda) {
+  f.capitalOut.innerText = formatMoney(capital);
+  f.cuotaOut.innerText = formatMoney(cuota);
+  f.ltvOut.innerText = "-";
+  f.gastosOut.innerText = formatMoney(0);
+  f.ltiOut.innerText = "-";
+
+  if (msg) {
+    msg.innerText = "Capacidad de compra estimada sin vivienda.";
+    msg.style.display = "block";
+  }
+
+  return;
+}
 // =====================
 // 🔥 MODELO BANCO REAL
 // =====================
