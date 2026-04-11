@@ -13,18 +13,18 @@ window.abrirOperacion = function(id){
     }
   });
   
-window.cerrarCalculadora = function () {
-  document.querySelectorAll('.card-content').forEach(cc => {
-    cc.classList.remove('open');
-  });
-  document.body.classList.remove("modal-open");
-};
-  
   if (abierta) {
     document.body.classList.add("modal-open");
   } else {
     document.body.classList.remove("modal-open");
   }
+};
+  
+window.cerrarCalculadora = function () {
+  document.querySelectorAll('.card-content').forEach(cc => {
+    cc.classList.remove('open');
+  });
+  document.body.classList.remove("modal-open");
 };
 
 window.irAnalisis = function(event, tipoOperacion){
@@ -260,6 +260,8 @@ const perfilFields = {
   compatibleOut: document.getElementById("perfilCompatible"),
   avisoSegunda: document.getElementById("avisoSegunda"),
   operacionBadge: document.getElementById("operacionSeleccionada")
+  contrato: document.getElementById("perfilContrato1"),
+antiguedad: document.getElementById("perfilAntiguedad1"),
 };
 
       
@@ -426,7 +428,7 @@ const prestamoNecesario = usarVivienda
   }
 
   capital = Math.max(0, capital);
-
+const precioMaximo = (ahorros + prestamo) / (1 + impuesto + gastosExtra);
   const cuota = capital * (tipoRef * pow) / (pow - 1);
 
   const ltv = precio ? (capital / precio) * 100 : 0;
@@ -462,7 +464,9 @@ const prestamoNecesario = usarVivienda
   // =====================
   // MENSAJE
   // =====================
-
+msg.innerText += ` 
+Precio máximo recomendado: ${formatMoney(precioMaximo)}.`;
+  
   if (msg) {
   msg.style.display = "block";
   msg.className = "mensaje-perfil";
@@ -471,9 +475,15 @@ const prestamoNecesario = usarVivienda
     msg.innerText = "No necesitas financiación: tus ahorros cubren la operación.";
     msg.classList.add("mensaje-ok");
 
-  } else if (!entradaOk) {
-    msg.innerText = "Ahorro insuficiente para entrada mínima (20%).";
-    msg.classList.add("mensaje-warning");
+if (faltaDinero > 0) {
+  msg.innerText = `Necesitas ${formatMoney(aportacionNecesaria)} para comprar esta vivienda.
+Actualmente tienes ${formatMoney(ahorros)}, te faltan ${formatMoney(faltaDinero)}.`;
+  msg.classList.add("mensaje-warning");
+
+} else {
+  msg.innerText = `Tienes capacidad suficiente para afrontar la compra y los gastos.`;
+  msg.classList.add("mensaje-ok");
+}
 
   } else if (lti <= 0.35) {
     msg.innerText = "¡Excelente perfil financiero!";
