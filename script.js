@@ -37,7 +37,13 @@ window.irAnalisis = function(event, tipoOperacion){
     'Compra Primera Vivienda': 'compra', 
     'Inversión': 'inversion' 
   };
-
+window.cerrarCalculadora = function () {
+  document.querySelectorAll('.card-content').forEach(cc => {
+    cc.classList.remove('open');
+  });
+  document.body.classList.remove("modal-open");
+};
+  
   const id = idMap[tipoOperacion];
   if(id) abrirOperacion(id);
 
@@ -403,13 +409,12 @@ if (!usarVivienda) {
   // PRÉSTAMO NECESARIO (AHORRO APLICADO AQUÍ)
   // =====================
   const totalOperacion = precio + gastos;
-  const prestamoNecesario = usarVivienda
-    const entradaReal = precio > 0 ? ahorros / precio : 0;
-
+ const entradaReal = precio > 0 ? ahorros / precio : 0;
 const entradaOk = entradaReal >= 0.20;
-    ? Math.max(totalOperacion - ahorros, 0)
-    : 0;
 
+const prestamoNecesario = usarVivienda
+  ? Math.max(totalOperacion - ahorros, 0)
+  : 0;
   const maxPrestamo = usarVivienda ? precio * maxFinanciacion : Infinity;
 
   // =====================
