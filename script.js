@@ -407,10 +407,7 @@ const comunidad = limpiarNumero(f.comunidad?.value, 0, 0.2);
   // =====================
   // PRÉSTAMO NECESARIO (AHORRO APLICADO AQUÍ)
   // =====================
-  const totalOperacion = precio + gastos;
-const prestamoNecesario = usarVivienda
-  ? Math.max(totalOperacion - ahorros, 0)
-  : 0;
+  
 
 
 // =====================
