@@ -406,12 +406,27 @@ if (!usarVivienda) {
   // PRÉSTAMO NECESARIO (AHORRO APLICADO AQUÍ)
   // =====================
   const totalOperacion = precio + gastos;
- const entradaReal = precio > 0 ? ahorros / precio : 0;
-const entradaOk = entradaReal >= 0.20;
-
 const prestamoNecesario = usarVivienda
   ? Math.max(totalOperacion - ahorros, 0)
   : 0;
+
+// =====================
+// 🔥 MODELO BANCO REAL
+// =====================
+const impuesto = f.tipoVivienda?.value === "obraNueva" ? 0.10 : comunidad;
+const gastosExtra = 0.02;
+
+const gastosReales = precio * (impuesto + gastosExtra);
+const totalNecesario = precio + gastosReales;
+
+// 🔥 préstamo real que te pueden dar
+const prestamoConcedido = capital; // lo calculas después
+
+const aportacionNecesaria = totalNecesario - maxPrestamo;
+const faltaDinero = Math.max(aportacionNecesaria - ahorros, 0);
+
+// 💡 precio máximo realista
+const precioMaximo = (ahorros + maxPrestamo) / (1 + impuesto + gastosExtra);
   const maxPrestamo = usarVivienda ? precio * maxFinanciacion : Infinity;
 
   // =====================
