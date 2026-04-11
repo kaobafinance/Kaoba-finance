@@ -411,6 +411,24 @@ const prestamoNecesario = usarVivienda
   : 0;
 
 // =====================
+// CAPACIDAD
+// =====================
+const ratio = usarVivienda ? 0.40 : 0.35;
+
+const cuotaMax = (ingresosAnuales * ratio) / 12 - deudas;
+
+let capital = cuotaMax * factorHipoteca;
+
+// 🔥 límite financiación banco
+const maxPrestamo = usarVivienda ? precio * maxFinanciacion : Infinity;
+
+if (usarVivienda) {
+  capital = Math.min(capital, maxPrestamo, prestamoNecesario);
+}
+
+capital = Math.max(0, capital);
+
+// =====================
 // 🔥 MODELO BANCO REAL
 // =====================
 const impuesto = f.tipoVivienda?.value === "obraNueva" ? 0.10 : comunidad;
@@ -419,48 +437,25 @@ const gastosExtra = 0.02;
 const gastosReales = precio * (impuesto + gastosExtra);
 const totalNecesario = precio + gastosReales;
 
-// 🔥 préstamo real que te pueden dar
-const prestamoConcedido = capital; // lo calculas después
-  // =====================
-  // CAPACIDAD
-  // =====================
-  const ratio = usarVivienda ? 0.40 : 0.35;
-
-  const cuotaMax = (ingresosAnuales * ratio) / 12 - deudas;
-
-  let capital = cuotaMax * factorHipoteca;
-
-  if (usarVivienda) {
-    capital = Math.min(capital, maxPrestamo, prestamoNecesario);
-  }
-
-  capital = Math.max(0, capital);
-    // =====================
-// 🔥 MODELO BANCO REAL (BIEN HECHO)
-// =====================
-const impuesto = f.tipoVivienda?.value === "obraNueva" ? 0.10 : comunidad;
-const gastosExtra = 0.02;
-
-const gastosReales = precio * (impuesto + gastosExtra);
-const totalNecesario = precio + gastosReales;
-
-// 💰 lo que realmente te presta el banco
+// 💰 préstamo real
 const prestamoConcedido = capital;
 
-// 💸 lo que necesitas poner tú
+// 💸 aportación necesaria
 const aportacionNecesaria = totalNecesario - prestamoConcedido;
 
-// ❗ dinero que te falta
+// ❗ dinero que falta
 const faltaDinero = Math.max(aportacionNecesaria - ahorros, 0);
 
-// 🏠 precio máximo realista según tu perfil
+// 🏠 precio máximo real
 const precioMaximo = (ahorros + prestamoConcedido) / (1 + impuesto + gastosExtra);
-const precioMaximo = (ahorros + prestamo) / (1 + impuesto + gastosExtra);
-  const cuota = capital * (tipoRef * pow) / (pow - 1);
 
-  const ltv = precio ? (capital / precio) * 100 : 0;
-  const lti = ingresosAnuales ? ((cuota + deudas) * 12) / ingresosAnuales : 0;
+// =====================
+// CUOTA
+// =====================
+const cuota = capital * (tipoRef * pow) / (pow - 1);
 
+const ltv = precio ? (capital / precio) * 100 : 0;
+const lti = ingresosAnuales ? ((cuota + deudas) * 12) / ingresosAnuales : 0;
   // =====================
   // OUTPUTS
   // =====================
