@@ -429,7 +429,7 @@ if (usarVivienda) {
 capital = Math.max(0, capital);
 
 // 👉 AHORA SÍ EXISTE capital
-const cuota = calcularCuota(capital, tipoRef, n);
+let cuota = calcularCuota(capital, tipoRef, n);
 
 // =====================
 // SIN VIVIENDA
@@ -480,7 +480,6 @@ const precioMaximo = (ahorros + prestamoConcedido) / (1 + impuesto + gastosExtra
 // =====================
 // CUOTA
 // =====================
-const cuota = calcularCuota(capital, tipoRef, n);
 
 const ltv = precio ? (capital / precio) * 100 : 0;
 const lti = ingresosAnuales ? ((cuota + deudas) * 12) / ingresosAnuales : 0;
