@@ -45,7 +45,7 @@ window.cerrarCalculadora = function () {
 };
   
   const id = idMap[tipoOperacion];
-  if(id) abrirOperacion(id);
+  if(id) window.abrirOperacion(id);
 
   const perfilDiv = document.getElementById("perfil");
   const badge = document.getElementById("operacionSeleccionada");
