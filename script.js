@@ -483,41 +483,67 @@ const lti = ingresosAnuales ? ((cuota + deudas) * 12) / ingresosAnuales : 0;
     }
   }
 
-  // =====================
-  // MENSAJE
-  // =====================
-msg.innerText += ` 
-Precio máximo recomendado: ${formatMoney(precioMaximo)}.`;
-  
+// =====================
+// MENSAJE PRO
+// =====================
+
 if (msg) {
   msg.style.display = "block";
   msg.className = "mensaje-perfil";
 
+  let texto = "";
+
   if (prestamoNecesario === 0) {
-    msg.innerText = "No necesitas financiación: tus ahorros cubren la operación.";
+    texto = `✅ No necesitas financiación: tus ahorros cubren toda la operación.
+
+💡 Aun así, podrías financiar parte para mantener liquidez.`;
+
     msg.classList.add("mensaje-ok");
 
   } else if (faltaDinero > 0) {
-    msg.innerText = `Necesitas ${formatMoney(aportacionNecesaria)} para la compra total.
-Tienes ${formatMoney(ahorros)} y te faltan ${formatMoney(faltaDinero)}.`;
+    texto = `⚠️ Operación no viable actualmente.
 
-    msg.innerText += ` 
-Precio máximo recomendado: ${formatMoney(precioMaximo)}.`;
+Necesitas ${formatMoney(aportacionNecesaria)} en total (precio + gastos).
+Dispones de ${formatMoney(ahorros)}, por lo que te faltan ${formatMoney(faltaDinero)}.
+
+💡 Opciones para hacerlo viable:
+- Aumentar ahorro
+- Reducir precio de compra
+- Buscar financiación adicional`;
 
     msg.classList.add("mensaje-warning");
 
   } else if (lti <= 0.35) {
-    msg.innerText = "¡Excelente perfil financiero!";
+    texto = `✅ Perfil excelente.
+
+Cumples cómodamente los criterios bancarios.
+Alta probabilidad de aprobación y buenas condiciones.`;
+
     msg.classList.add("mensaje-ok");
 
   } else if (lti <= 0.45) {
-    msg.innerText = "Perfil aceptable con condiciones.";
+    texto = `⚠️ Perfil aceptable.
+
+La operación podría aprobarse, pero con condiciones más exigentes
+(tipo de interés más alto o menor financiación).`;
+
     msg.classList.add("mensaje-warning");
 
   } else {
-    msg.innerText = "Perfil de riesgo elevado.";
+    texto = `❌ Perfil de riesgo elevado.
+
+El nivel de endeudamiento es alto y dificulta la aprobación.
+Sería recomendable reducir deudas o ajustar el precio de compra.`;
+
     msg.classList.add("mensaje-warning");
   }
+
+  // 🔥 SIEMPRE mostramos precio máximo
+  texto += `
+
+🏠 Precio máximo recomendado: ${formatMoney(precioMaximo)}`;
+
+  msg.innerText = texto;
 }
   // =====================
   // BADGE
