@@ -494,66 +494,77 @@ const precioIdeal = precioMaximo * factorIdeal;
   }
 
 // =====================
-// MENSAJE PRO
+// MENSAJE PRO+ (UX REAL)
 // =====================
 
 if (msg) {
   msg.style.display = "block";
   msg.className = "mensaje-perfil";
 
-  let texto = "";
+  let resumen = "";
+  let detalle = "";
+  let aviso = "";
 
+  // =====================
+  // PERFIL (1 línea potente)
+  // =====================
   if (prestamoNecesario === 0) {
-    texto = `✅ No necesitas financiación: tus ahorros cubren toda la operación.
-
-💡 Aun así, podrías financiar parte para mantener liquidez.`;
-
+    resumen = "✅ Puedes comprar sin financiación";
     msg.classList.add("mensaje-ok");
 
   } else if (faltaDinero > 0) {
-    texto = `⚠️ Operación no viable actualmente.
-
-Necesitas ${formatMoney(aportacionNecesaria)} en total (precio + gastos).
-Dispones de ${formatMoney(ahorros)}, por lo que te faltan ${formatMoney(faltaDinero)}.
-
-💡 Opciones para hacerlo viable:
-- Aumentar ahorro
-- Reducir precio de compra
-- Buscar financiación adicional`;
-
+    resumen = "❌ No tienes ahorro suficiente para esta compra";
     msg.classList.add("mensaje-warning");
 
   } else if (lti <= 0.35) {
-    texto = `✅ Perfil excelente.
-
-Cumples cómodamente los criterios bancarios.
-Alta probabilidad de aprobación y buenas condiciones.`;
-
+    resumen = "✅ Perfil sólido: alta probabilidad de aprobación";
     msg.classList.add("mensaje-ok");
 
   } else if (lti <= 0.45) {
-    texto = `⚠️ Perfil aceptable.
-
-La operación podría aprobarse, pero con condiciones más exigentes
-(tipo de interés más alto o menor financiación).`;
-
+    resumen = "⚠️ Perfil justo: podrían exigirte más condiciones";
     msg.classList.add("mensaje-warning");
 
   } else {
-    texto = `❌ Perfil de riesgo elevado.
-
-El nivel de endeudamiento es alto y dificulta la aprobación.
-Sería recomendable reducir deudas o ajustar el precio de compra.`;
-
+    resumen = "❌ Riesgo elevado: difícil aprobación";
     msg.classList.add("mensaje-warning");
   }
 
-  // 🔥 SIEMPRE mostramos precio máximo
-texto += `
+  // =====================
+  // DETALLE ECONÓMICO (claro y directo)
+  // =====================
+  detalle = `🏠 Máximo banco: ${formatMoney(precioMaximo)}
+🎯 Precio cómodo: ${formatMoney(precioIdeal)}`;
 
-🏠 Precio máximo recomendado: ${formatMoney(precioMaximo)}
-🎯 Precio ideal para ir cómodo: ${formatMoney(precioIdeal)}`;
-  msg.innerText = texto;
+  // =====================
+  // AVISO INTELIGENTE (clave conversión)
+  // =====================
+  if (precio > precioMaximo) {
+    aviso = "❌ Este precio no pasaría un estudio bancario.";
+  } else if (precio > precioIdeal) {
+    aviso = "⚠️ Estás por encima del nivel recomendado (irías justo).";
+  } else {
+    aviso = "✅ Estás dentro de un rango saludable.";
+  }
+
+  // =====================
+  // FALTA DINERO (solo si aplica)
+  // =====================
+  let extra = "";
+
+  if (faltaDinero > 0) {
+    extra = `
+
+💸 Te faltan ${formatMoney(faltaDinero)} para cerrar la operación.`;
+  }
+
+  // =====================
+  // MENSAJE FINAL (orden perfecto)
+  // =====================
+  msg.innerText = `${resumen}
+
+${detalle}
+
+${aviso}${extra}`;
 }
   // =====================
   // BADGE
