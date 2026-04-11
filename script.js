@@ -422,16 +422,6 @@ const cuotaMax = (ingresosAnuales * ratio) / 12 - deudas;
 let capitalBanco = cuotaMax * factorHipoteca;
 capitalBanco = Math.min(capitalBanco, maxPrestamo);
 
-// 2. Préstamo necesario
-const prestamoNecesario = totalOperacion - ahorros;
-
-// 3. Préstamo final
-const capital = Math.min(capitalBanco, prestamoNecesario);
-
-// 4. Falta dinero REAL
-const aportacionNecesaria = totalOperacion - capitalBanco;
-const faltaDinero = Math.max(aportacionNecesaria - ahorros, 0);prestamoNecesario);
-}
 
 capital = Math.max(0, capital);
 
