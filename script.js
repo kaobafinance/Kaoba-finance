@@ -448,7 +448,16 @@ const faltaDinero = Math.max(aportacionNecesaria - ahorros, 0);
 
 // 🏠 precio máximo real
 const precioMaximo = (ahorros + prestamoConcedido) / (1 + impuesto + gastosExtra);
-// 🎯 PRECIO IDEAL (dinámico según riesgo)
+
+// =====================
+// CUOTA
+// =====================
+const cuota = capital * (tipoRef * pow) / (pow - 1);
+
+const ltv = precio ? (capital / precio) * 100 : 0;
+const lti = ingresosAnuales ? ((cuota + deudas) * 12) / ingresosAnuales : 0;
+
+  // 🎯 PRECIO IDEAL (dinámico según riesgo)
 let factorIdeal = 0.9;
 
 if (lti <= 0.30) factorIdeal = 0.95;
@@ -457,13 +466,6 @@ else if (lti <= 0.45) factorIdeal = 0.85;
 else factorIdeal = 0.8;
 
 const precioIdeal = precioMaximo * factorIdeal;
-// =====================
-// CUOTA
-// =====================
-const cuota = capital * (tipoRef * pow) / (pow - 1);
-
-const ltv = precio ? (capital / precio) * 100 : 0;
-const lti = ingresosAnuales ? ((cuota + deudas) * 12) / ingresosAnuales : 0;
   // =====================
   // OUTPUTS
   // =====================
