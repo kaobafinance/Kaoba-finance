@@ -448,14 +448,7 @@ if (!usarVivienda) {
 
   return;
 }
-  if (!datosMinimosOK) {
-  if (msg) {
-    msg.style.display = "block";
-    msg.className = "mensaje-perfil mensaje-neutral";
-    msg.innerText = "Introduce tus datos para ver tu análisis financiero.";
-  }
-  return;
-}
+
 // =====================
 // 🔥 MODELO BANCO REAL
 // =====================
@@ -526,6 +519,14 @@ const datosMinimosOK =
   ingresosAnuales > 0 &&
   n > 0 &&
   (usarVivienda ? precio > 50000 : true);
+    if (!datosMinimosOK) {
+  if (msg) {
+    msg.style.display = "block";
+    msg.className = "mensaje-perfil mensaje-neutral";
+    msg.innerText = "Introduce tus datos para ver tu análisis financiero.";
+  }
+  return;
+}
 // =====================
 // MENSAJE PRO+ (UX REAL)
 // =====================
