@@ -492,7 +492,13 @@ const precioIdeal = precioMaximo * factorIdeal;
       f.compatibleOut.classList.add("red");
     }
   }
-
+// =====================
+// VALIDACIÓN DATOS MÍNIMOS
+// =====================
+const datosMinimosOK =
+  ingresosAnuales > 0 &&
+  n > 0 &&
+  (usarVivienda ? precio > 0 : true);
 // =====================
 // MENSAJE PRO+ (UX REAL)
 // =====================
