@@ -450,6 +450,26 @@ const precioMaximo = (ahorros + prestamo) / (1 + impuesto + gastosExtra);
   const lti = ingresosAnuales ? ((cuota + deudas) * 12) / ingresosAnuales : 0;
 
   // =====================
+// 🔥 MODELO BANCO REAL (BIEN HECHO)
+// =====================
+const impuesto = f.tipoVivienda?.value === "obraNueva" ? 0.10 : comunidad;
+const gastosExtra = 0.02;
+
+const gastosReales = precio * (impuesto + gastosExtra);
+const totalNecesario = precio + gastosReales;
+
+// 💰 lo que realmente te presta el banco
+const prestamoConcedido = capital;
+
+// 💸 lo que necesitas poner tú
+const aportacionNecesaria = totalNecesario - prestamoConcedido;
+
+// ❗ dinero que te falta
+const faltaDinero = Math.max(aportacionNecesaria - ahorros, 0);
+
+// 🏠 precio máximo realista según tu perfil
+const precioMaximo = (ahorros + prestamoConcedido) / (1 + impuesto + gastosExtra);
+  // =====================
   // OUTPUTS
   // =====================
   f.capitalOut.innerText = formatMoney(capital);
