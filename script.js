@@ -474,7 +474,14 @@ const totalOperacion = precio + gastos;
 const entradaMinima = totalOperacion - maxPrestamo;
 const puedeCubrirEntrada = ahorros >= entradaMinima;
 if (!puedeCubrirEntrada) {
-  // marcar como NO viable directamente
+  if (msg) {
+    msg.style.display = "block";
+    msg.className = "mensaje-perfil mensaje-warning";
+    msg.innerText = `❌ No alcanzas la entrada mínima requerida (${formatMoney(entradaMinima)}).`;
+  }
+
+  // Opcional: cortar cálculo
+  return;
 }
   
 const prestamoNecesario = totalOperacion - ahorros;
