@@ -387,7 +387,7 @@ const comunidad = limpiarNumero(f.comunidad?.value, 0, 0.2);
     ? (f.tipoVivienda?.value === "obraNueva" ? precio * 0.10 : precio * comunidad)
     : 0;
 
-  const gastos = impuestos + (usarVivienda ? 2500 : 0);
+  const gastosOperacion = impuestos + (usarVivienda ? 2500 : 0);
 
   const esSegunda = f.primeraSegunda?.value === "segunda";
 
