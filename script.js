@@ -446,7 +446,7 @@ const prestamoNecesario = Math.max(totalOperacion - ahorros, 0);
 const maxPrestamo = precio * maxFinanciacion;
 
 const ratio = usarVivienda ? 0.40 : 0.35;
-const cuotaMax = (ingresosAnuales * ratio) / 12 - deudas;
+const cuotaMax = Math.max((ingresosAnuales * ratio) / 12 - deudas, 0);
   
 // 5. CAPACIDAD POR INGRESOS
 let capitalBanco = cuotaMax * factorHipoteca;
@@ -474,7 +474,7 @@ else if (lti <= 0.35) factorIdeal = 0.9;
 else if (lti <= 0.45) factorIdeal = 0.85;
 else factorIdeal = 0.8;
 
-  const precioMaximo = capitalBanco; // o el valor correcto según tu lógica
+  const precioMaximo = capitalBanco / maxFinanciacion;
 const precioIdeal = precioMaximo * factorIdeal;
   // =====================
   // OUTPUTS
