@@ -412,17 +412,48 @@ const comunidad = limpiarNumero(f.comunidad?.value, 0, 0.2);
 
 // =====================
 // SIN VIVIENDA
-// =====================
-if (!usarVivienda) {
-  f.capitalOut.innerText = formatMoney(0);
-  f.cuotaOut.innerText = formatMoney(0);
+// =====================if (!usarVivienda) {
+
+  const ratio = 0.35;
+  const cuotaMax = Math.max((ingresosAnuales * ratio) / 12 - deudas, 0);
+if (cuotaMax === 0) {
+
+  if (ingresosAnuales <= 0) {
+    msg.innerText = "Introduce tus ingresos para calcular tu capacidad de compra.";
+    msg.className = "mensaje-perfil mensaje-neutral";
+
+  } else if (deudas > 0) {
+    msg.innerText = "⚠️ Tus deudas actuales limitan tu capacidad para asumir una hipoteca.";
+    msg.className = "mensaje-perfil mensaje-warning";
+
+  } else {
+    msg.innerText = "⚠️ Con tus ingresos actuales no es posible asumir una hipoteca.";
+    msg.className = "mensaje-perfil mensaje-warning";
+  }
+
+  msg.style.display = "block";
+  return;
+}
+  let capitalBanco = cuotaMax * factorHipoteca;
+
+  const precioMaximo = capitalBanco / 0.8; // asumimos 80% financiación estándar
+  const precioIdeal = precioMaximo * 0.9;
+
+  f.capitalOut.innerText = formatMoney(capitalBanco);
+  f.cuotaOut.innerText = formatMoney(cuotaMax);
   f.ltvOut.innerText = "-";
-  f.gastosOut.innerText = formatMoney(0);
+  f.gastosOut.innerText = "-";
   f.ltiOut.innerText = "-";
 
   if (msg) {
-    msg.innerText = "Capacidad de compra estimada sin vivienda.";
     msg.style.display = "block";
+    msg.className = "mensaje-perfil mensaje-ok";
+    msg.innerText = `💡 Según tus ingresos:
+
+🏠 Precio máximo estimado: ${formatMoney(precioMaximo)}
+🎯 Precio recomendable: ${formatMoney(precioIdeal)}
+
+Puedes ver opciones sin necesidad de introducir una vivienda concreta.`;
   }
 
   return;
