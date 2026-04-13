@@ -381,7 +381,7 @@ const deudas = limpiarNumero(f.deuda?.value, 0, 100000);
 
 const precio = usarVivienda ? limpiarNumero(f.precio?.value, 50000, 5000000) : 0;
 
-const comunidad = limpiarNumero(f.comunidad?.value, 0, 0.2);
+const comunidad = f.comunidad?.value;
   
   const impuestos = usarVivienda
     ? (f.tipoVivienda?.value === "obraNueva" ? precio * 0.10 : precio * comunidad)
