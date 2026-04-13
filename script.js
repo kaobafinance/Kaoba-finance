@@ -381,7 +381,7 @@ const deudas = limpiarNumero(f.deuda?.value, 0, 100000);
   const usarVivienda = f.viviendaCheck?.checked || false;
 
 const precio = usarVivienda ? limpiarNumero(f.precio?.value, 50000, 5000000) : 0;
-
+  const esSegunda = f.primeraSegunda?.value === "segunda";
 const comunidad = f.comunidad?.value;
   
 let impuestos = 0;
@@ -409,8 +409,6 @@ if (usarVivienda) {
   }
 }
   const gastosOperacion = impuestos + (usarVivienda ? 2500 : 0);
-
-  const esSegunda = f.primeraSegunda?.value === "segunda";
 
   // =====================
   // 🔥 FINANCIACIÓN JÓVENES (100% OK)
@@ -464,8 +462,8 @@ if (cuotaMax === 0) {
   f.capitalOut.innerText = formatMoney(capitalBanco);
   f.cuotaOut.innerText = formatMoney(cuotaMax);
   f.ltvOut.innerText = "-";
-  f.gastosOut.innerText =
-  `${formatMoney(gastos)} (${(tipoITP * 100).toFixed(2)}% - ${motivo})`;
+ f.gastosOut.innerText =
+  `${formatMoney(gastosOperacion)} (${(tipoITP * 100).toFixed(2)}%)`;
   f.ltiOut.innerText = "-";
 
   if (msg) {
