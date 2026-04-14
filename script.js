@@ -395,7 +395,7 @@ if (usarVivienda) {
   let resultadoITP;
 
   // 🔥 PRIORIDAD: manual
-  if (!isNaN(itpManualValor) && itpManualValor > 0) {
+  if (usarVivienda && !isNaN(itpManualValor) && itpManualValor > 0) {
     const tipoManual = itpManualValor / 100;
 
     resultadoITP = {
@@ -501,21 +501,12 @@ Puedes ver opciones sin necesidad de introducir una vivienda concreta.`;
 const itpManualInput = document.getElementById("itpManual");
 const itpManualValor = parseFloat(itpManualInput?.value);
 
-let resultadoITP;
+let tipoITP;
 
-// 🔥 PRIORIDAD: ITP MANUAL
 if (!isNaN(itpManualValor) && itpManualValor > 0) {
-
-  const tipoManual = itpManualValor / 100;
-
-  resultadoITP = {
-    tipo: tipoManual,
-    cuotaITP: precio * tipoManual
-  };
-
+  tipoITP = itpManualValor / 100;
 } else {
-
-  resultadoITP = calcularITP({
+  const resultadoITP = calcularITP({
     comunidad,
     precio,
     edad: edad1,
@@ -525,10 +516,10 @@ if (!isNaN(itpManualValor) && itpManualValor > 0) {
     discapacidad
   });
 
+  tipoITP = resultadoITP.tipo;
 }
 
-const impuesto = resultadoITP.tipo;
-const impuestosCalculados = resultadoITP.cuotaITP;
+const impuestosCalculados = precio * tipoITP;
 const gastos = impuestosCalculados + 2500;
 
 // 2. TOTAL OPERACIÓN
