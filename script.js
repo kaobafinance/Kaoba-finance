@@ -389,29 +389,37 @@ let tipoITP = 0;
 
 if (usarVivienda) {
 
-  if (f.tipoVivienda?.value === "obraNueva") {
+  const itpManualInput = document.getElementById("itpManual");
+  const itpManualValor = parseFloat(itpManualInput?.value);
 
-    tipoITP = 0.10;
-    impuestos = precio * tipoITP;
+  let resultadoITP;
+
+  // 🔥 PRIORIDAD: manual
+  if (!isNaN(itpManualValor) && itpManualValor > 0) {
+    const tipoManual = itpManualValor / 100;
+
+    resultadoITP = {
+      tipo: tipoManual,
+      cuotaITP: precio * tipoManual
+    };
 
   } else {
 
-    const familiaNumerosa = document.getElementById("familiaNumerosa")?.checked;
-const discapacidad = document.getElementById("discapacidad")?.checked;
+    resultadoITP = calcularITP({
+      comunidad,
+      precio,
+      edad: edad1,
+      ingresos: ingresosAnuales,
+      esViviendaHabitual: !esSegunda,
+      familiaNumerosa,
+      discapacidad
+    });
 
-const resultadoITP = calcularITP({
-  comunidad,
-  precio,
-  edad: edad1,
-  ingresos: ingresosAnuales,
-  esViviendaHabitual: !esSegunda,
-  familiaNumerosa,
-  discapacidad
-});
-
-    tipoITP = resultadoITP.tipo;
-    impuestos = resultadoITP.cuotaITP;
   }
+
+  tipoITP = resultadoITP.tipo;
+  impuestos = resultadoITP.cuotaITP;
+}
 }
   const gastosOperacion = impuestos + (usarVivienda ? 2500 : 0);
 
@@ -490,15 +498,34 @@ Puedes ver opciones sin necesidad de introducir una vivienda concreta.`;
 // =====================
 
 // 1. GASTOS
-const resultadoITP = calcularITP({
-  comunidad,
-  precio,
-  edad: edad1,
-  ingresos: ingresosAnuales,
-  esViviendaHabitual: !esSegunda,
-  familiaNumerosa,
-  discapacidad
-});
+const itpManualInput = document.getElementById("itpManual");
+const itpManualValor = parseFloat(itpManualInput?.value);
+
+let resultadoITP;
+
+// 🔥 PRIORIDAD: ITP MANUAL
+if (!isNaN(itpManualValor) && itpManualValor > 0) {
+
+  const tipoManual = itpManualValor / 100;
+
+  resultadoITP = {
+    tipo: tipoManual,
+    cuotaITP: precio * tipoManual
+  };
+
+} else {
+
+  resultadoITP = calcularITP({
+    comunidad,
+    precio,
+    edad: edad1,
+    ingresos: ingresosAnuales,
+    esViviendaHabitual: !esSegunda,
+    familiaNumerosa,
+    discapacidad
+  });
+
+}
 
 const impuesto = resultadoITP.tipo;
 const impuestosCalculados = resultadoITP.cuotaITP;
@@ -773,6 +800,7 @@ perfilFields.titulares && perfilFields.titular2Div && perfilFields.titulares.add
 
   document.getElementById("familiaNumerosa")?.addEventListener("change", calcularPerfil);
 document.getElementById("discapacidad")?.addEventListener("change", calcularPerfil);
+  document.getElementById("itpManual")?.addEventListener("input", calcularPerfil);
   // 🔒 VALIDACIÓN INPUTS (ANTI-NEGATIVOS)
 perfilFields.salario1 && perfilFields.salario1.addEventListener("blur", () => corregirInput(perfilFields.salario1, 0));
 perfilFields.salario2 && perfilFields.salario2.addEventListener("blur", () => corregirInput(perfilFields.salario2, 0));
