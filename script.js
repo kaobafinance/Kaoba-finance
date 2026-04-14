@@ -495,13 +495,14 @@ const resultadoITP = calcularITP({
   precio,
   edad: edad1,
   ingresos: ingresosAnuales,
-  esViviendaHabitual: !esSegunda
+  esViviendaHabitual: !esSegunda,
+  familiaNumerosa,
+  discapacidad
 });
 
 const impuesto = resultadoITP.tipo;
 const impuestosCalculados = resultadoITP.cuotaITP;
-const gastosExtra = 0.02;
-const gastos = impuestosCalculados + (precio * 0.02);
+const gastos = impuestosCalculados + 2500;
 
 // 2. TOTAL OPERACIÓN
 const totalOperacion = precio + gastos;
@@ -769,6 +770,9 @@ perfilFields.titulares && perfilFields.titular2Div && perfilFields.titulares.add
   perfilFields.titular2Div.style.display = perfilFields.titulares.value === "2" ? "block" : "none";
   calcularPerfil();
 });
+
+  document.getElementById("familiaNumerosa")?.addEventListener("change", calcularPerfil);
+document.getElementById("discapacidad")?.addEventListener("change", calcularPerfil);
   // 🔒 VALIDACIÓN INPUTS (ANTI-NEGATIVOS)
 perfilFields.salario1 && perfilFields.salario1.addEventListener("blur", () => corregirInput(perfilFields.salario1, 0));
 perfilFields.salario2 && perfilFields.salario2.addEventListener("blur", () => corregirInput(perfilFields.salario2, 0));
