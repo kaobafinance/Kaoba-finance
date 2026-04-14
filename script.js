@@ -485,7 +485,16 @@ Puedes ver opciones sin necesidad de introducir una vivienda concreta.`;
 // =====================
 
 // 1. GASTOS
-const impuesto = f.tipoVivienda?.value === "obraNueva" ? 0.10 : comunidad;
+const resultadoITP = calcularITP({
+  comunidad,
+  precio,
+  edad: edad1,
+  ingresos: ingresosAnuales,
+  esViviendaHabitual: !esSegunda
+});
+
+const impuesto = resultadoITP.tipo;
+const impuestosCalculados = resultadoITP.cuotaITP;
 const gastosExtra = 0.02;
 const gastos = precio * (impuesto + gastosExtra);
 
