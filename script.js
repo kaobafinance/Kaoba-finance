@@ -401,8 +401,7 @@ const antiguedad = Math.max(antiguedad1, antiguedad2);
 const precio = usarVivienda ? limpiarNumero(f.precio?.value, 50000, 5000000) : 0;
   const esSegunda = f.primeraSegunda?.value === "segunda";
 const comunidad = f.comunidad?.value;
-  
-let impuestos = 0;
+
 
   // =====================
   // 🔥 FINANCIACIÓN JÓVENES (100% OK)
