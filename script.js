@@ -485,13 +485,37 @@ Puedes ver opciones sin necesidad de introducir una vivienda concreta.`;
 const itpManualInput = document.getElementById("itpManual");
 const itpManualValor = parseFloat(itpManualInput?.value);
 
-let tipoITP;
+const tipoVivienda = f.tipoVivienda?.value;
+
+let tipoImpuesto;
 let impuestos;
 
+// 👉 PRIORIDAD: ITP MANUAL (sobrescribe todo)
 if (!isNaN(itpManualValor) && itpManualValor > 0) {
-  tipoITP = itpManualValor / 100;
-  impuestos = precio * tipoITP;
+
+  tipoImpuesto = itpManualValor / 100;
+  impuestos = precio * tipoImpuesto;
+
+// 👉 OBRA NUEVA → IVA + AJD
+} else if (tipoVivienda === "obra_nueva") {
+
+  const iva = 0.10;
+
+  const ajdPorComunidad = {
+    madrid: 0.006,
+    cataluna: 0.015,
+    valencia: 0.015,
+    andalucia: 0.012
+  };
+
+  const ajd = ajdPorComunidad[comunidad] || 0.01;
+
+  tipoImpuesto = iva + ajd;
+  impuestos = precio * tipoImpuesto;
+
+// 👉 SEGUNDA MANO → ITP
 } else {
+
   const resultadoITP = calcularITP({
     comunidad,
     precio,
@@ -502,19 +526,33 @@ if (!isNaN(itpManualValor) && itpManualValor > 0) {
     discapacidad
   });
 
-  tipoITP = resultadoITP.tipo;
+  tipoImpuesto = resultadoITP.tipo;
   impuestos = resultadoITP.cuotaITP;
 }
 
-// 👉 gastos totales
-const gastos = impuestos + 2500;
+// =====================
+// GASTOS REALES
+// =====================
+const notaria = precio * 0.005;     // ~0.5%
+const registro = precio * 0.002;    // ~0.2%
+const gestoria = 400;
 
-// 👉 ESTO TE FALTABA
+const gastosExtras = notaria + registro + gestoria;
+
+// 👉 gastos totales
+const gastos = impuestos + gastosExtras;
+
+// 👉 TOTAL OPERACIÓN
 const totalOperacion = precio + gastos;
-// 3. LÍMITE BANCO (IMPORTANTE: antes de usarlo en entrada mínima)
+
+// =====================
+// 3. LÍMITE BANCO
+// =====================
 const maxPrestamo = precio * maxFinanciacion;
 
+// =====================
 // 4. NECESIDAD REAL
+// =====================
 const entradaMinima = totalOperacion - maxPrestamo;
 const puedeCubrirEntrada = ahorros >= entradaMinima;
 
