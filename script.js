@@ -1086,53 +1086,80 @@ function calcularCapacidad(ingresosAnuales, deudas, tipoRef, n) {
 
   switch (comunidad) {
 
-    case "madrid":
+  case "madrid":
+    tipo = 0.06;
+    break;
+
+  case "cataluna":
+    tipo = precio > 1000000 ? 0.11 : 0.10;
+
+    if (edad < 32 && ingresos < 30000 && esViviendaHabitual) {
+      tipo = 0.05;
+    }
+
+    if (familiaNumerosa) tipo = 0.07;
+    break;
+
+  case "andalucia":
+    tipo = 0.07;
+
+    if (edad < 35 && precio < 150000 && esViviendaHabitual) {
+      tipo = 0.035;
+    }
+
+    if (discapacidad) tipo = 0.035;
+    break;
+
+  case "valencia":
+    tipo = 0.10;
+
+    if (edad < 35 && esViviendaHabitual) {
       tipo = 0.06;
-      break;
+    }
+    break;
 
-    case "cataluna":
-      tipo = precio > 1000000 ? 0.11 : 0.10;
+  case "galicia":
+    tipo = 0.10;
 
-      if (edad < 32 && ingresos < 30000 && esViviendaHabitual) {
-        tipo = 0.05;
-      }
+    if (edad < 36 && esViviendaHabitual) {
+      tipo = 0.05;
+    }
+    break;
 
-      if (familiaNumerosa) tipo = 0.07;
-      break;
+  case "pais_vasco":
+    tipo = 0.04;
+    break;
 
-    case "andalucia":
-      tipo = 0.07;
+  case "navarra":
+    tipo = 0.06;
+    break;
 
-      if (edad < 35 && precio < 150000 && esViviendaHabitual) {
-        tipo = 0.035;
-      }
+  case "madrid":
+    tipo = 0.06;
+    break;
 
-      if (discapacidad) tipo = 0.035;
-      break;
+  case "murcia":
+  case "castilla_mancha":
+  case "castilla_leon":
+    tipo = 0.09;
+    break;
 
-    case "valencia":
-      tipo = 0.10;
+  case "aragon":
+  case "asturias":
+  case "cantabria":
+  case "extremadura":
+  case "rioja":
+    tipo = 0.08;
+    break;
 
-      if (edad < 35 && esViviendaHabitual) {
-        tipo = 0.06;
-      }
-      break;
+  case "baleares":
+  case "canarias":
+    tipo = 0.065;
+    break;
 
-    case "galicia":
-      tipo = 0.10;
-
-      if (edad < 36 && esViviendaHabitual) {
-        tipo = 0.05;
-      }
-      break;
-
-    case "pais_vasco":
-      tipo = 0.04;
-      break;
-
-    default:
-  tipo = 0.08; // fallback seguro (OK)
-  }
+  default:
+    tipo = 0.08;
+}
 
   return {
     tipo,
