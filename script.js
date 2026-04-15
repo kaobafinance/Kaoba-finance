@@ -797,7 +797,8 @@ if (toggleCard && perfilFields.viviendaCheck) {
 
  // EVENTOS PERFIL// -------
 perfilFields.plazo && perfilFields.plazo.addEventListener("input", () => plazoEditadoPorUsuario = true);
-
+perfilFields.salario1?.addEventListener("input", calcularPerfil);
+perfilFields.precio?.addEventListener("input", calcularPerfil);
 // 🔕 Desactivado para usar botón calcular
 /*
 [
