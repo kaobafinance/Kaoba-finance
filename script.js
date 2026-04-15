@@ -492,8 +492,12 @@ if (cuotaMax === 0) {
   f.capitalOut.innerText = formatMoney(capitalBanco);
   f.cuotaOut.innerText = formatMoney(cuotaMax);
   f.ltvOut.innerText = "-";
- f.gastosOut.innerText =
-  `${formatMoney(impuestos)} (${(tipoITP * 100).toFixed(2)}%)`;
+ f.gastosOut.innerText = formatMoney(impuestos);
+
+const itpOut = document.getElementById("perfilITP");
+if (itpOut) {
+  itpOut.innerText = `ITP aplicado: ${(tipoITP * 100).toFixed(2)}%`;
+}
   f.ltiOut.innerText = "-";
 
   if (msg) {
